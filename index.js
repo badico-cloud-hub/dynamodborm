@@ -1,1 +1,2 @@
-module.exports = require('./build')
+module.exports.default = require('./build')
+module.exports.Model = require('./build').Model
