@@ -1,6 +1,6 @@
 import Connection from './Connection'
 import Repository from './Repository'
-import parseAggregationRootModel, { parseFields } from './Model'
+import parseAggregationRootModel, { parseFields, Model } from './Model'
 
 class AggregationRoot {
   constructor(modelRoot, ...objectsValuesMaps) {
@@ -17,4 +17,11 @@ class AggregationRoot {
   }
 }
 
+export {
+ Model,
+ Connection,
+ parseFields,
+ parseAggregationRootModel,
+
+}
 export default AggregationRoot
