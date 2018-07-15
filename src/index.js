@@ -19,9 +19,5 @@ class AggregationRoot {
 
 export {
  Model,
- Connection,
- parseFields,
- parseAggregationRootModel,
-
 }
 export default AggregationRoot
