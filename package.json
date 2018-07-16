@@ -2,7 +2,7 @@
   "name": "@spark/dynamodborm",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.2.1",
