@@ -1,8 +1,8 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper'
 import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
-import buildAggregatorModel from '../Model'
-import Connection from '../Connection'
+import buildAggregatorModel from '../src/Model'
+import Connection from '../src/Connection'
 
 const region = 'us-east-1'
 const client = new Client({ region })
@@ -72,7 +72,6 @@ describe('Model', () => {
     expect(result).toHaveProperty('id')
     return done()
   })
-
 
   it('root Model should be a construct alias for Model Root Class method', async (done) => {
     expect.assertions(1)

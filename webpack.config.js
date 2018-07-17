@@ -1,7 +1,7 @@
-let path = require('path')
-var fs = require('fs')
-
-var readDir = function (name) {
+const path = require('path')
+const fs = require('fs')
+const nodeExternals = require('webpack-node-externals');
+const readDir = function (name) {
   return fs.readdirSync(path.join(__dirname,name))
     .filter(filename => /\.js$/.test(filename))
     .map((filename) => {
@@ -16,20 +16,15 @@ var readDir = function (name) {
     .reduce((finalObject, entry) => Object.assign(finalObject, entry), {})
 }
 
-let config = {
+const config = {
   target: 'node',
+  externals: [nodeExternals()],
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel',
-        // query: {
-        //   plugins: ['transform-decorators-legacy', "transform-class-properties",
-        //   "babel-plugin-syntax-async-functions",
-        //   "babel-plugin-transform-async-to-generator" ],
-        //   presets: ['es2015', 'stage-0']
-        // }
         query: JSON.parse(fs.readFileSync(path.join(__dirname, '.babelrc'), { encoding: 'utf8' }))
       },
       {

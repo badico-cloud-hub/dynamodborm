@@ -20,13 +20,39 @@ function parseFields(Joi, rootSchema, ...objectValuesSchemas) {
     rootSchema(Joi),
   )
   return (fields) => {
+    const parseArrayItems = (values, ...keys) => {
+      const parseItems = (parsedItems, field, index) => {
+        const itemSchema = path([...keys], schema)
+        if (typeof field === 'object') {
+          return [
+            ...parsedItems,
+            (
+              itemSchema
+              && field instanceof Array
+                ? parseArrayItems(field, ...keys) // TODO: Look to error on nested
+                : parseObjFields(field, ...keys)
+            )
+          ]
+        }
+        return [
+          ...parsedItems,
+          (itemSchema && field)
+        ]
+      }
+      return values.reduce(parseItems, [])
+    }
     const parseObjFields = (obj, ...keys) => {
       const parseKeysField = (parsedFields, key) => {
         const fieldSchema = path([...keys, key], schema)
-        if (typeof fields[key] === 'object') {
+        const field = path([...keys, key], fields)
+        if (typeof field === 'object') {
           return {
             ...parsedFields,
-            ...(fieldSchema && { [key]: parseObjFields(fields[key], ...keys, key) })
+            ...(fieldSchema && { [key]:
+              field instanceof Array
+                ? parseArrayItems(field, ...keys, key)
+                : parseObjFields(field, ...keys, key)
+            })
           }
         }
         return {

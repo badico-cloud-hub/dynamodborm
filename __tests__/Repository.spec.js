@@ -5,9 +5,9 @@ import {
   ExpressionAttributes
 } from '@aws/dynamodb-expressions'
 
-import Repository from '../Repository'
-import Connection from '../Connection'
-import aggregationRootModel, { Model } from '../Model'
+import Repository from '../src/Repository'
+import Connection from '../src/Connection'
+import aggregationRootModel, { Model } from '../src/Model'
 import v4 from 'uuid/v4'
 
 const connection = new Connection({ region: 'us-east-1' })

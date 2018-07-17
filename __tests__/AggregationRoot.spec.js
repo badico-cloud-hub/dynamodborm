@@ -2,7 +2,7 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper'
 import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
-import AggregationRoot from '../index'
+import AggregationRoot from '../src'
 
 const region = 'us-east-1'
 const client = new Client({ region })
