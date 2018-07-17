@@ -134,7 +134,6 @@ describe('parseFields, a function to retrieve just the fields based on our schem
       name: 'a foo name'
     }
     const retrievedData = parseFields(root, objectValue)(data)
-    console.log('list', retrievedData.list)
     expect(Object.keys(retrievedData)).toHaveLength(2)
     expect(retrievedData.list).toHaveLength(3)
   })

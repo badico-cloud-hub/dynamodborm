@@ -227,15 +227,20 @@ describe('Dictionary behavior', () => {
           type: 'Number',
           validator: hasToBe.any()
         },
-        phones: (embed, EmbedModel) => ({
+        phones: (embed, EmbedModel, embedSchema) => ({
             type: 'List',
             memberType: embed(EmbedModel),
-            validator: hasToBe.array()
+            validator: hasToBe.array().items(hasToBe.object().keys(embedSchema))
         })
       })
       
 
-    const { SubDomain, Domain, Repository, connection } = new AggregationRoot({
+    const {
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
+    } = new AggregationRoot({
       tableName,
       region,
       className: 'Domain',
@@ -350,7 +355,6 @@ describe('Dictionary behavior', () => {
   })
 
   it('should be abble to Validade a List attr and retrieve', async (done) => {
-    expect.assertions(2)
     class DomainModel {
       constructor(values) {
         Object.assign(this, values)
@@ -366,7 +370,7 @@ describe('Dictionary behavior', () => {
     const subDomainSchema = hasToBe => ({
         number: {
             type: 'String',
-            validator: hasToBe.number()
+            validator: hasToBe.string()
         }
     })
     const domainSchema = hasToBe => ({
@@ -392,18 +396,20 @@ describe('Dictionary behavior', () => {
           type: 'Number',
           validator: hasToBe.any()
         },
-        phones: (embed, embedClass, embedSchema) => ({
+        phones: (embed, EmbedModel, embedSchema) => ({
             type: 'List',
-            validator: hasToBe.array().items(hasToBe.object().keys(embedSchema))
+            memberType: embed(EmbedModel),
+            validator: (
+              hasToBe.array().items(hasToBe.object().keys(embedSchema)))
         })
       })
+      
 
     const {
-        SubDomain,
-        Domain,
-        Repository,
-        connection,
-        parseFields,
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
     } = new AggregationRoot({
       tableName,
       region,
@@ -411,34 +417,400 @@ describe('Dictionary behavior', () => {
       ModelClass: DomainModel,
       schema: domainSchema
     },{
-      ModelClass: SubDomainModel,
-      schema: subDomainSchema,
-      className: 'SubDomain',
-      key: 'phones'
+        ModelClass: SubDomainModel,
+        schema: subDomainSchema,
+        className: 'SubDomain',
+        key: 'phones'
     })
-
-    const item = parseFields({
-        name: 'lucas',
-        foo: 1,
-        phones: [
-            {
-              number: 'wrong'
-            }
-        ]
+    const item = new Domain({
+        name: 'item domain',
+        phones: [{
+            number: 'teste number'
+        }]
     })
-    const itemToSave =  new Domain(item)
-    console.log({item, itemToSave })
-    const savedItem = await connection.update(itemToSave)
-    console.log('@4', savedItem)
-    expect(savedItem).toBeDefined()
-    
+    const retrievedItem = await connection.update(item)
+    expect(retrievedItem).toHaveProperty('id')
     try {
-      await savedItem.validate()
+      await retrievedItem.validate()
+      return done()
     } catch (err) {
         expect(err).toBeDefined()
         return done()
-    }   
+    }
   })
 
-  
+  it('should retrieve a get a item by id from the dictionary', async (done) => {
+    class DomainModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class SubDomainModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+
+    const subDomainSchema = hasToBe => ({
+        id: {
+            type: 'String',
+            defaultProvider: v4,
+            validator: hasToBe.string()
+        },
+        number: {
+          type: 'String',
+          validator: hasToBe.string()
+      }
+    })
+    const domainSchema = hasToBe => ({
+        id: {
+          type: 'String',
+          keyType: 'HASH',
+          validator: hasToBe.string(),
+          defaultProvider: v4
+        },
+        parent: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        name: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        email: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        cpf: {
+          type: 'Number',
+          validator: hasToBe.any()
+        },
+        phones: (embed, EmbedModel, embedSchema) => ({
+            type: 'List',
+            memberType: embed(EmbedModel),
+            validator: (
+              hasToBe.array().items(hasToBe.object().keys(embedSchema))
+              )
+        })
+      })
+
+    const {
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
+    } = new AggregationRoot({
+      tableName,
+      region,
+      className: 'Domain',
+      ModelClass: DomainModel,
+      schema: domainSchema
+    },{
+        ModelClass: SubDomainModel,
+        schema: subDomainSchema,
+        className: 'SubDomain',
+        key: 'phones'
+    })
+    const item = new Domain({
+        name: 'item domain',
+        phones: [{
+            id: 'mockId',
+            number: 'mockedNumber'
+        }]
+    })
+
+    const retrievedItem = await connection.update(item)
+    const phone = retrievedItem.getItem('phones', 'mockId')
+    expect(phone).toHaveProperty('number', 'mockedNumber')
+    return done()
+  })
+
+  it('should add a item to the dictionary', async (done) => {
+    class DomainModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class SubDomainModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+
+    const subDomainSchema = hasToBe => ({
+        id: {
+            type: 'String',
+            defaultProvider: v4,
+            validator: hasToBe.string()
+        },
+        number: {
+          type: 'String',
+          validator: hasToBe.string()
+      }
+    })
+    const domainSchema = hasToBe => ({
+        id: {
+          type: 'String',
+          keyType: 'HASH',
+          validator: hasToBe.string(),
+          defaultProvider: v4
+        },
+        parent: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        name: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        email: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        cpf: {
+          type: 'Number',
+          validator: hasToBe.any()
+        },
+        phones: (embed, EmbedModel, embedSchema) => ({
+            type: 'List',
+            memberType: embed(EmbedModel),
+            validator: (
+              hasToBe.array().items(hasToBe.object().keys(embedSchema))
+              )
+        })
+      })
+
+    const {
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
+    } = new AggregationRoot({
+      tableName,
+      region,
+      className: 'Domain',
+      ModelClass: DomainModel,
+      schema: domainSchema
+    },{
+        ModelClass: SubDomainModel,
+        schema: subDomainSchema,
+        className: 'SubDomain',
+        key: 'phones'
+    })
+    const item = new Domain({
+        name: 'item domain',
+        phones: [{
+            id: 'mockId',
+            number: 'mockedNumber'
+        }]
+    })
+
+    const itemToAdd = new SubDomain({
+      number: 'added Item'
+    })
+
+    const retrievedItem = await connection.update(item)
+    retrievedItem.addItem('phones', itemToAdd)
+    await retrievedItem.save()
+    expect(retrievedItem.phones[1]).toHaveProperty('number', 'added Item')
+    return done()
+  })
+
+  it('should remove a item from the dictionary', async (done) => {
+    class DomainModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class SubDomainModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+
+    const subDomainSchema = hasToBe => ({
+        id: {
+            type: 'String',
+            defaultProvider: v4,
+            validator: hasToBe.string()
+        },
+        number: {
+          type: 'String',
+          validator: hasToBe.string()
+      }
+    })
+    const domainSchema = hasToBe => ({
+        id: {
+          type: 'String',
+          keyType: 'HASH',
+          validator: hasToBe.string(),
+          defaultProvider: v4
+        },
+        parent: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        name: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        email: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        cpf: {
+          type: 'Number',
+          validator: hasToBe.any()
+        },
+        phones: (embed, EmbedModel, embedSchema) => ({
+            type: 'List',
+            memberType: embed(EmbedModel),
+            validator: (
+              hasToBe.array().items(hasToBe.object().keys(embedSchema))
+              )
+        })
+      })
+
+    const {
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
+    } = new AggregationRoot({
+      tableName,
+      region,
+      className: 'Domain',
+      ModelClass: DomainModel,
+      schema: domainSchema
+    },{
+        ModelClass: SubDomainModel,
+        schema: subDomainSchema,
+        className: 'SubDomain',
+        key: 'phones'
+    })
+
+    const item = new Domain({
+        name: 'item domain',
+        phones: [{
+            id: 'mockId',
+            number: 'mockedNumber'
+        }]
+    })
+
+    const itemToAdd = new SubDomain({
+      number: 'added Item'
+    })
+
+    const retrievedItem = await connection.update(item)
+    retrievedItem.addItem('phones', itemToAdd)
+    const { id } = retrievedItem
+    await retrievedItem.save()
+    expect(retrievedItem.phones[1]).toHaveProperty('number', 'added Item')
+    retrievedItem.removeItem('phones', retrievedItem.phones[1].id)
+    retrievedItem.removeItem('phones', retrievedItem.phones[0].id)
+    await retrievedItem.save()
+    const dynamoVersion = await Repository.get(id)
+    expect(dynamoVersion.phones).toHaveLength(0)
+    return done()
+  })
+
+  it('should update a item from the dictionary', async (done) => {
+    class DomainModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class SubDomainModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+
+    const subDomainSchema = hasToBe => ({
+        id: {
+            type: 'String',
+            defaultProvider: v4,
+            validator: hasToBe.string()
+        },
+        number: {
+          type: 'String',
+          validator: hasToBe.string()
+      }
+    })
+    const domainSchema = hasToBe => ({
+        id: {
+          type: 'String',
+          keyType: 'HASH',
+          validator: hasToBe.string(),
+          defaultProvider: v4
+        },
+        parent: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        name: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        email: {
+          type: 'String',
+          validator: hasToBe.string()
+        },
+        cpf: {
+          type: 'Number',
+          validator: hasToBe.any()
+        },
+        phones: (embed, EmbedModel, embedSchema) => ({
+            type: 'List',
+            memberType: embed(EmbedModel),
+            validator: (
+              hasToBe.array().items(hasToBe.object().keys(embedSchema))
+              )
+        })
+      })
+
+    const {
+      SubDomain,
+      Domain,
+      Repository,
+      connection,
+    } = new AggregationRoot({
+      tableName,
+      region,
+      className: 'Domain',
+      ModelClass: DomainModel,
+      schema: domainSchema
+    },{
+        ModelClass: SubDomainModel,
+        schema: subDomainSchema,
+        className: 'SubDomain',
+        key: 'phones'
+    })
+
+    const item = new Domain({
+        name: 'item domain',
+        phones: [{
+            id: 'mockId',
+            number: 'mockedNumber'
+        }]
+    })
+
+    const itemToUpdate = new SubDomain({
+      number: 'updated Item',
+      id: 'mockId'
+    })
+
+    const retrievedItem = await connection.update(item)
+    retrievedItem.updateItem('phones', itemToUpdate)
+    const { id } = retrievedItem
+    await retrievedItem.save()
+    expect(retrievedItem.phones[0]).toHaveProperty('number', 'updated Item')
+    const dynamoVersion = await Repository.get(id)
+    expect(dynamoVersion.phones).toHaveLength(1)
+    return done()
+  })
 })

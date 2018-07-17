@@ -15,5 +15,6 @@ export function get(...keys) {
   if (keys.length > 0) {
     return this[keys[0]]
   }
-  return Object.keys(this).reduce(extractRawData, {})
+  Object.keys(this).reduce(extractRawData, {})
+  return this
 }

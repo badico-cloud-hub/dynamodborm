@@ -26,7 +26,9 @@ function buildAggregationRootModels(
   const getMapperSchema = mixedSchema => Object.keys(mixedSchema).reduce(
     (jschema, key) => ({
       ...jschema,
-      [key]: mixedSchema[key] instanceof Function ? mixedSchema[key] : filterOutValidator(mixedSchema[key])
+      [key]: mixedSchema[key] instanceof Function
+        ? mixedSchema[key]
+        : filterOutValidator(mixedSchema[key])
     }),
     {}
   )
@@ -34,12 +36,13 @@ function buildAggregationRootModels(
     const mixedSchema = map.schema(Joi)
     const mapSchema = getMapperSchema(mixedSchema)
     const joiSchema = getJoischema(mixedSchema, batch)
+
     applyValueObjectSchema(map.ModelClass, mapSchema, connection, Joi.validate, joiSchema)
     applyCommonMethods(map.ModelClass)
     return ({
       ...batch,
       [map.className]: map.ModelClass,
-      [map.key]: map.schema(Joi)
+      [map.key]: joiSchema // map.schema(Joi)
     })
   }, {})
 
@@ -57,7 +60,6 @@ function buildAggregationRootModels(
       }), mapRootSchema)
       : mapRootSchema
   )
-
   applyRootSchema(
     ModelClass,
     { schema: parsedSchema, tableName },
