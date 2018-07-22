@@ -12,7 +12,6 @@ class AggregationRoot {
       objectsValuesMaps,
     )
     this.parseFields = parseFields(modelRoot.schema, ...objectsValuesMaps)
-
     this.Repository = new Repository(this.Model, this.connection)
   }
 }

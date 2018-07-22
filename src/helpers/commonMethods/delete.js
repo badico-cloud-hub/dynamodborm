@@ -1,3 +1,4 @@
-export async function deleteItem() {
-  return this.connection.delete(this)
+export async function del() {
+  this.connection.delete(this)
+  return this
 }

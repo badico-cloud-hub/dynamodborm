@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { parseFieldsFactory } from '../../helpers/parseFields'
+import { parseFieldsFactory } from '../../src/helpers/parseFields'
 
 jest.mock('joi')
 const parseFields = parseFieldsFactory(Joi)
@@ -106,5 +106,35 @@ describe('parseFields, a function to retrieve just the fields based on our schem
 
     const retrievedData = parseFields(root, objectValue)(data)
     expect(Object.keys(retrievedData)).toHaveLength(0)
+  })
+
+  it.only('should respond with a list when a list is sended', () => {
+    const root = hasToBe => ({
+      name: {
+        type: 'String'
+      },
+      list: (embed, Class, itemSchema) => ({
+        type: 'List',
+        menberType: embed(Class),
+        validator: hasToBe.array(itemSchema)
+      })
+    })
+
+    const objectValue = {
+      schema: () => ({
+        bar: {
+          type: 'String'
+        }
+      }),
+      key: 'list'
+    }
+
+    const data = {
+      list: [1,2,1],
+      name: 'a foo name'
+    }
+    const retrievedData = parseFields(root, objectValue)(data)
+    expect(Object.keys(retrievedData)).toHaveLength(2)
+    expect(retrievedData.list).toHaveLength(3)
   })
 })

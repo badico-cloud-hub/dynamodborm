@@ -13,10 +13,10 @@ function buildAggregationRootModels(
   },
   objectValuesMaps = [],
 ) {
-  const getJoischema = mixedSchema => Object.keys(mixedSchema).reduce(
+  const getJoischema = (mixedSchema, objValMaps) => Object.keys(mixedSchema).reduce(
     (jschema, key) => ({
       ...jschema,
-      [key]: mixedSchema[key].validator
+      [key]: mixedSchema[key] instanceof Function ? mixedSchema[key](embed, function(){}, objValMaps[key]).validator : mixedSchema[key].validator
     }),
     {}
   )
@@ -26,26 +26,29 @@ function buildAggregationRootModels(
   const getMapperSchema = mixedSchema => Object.keys(mixedSchema).reduce(
     (jschema, key) => ({
       ...jschema,
-      [key]: mixedSchema[key] instanceof Function ? mixedSchema[key] : filterOutValidator(mixedSchema[key])
+      [key]: mixedSchema[key] instanceof Function
+        ? mixedSchema[key]
+        : filterOutValidator(mixedSchema[key])
     }),
     {}
   )
   const valueObjectsClasses = objectValuesMaps.reduce((batch, map) => {
     const mixedSchema = map.schema(Joi)
     const mapSchema = getMapperSchema(mixedSchema)
-    const joiSchema = getJoischema(mixedSchema)
+    const joiSchema = getJoischema(mixedSchema, batch)
+
     applyValueObjectSchema(map.ModelClass, mapSchema, connection, Joi.validate, joiSchema)
     applyCommonMethods(map.ModelClass)
     return ({
       ...batch,
-      [map.className]: map.ModelClass
+      [map.className]: map.ModelClass,
+      [map.key]: joiSchema // map.schema(Joi)
     })
   }, {})
 
   const mixedRootSchema = schema(Joi)
   const mapRootSchema = getMapperSchema(mixedRootSchema)
-
-  const rootJoischema = getJoischema(mixedRootSchema)
+  const rootJoischema = getJoischema(mixedRootSchema, valueObjectsClasses)
   const parsedSchema = (
     objectValuesMaps.length
       ? objectValuesMaps.reduce((intermediateSchema, objectValueMap) => ({
@@ -57,7 +60,6 @@ function buildAggregationRootModels(
       }), mapRootSchema)
       : mapRootSchema
   )
-
   applyRootSchema(
     ModelClass,
     { schema: parsedSchema, tableName },

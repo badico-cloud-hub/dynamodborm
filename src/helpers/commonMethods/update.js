@@ -1,4 +1,5 @@
 export function update(data) {
-  return Object.assign(this, data)
+  Object.assign(this, data)
+  return this
 }
 
