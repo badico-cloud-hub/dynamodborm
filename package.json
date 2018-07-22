@@ -36,6 +36,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jest  --runInBand",
+    "postinstall": "npm build run",
     "build": "./node_modules/.bin/webpack --display-error-details"
   },
   "repository": {
