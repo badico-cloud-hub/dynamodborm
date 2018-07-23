@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(26);
+	module.exports = __webpack_require__(30);
 
 
 /***/ }),
@@ -342,11 +342,11 @@ module.exports =
 
 	var _applyCommonMethods2 = _interopRequireDefault(_applyCommonMethods);
 
-	var _buildAggregationRootModels = __webpack_require__(22);
+	var _buildAggregationRootModels = __webpack_require__(26);
 
 	var _buildAggregationRootModels2 = _interopRequireDefault(_buildAggregationRootModels);
 
-	var _parseFields = __webpack_require__(23);
+	var _parseFields = __webpack_require__(27);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -361,7 +361,6 @@ module.exports =
 	  Joi: _joi2.default
 	});
 	var parseFields = (0, _parseFields.parseFieldsFactory)(_joi2.default);
-	console.log('$ - injected joi?', parseFields);
 
 	function AgregationRootModel(connection, root, rootModel, objectsValueMaps) {
 	  return Object.assign(root, buildAgregationRootModel(connection, rootModel, objectsValueMaps));
@@ -549,7 +548,16 @@ module.exports =
 	  }
 	});
 
-	var _validate = __webpack_require__(20);
+	var _delete = __webpack_require__(20);
+
+	Object.defineProperty(exports, 'delete', {
+	  enumerable: true,
+	  get: function get() {
+	    return _delete.del;
+	  }
+	});
+
+	var _validate = __webpack_require__(21);
 
 	Object.defineProperty(exports, 'validate', {
 	  enumerable: true,
@@ -558,12 +566,39 @@ module.exports =
 	  }
 	});
 
-	var _delete = __webpack_require__(21);
+	var _getItem = __webpack_require__(22);
 
-	Object.defineProperty(exports, 'delete', {
+	Object.defineProperty(exports, 'getItem', {
 	  enumerable: true,
 	  get: function get() {
-	    return _delete.deleteItem;
+	    return _getItem.getItem;
+	  }
+	});
+
+	var _addItem = __webpack_require__(23);
+
+	Object.defineProperty(exports, 'addItem', {
+	  enumerable: true,
+	  get: function get() {
+	    return _addItem.addItem;
+	  }
+	});
+
+	var _removeItem = __webpack_require__(24);
+
+	Object.defineProperty(exports, 'removeItem', {
+	  enumerable: true,
+	  get: function get() {
+	    return _removeItem.removeItem;
+	  }
+	});
+
+	var _updateItem = __webpack_require__(25);
+
+	Object.defineProperty(exports, 'updateItem', {
+	  enumerable: true,
+	  get: function get() {
+	    return _updateItem.updateItem;
 	  }
 	});
 
@@ -606,7 +641,8 @@ module.exports =
 	  if (keys.length > 0) {
 	    return this[keys[0]];
 	  }
-	  return Object.keys(this).reduce(extractRawData, {});
+	  Object.keys(this).reduce(extractRawData, {});
+	  return this;
 	}
 
 /***/ }),
@@ -668,26 +704,12 @@ module.exports =
 	});
 	exports.update = update;
 	function update(data) {
-	  return Object.assign(this, data);
+	  Object.assign(this, data);
+	  return this;
 	}
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.validate = validate;
-	function validate() {
-	  console.log('validade???');
-	  return this.validator(this.get(), this.joischema);
-	}
-
-/***/ }),
-/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -695,7 +717,7 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.deleteItem = undefined;
+	exports.del = undefined;
 
 	var _regenerator = __webpack_require__(4);
 
@@ -705,15 +727,16 @@ module.exports =
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-	var deleteItem = exports.deleteItem = function () {
+	var del = exports.del = function () {
 	  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
 	    return _regenerator2.default.wrap(function _callee$(_context) {
 	      while (1) {
 	        switch (_context.prev = _context.next) {
 	          case 0:
-	            return _context.abrupt("return", this.connection.delete(this));
+	            this.connection.delete(this);
+	            return _context.abrupt("return", this);
 
-	          case 1:
+	          case 2:
 	          case "end":
 	            return _context.stop();
 	        }
@@ -721,7 +744,7 @@ module.exports =
 	    }, _callee, this);
 	  }));
 
-	  return function deleteItem() {
+	  return function del() {
 	    return _ref.apply(this, arguments);
 	  };
 	}();
@@ -729,7 +752,100 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.validate = validate;
+	function validate() {
+	  return this.validator(this.get(), this.joischema);
+	}
+
+/***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.getItem = getItem;
+	function getItem(itemKey, itemId) {
+	    var searchById = function searchById(items) {
+	        var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	        return items[index].id === itemId && items[index] || searchById(items, index + 1);
+	    };
+	    return searchById(this[itemKey]);
+	}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _toConsumableArray2 = __webpack_require__(5);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	exports.addItem = addItem;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function addItem(itemKey, Item) {
+	    // TODO: add check for uniqueness
+	    var items = this[itemKey] || [];
+	    this[itemKey] = [].concat((0, _toConsumableArray3.default)(items), [Item]); // dont't like this
+	    return this;
+	}
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.removeItem = removeItem;
+	function removeItem(itemKey, itemId) {
+	  this[itemKey] = this[itemKey].filter(function (item) {
+	    return item.id !== itemId;
+	  });
+
+	  return this;
+	}
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateItem = updateItem;
+	function updateItem(itemKey, Item) {
+	  this[itemKey] = this[itemKey].map(function (item) {
+	    return item.id === Item.id ? Item : item;
+	  });
+
+	  return this;
+	}
+
+/***/ }),
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -777,9 +893,10 @@ module.exports =
 	    var mixedSchema = map.schema(Joi);
 	    var mapSchema = getMapperSchema(mixedSchema);
 	    var joiSchema = getJoischema(mixedSchema, batch);
+
 	    applyValueObjectSchema(map.ModelClass, mapSchema, connection, Joi.validate, joiSchema);
 	    applyCommonMethods(map.ModelClass);
-	    return (0, _extends8.default)({}, batch, (_extends5 = {}, (0, _defineProperty3.default)(_extends5, map.className, map.ModelClass), (0, _defineProperty3.default)(_extends5, map.key, map.schema(Joi)), _extends5));
+	    return (0, _extends8.default)({}, batch, (_extends5 = {}, (0, _defineProperty3.default)(_extends5, map.className, map.ModelClass), (0, _defineProperty3.default)(_extends5, map.key, joiSchema), _extends5));
 	  }, {});
 
 	  var mixedRootSchema = schema(Joi);
@@ -788,7 +905,6 @@ module.exports =
 	  var parsedSchema = objectValuesMaps.length ? objectValuesMaps.reduce(function (intermediateSchema, objectValueMap) {
 	    return (0, _extends8.default)({}, intermediateSchema, (0, _defineProperty3.default)({}, objectValueMap.key, intermediateSchema[objectValueMap.key](embed, objectValueMap.ModelClass)));
 	  }, mapRootSchema) : mapRootSchema;
-
 	  applyRootSchema(ModelClass, { schema: parsedSchema, tableName: tableName }, connection, Joi.validate, rootJoischema);
 	  applyCommonMethods(ModelClass);
 	  return (0, _extends8.default)({
@@ -810,7 +926,7 @@ module.exports =
 	exports.default = buildAggregationRootModelsFactory;
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -819,7 +935,11 @@ module.exports =
 	  value: true
 	});
 
-	var _typeof2 = __webpack_require__(24);
+	var _toConsumableArray2 = __webpack_require__(5);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	var _typeof2 = __webpack_require__(28);
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -859,15 +979,31 @@ module.exports =
 	    return (0, _extends5.default)({}, mergedSchema, (0, _defineProperty3.default)({}, key, mapedObjectValuesSchemas[key]));
 	  }, rootSchema(Joi));
 	  return function (fields) {
-	    var parseObjFields = function parseObjFields(obj) {
+	    var parseArrayItems = function parseArrayItems(values) {
 	      for (var _len2 = arguments.length, keys = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 	        keys[_key2 - 1] = arguments[_key2];
 	      }
 
+	      var parseItems = function parseItems(parsedItems, field, index) {
+	        var itemSchema = path([].concat(keys), schema);
+	        if ((typeof field === 'undefined' ? 'undefined' : (0, _typeof3.default)(field)) === 'object') {
+	          return [].concat((0, _toConsumableArray3.default)(parsedItems), [itemSchema && field instanceof Array ? parseArrayItems.apply(undefined, [field].concat(keys)) // TODO: Look to error on nested
+	          : parseObjFields.apply(undefined, [field].concat(keys))]);
+	        }
+	        return [].concat((0, _toConsumableArray3.default)(parsedItems), [itemSchema && field]);
+	      };
+	      return values.reduce(parseItems, []);
+	    };
+	    var parseObjFields = function parseObjFields(obj) {
+	      for (var _len3 = arguments.length, keys = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	        keys[_key3 - 1] = arguments[_key3];
+	      }
+
 	      var parseKeysField = function parseKeysField(parsedFields, key) {
 	        var fieldSchema = path([].concat(keys, [key]), schema);
-	        if ((0, _typeof3.default)(fields[key]) === 'object') {
-	          return (0, _extends5.default)({}, parsedFields, fieldSchema && (0, _defineProperty3.default)({}, key, parseObjFields.apply(undefined, [fields[key]].concat(keys, [key]))));
+	        var field = path([].concat(keys, [key]), fields);
+	        if ((typeof field === 'undefined' ? 'undefined' : (0, _typeof3.default)(field)) === 'object') {
+	          return (0, _extends5.default)({}, parsedFields, fieldSchema && (0, _defineProperty3.default)({}, key, field instanceof Array ? parseArrayItems.apply(undefined, [field].concat(keys, [key])) : parseObjFields.apply(undefined, [field].concat(keys, [key]))));
 	        }
 	        return (0, _extends5.default)({}, parsedFields, fieldSchema && (0, _defineProperty3.default)({}, key, obj[key]));
 	      };
@@ -882,13 +1018,13 @@ module.exports =
 	}
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports) {
 
 	module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1048,7 +1184,7 @@ module.exports =
 	exports.default = Repository;
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1066,7 +1202,7 @@ module.exports =
 
 	var _Connection2 = _interopRequireDefault(_Connection);
 
-	var _Repository = __webpack_require__(25);
+	var _Repository = __webpack_require__(29);
 
 	var _Repository2 = _interopRequireDefault(_Repository);
 
@@ -1079,20 +1215,15 @@ module.exports =
 	var AggregationRoot = function AggregationRoot(modelRoot) {
 	  (0, _classCallCheck3.default)(this, AggregationRoot);
 
+	  this.connection = new _Connection2.default(modelRoot);
+
 	  for (var _len = arguments.length, objectsValuesMaps = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	    objectsValuesMaps[_key - 1] = arguments[_key];
 	  }
 
+	  (0, _Model2.default)(this.connection, this, modelRoot, objectsValuesMaps);
 	  this.parseFields = _Model.parseFields.apply(undefined, [modelRoot.schema].concat(objectsValuesMaps));
-	  console.log('@2', _Model.parseFields.apply(undefined, [modelRoot.schema].concat(objectsValuesMaps))({ phones: [1, 2, 3] }));
-	  // this.connection = new Connection(modelRoot)
-	  // parseAggregationRootModel(
-	  //   this.connection,
-	  //   this,
-	  //   modelRoot,
-	  //   objectsValuesMaps,
-	  // )
-	  // this.Repository = new Repository(this.Model, this.connection)
+	  this.Repository = new _Repository2.default(this.Model, this.connection);
 	};
 
 	exports.Model = _Model.Model;
