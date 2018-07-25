@@ -188,18 +188,30 @@ module.exports =
 	  }, {
 	    key: 'get',
 	    value: function () {
-	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, id) {
+	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, filter) {
 	        return _regenerator2.default.wrap(function _callee4$(_context4) {
 	          while (1) {
 	            switch (_context4.prev = _context4.next) {
 	              case 0:
-	                _context4.next = 2;
-	                return getMappedItems(this.mapper.query(DomainClass, { id: id }));
+	                if (!(filter instanceof Object)) {
+	                  _context4.next = 4;
+	                  break;
+	                }
 
-	              case 2:
-	                return _context4.abrupt('return', _context4.sent[0]);
+	                _context4.next = 3;
+	                return getMappedItems(this.mapper.query(DomainClass, filter));
 
 	              case 3:
+	                return _context4.abrupt('return', _context4.sent[0]);
+
+	              case 4:
+	                _context4.next = 6;
+	                return getMappedItems(this.mapper.query(DomainClass, { id: filter }));
+
+	              case 6:
+	                return _context4.abrupt('return', _context4.sent[0]);
+
+	              case 7:
 	              case 'end':
 	                return _context4.stop();
 	            }

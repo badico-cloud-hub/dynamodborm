@@ -129,12 +129,12 @@ module.exports =
 	  (0, _createClass3.default)(Repository, [{
 	    key: 'get',
 	    value: function () {
-	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(id) {
+	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filter) {
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
-	                return _context.abrupt('return', this.connection.get(this.Model, id));
+	                return _context.abrupt('return', this.connection.get(this.Model, filter));
 
 	              case 1:
 	              case 'end':
