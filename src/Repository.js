@@ -4,8 +4,8 @@ class Repository {
     this.connection = connection
     this.bucket = []
   }
-  async get(id) {
-    return this.connection.get(this.Model, id)
+  async get(filter) {
+    return this.connection.get(this.Model, filter)
   }
 
   async query(params, {

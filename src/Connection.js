@@ -23,8 +23,11 @@ class Connection {
     return this.mapper.delete({ item })
   }
 
-  async get(DomainClass, id) {
-    return (await getMappedItems(this.mapper.query(DomainClass, { id })))[0]
+  async get(DomainClass, filter) {
+    if (filter instanceof Object) {
+      return (await getMappedItems(this.mapper.query(DomainClass, filter)))[0]
+    }
+    return (await getMappedItems(this.mapper.query(DomainClass, { id: filter })))[0]
   }
 
   async update(item) {
