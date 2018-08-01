@@ -121,11 +121,21 @@ module.exports =
 
 	var _dynamodbDataMapper = __webpack_require__(7);
 
-	var _dynamodb = __webpack_require__(8);
+	var _awsSdk = __webpack_require__(8);
+
+	var _awsSdk2 = _interopRequireDefault(_awsSdk);
+
+	var _dynamodb = __webpack_require__(9);
 
 	var _dynamodb2 = _interopRequireDefault(_dynamodb);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_awsSdk2.default.config.update({
+	  region: 'us-east-1',
+	  accessKeyId: 'AKIAIBNGHV6G62M7SEBQ',
+	  secretAccessKey: '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'
+	});
 
 	var Connection = function () {
 	  function Connection(_ref3, options) {
@@ -317,6 +327,12 @@ module.exports =
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+	module.exports = require("aws-sdk");
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports) {
 
 	module.exports = require("aws-sdk/clients/dynamodb");
