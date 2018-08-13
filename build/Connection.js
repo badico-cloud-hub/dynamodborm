@@ -58,23 +58,27 @@ module.exports =
 	  value: true
 	});
 
-	var _classCallCheck2 = __webpack_require__(2);
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _classCallCheck2 = __webpack_require__(3);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(3);
+	var _createClass2 = __webpack_require__(4);
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	var _regenerator = __webpack_require__(4);
+	var _regenerator = __webpack_require__(5);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _toConsumableArray2 = __webpack_require__(5);
+	var _toConsumableArray2 = __webpack_require__(6);
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-	var _asyncToGenerator2 = __webpack_require__(6);
+	var _asyncToGenerator2 = __webpack_require__(7);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -119,9 +123,9 @@ module.exports =
 	  };
 	}();
 
-	var _dynamodbDataMapper = __webpack_require__(7);
+	var _dynamodbDataMapper = __webpack_require__(8);
 
-	var _dynamodb = __webpack_require__(8);
+	var _dynamodb = __webpack_require__(9);
 
 	var _dynamodb2 = _interopRequireDefault(_dynamodb);
 
@@ -229,11 +233,12 @@ module.exports =
 	    key: 'update',
 	    value: function () {
 	      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(item) {
+	        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	        return _regenerator2.default.wrap(function _callee5$(_context5) {
 	          while (1) {
 	            switch (_context5.prev = _context5.next) {
 	              case 0:
-	                return _context5.abrupt('return', this.mapper.update({ item: item }, this.options));
+	                return _context5.abrupt('return', this.mapper.update({ item: item }, (0, _extends3.default)({}, this.options, options)));
 
 	              case 1:
 	              case 'end':
@@ -267,7 +272,7 @@ module.exports =
 	        }, _callee6, this);
 	      }));
 
-	      function scan(_x10, _x11) {
+	      function scan(_x11, _x12) {
 	        return _ref8.apply(this, arguments);
 	      }
 
@@ -283,40 +288,46 @@ module.exports =
 /* 2 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/classCallCheck");
+	module.exports = require("babel-runtime/helpers/extends");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/createClass");
+	module.exports = require("babel-runtime/helpers/classCallCheck");
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/regenerator");
+	module.exports = require("babel-runtime/helpers/createClass");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/toConsumableArray");
+	module.exports = require("babel-runtime/regenerator");
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/asyncToGenerator");
+	module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
-	module.exports = require("@aws/dynamodb-data-mapper");
+	module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+	module.exports = require("@aws/dynamodb-data-mapper");
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports) {
 
 	module.exports = require("aws-sdk/clients/dynamodb");

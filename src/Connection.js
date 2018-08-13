@@ -30,8 +30,8 @@ class Connection {
     return (await getMappedItems(this.mapper.query(DomainClass, { id: filter })))[0]
   }
 
-  async update(item) {
-    return this.mapper.update({ item }, this.options)
+  async update(item, options={}) {
+    return this.mapper.update({ item }, { ...this.options, ...options})
   }
 
   async scan(DomainClass, options) {
