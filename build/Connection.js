@@ -62,23 +62,27 @@ module.exports =
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _classCallCheck2 = __webpack_require__(3);
+	var _objectWithoutProperties2 = __webpack_require__(3);
+
+	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+	var _classCallCheck2 = __webpack_require__(4);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(4);
+	var _createClass2 = __webpack_require__(5);
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	var _regenerator = __webpack_require__(5);
+	var _regenerator = __webpack_require__(6);
 
 	var _regenerator2 = _interopRequireDefault(_regenerator);
 
-	var _toConsumableArray2 = __webpack_require__(6);
+	var _toConsumableArray2 = __webpack_require__(7);
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-	var _asyncToGenerator2 = __webpack_require__(7);
+	var _asyncToGenerator2 = __webpack_require__(8);
 
 	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
@@ -123,9 +127,9 @@ module.exports =
 	  };
 	}();
 
-	var _dynamodbDataMapper = __webpack_require__(8);
+	var _dynamodbDataMapper = __webpack_require__(9);
 
-	var _dynamodb = __webpack_require__(9);
+	var _dynamodb = __webpack_require__(10);
 
 	var _dynamodb2 = _interopRequireDefault(_dynamodb);
 
@@ -144,7 +148,7 @@ module.exports =
 	  (0, _createClass3.default)(Connection, [{
 	    key: 'query',
 	    value: function () {
-	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, key, options) {
+	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, queryParams, options) {
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
@@ -192,30 +196,43 @@ module.exports =
 	  }, {
 	    key: 'get',
 	    value: function () {
-	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, filter) {
+	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, _ref7) {
+	        var index = _ref7.index,
+	            keys = (0, _objectWithoutProperties3.default)(_ref7, ['index']);
+	        var list;
 	        return _regenerator2.default.wrap(function _callee4$(_context4) {
 	          while (1) {
 	            switch (_context4.prev = _context4.next) {
 	              case 0:
-	                if (!(filter instanceof Object)) {
-	                  _context4.next = 4;
+	                if (!index) {
+	                  _context4.next = 7;
 	                  break;
 	                }
 
 	                _context4.next = 3;
-	                return getMappedItems(this.mapper.query(DomainClass, filter));
+	                return getMappedItems(this.mapper.query(DomainClass, filter, index));
 
 	              case 3:
-	                return _context4.abrupt('return', _context4.sent[0]);
+	                list = _context4.sent;
 
-	              case 4:
-	                _context4.next = 6;
-	                return getMappedItems(this.mapper.query(DomainClass, { id: filter }));
+	                if (!(list.length > 1)) {
+	                  _context4.next = 6;
+	                  break;
+	                }
+
+	                throw new Error('Not unique item');
 
 	              case 6:
-	                return _context4.abrupt('return', _context4.sent[0]);
+	                return _context4.abrupt('return', list[0]);
 
 	              case 7:
+	                _context4.next = 9;
+	                return getMappedItems(this.mapper.query(DomainClass, keys));
+
+	              case 9:
+	                return _context4.abrupt('return', _context4.sent[0]);
+
+	              case 10:
 	              case 'end':
 	                return _context4.stop();
 	            }
@@ -232,7 +249,7 @@ module.exports =
 	  }, {
 	    key: 'update',
 	    value: function () {
-	      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(item) {
+	      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(item) {
 	        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	        return _regenerator2.default.wrap(function _callee5$(_context5) {
 	          while (1) {
@@ -249,7 +266,7 @@ module.exports =
 	      }));
 
 	      function update(_x9) {
-	        return _ref7.apply(this, arguments);
+	        return _ref8.apply(this, arguments);
 	      }
 
 	      return update;
@@ -257,7 +274,7 @@ module.exports =
 	  }, {
 	    key: 'scan',
 	    value: function () {
-	      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(DomainClass, options) {
+	      var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(DomainClass, options) {
 	        return _regenerator2.default.wrap(function _callee6$(_context6) {
 	          while (1) {
 	            switch (_context6.prev = _context6.next) {
@@ -273,7 +290,7 @@ module.exports =
 	      }));
 
 	      function scan(_x11, _x12) {
-	        return _ref8.apply(this, arguments);
+	        return _ref9.apply(this, arguments);
 	      }
 
 	      return scan;
@@ -294,40 +311,46 @@ module.exports =
 /* 3 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/classCallCheck");
+	module.exports = require("babel-runtime/helpers/objectWithoutProperties");
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/createClass");
+	module.exports = require("babel-runtime/helpers/classCallCheck");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/regenerator");
+	module.exports = require("babel-runtime/helpers/createClass");
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/toConsumableArray");
+	module.exports = require("babel-runtime/regenerator");
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/asyncToGenerator");
+	module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
 /* 8 */
 /***/ (function(module, exports) {
 
-	module.exports = require("@aws/dynamodb-data-mapper");
+	module.exports = require("babel-runtime/helpers/asyncToGenerator");
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+	module.exports = require("@aws/dynamodb-data-mapper");
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports) {
 
 	module.exports = require("aws-sdk/clients/dynamodb");
