@@ -148,14 +148,24 @@ module.exports =
 	  (0, _createClass3.default)(Connection, [{
 	    key: 'query',
 	    value: function () {
-	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, queryParams, options) {
+	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, _ref5) {
+	        var index = _ref5.index,
+	            keys = (0, _objectWithoutProperties3.default)(_ref5, ['index']);
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
-	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, key, options)));
+	                if (!index) {
+	                  _context2.next = 2;
+	                  break;
+	                }
 
-	              case 1:
+	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, { indexName: index })));
+
+	              case 2:
+	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys)));
+
+	              case 3:
 	              case 'end':
 	                return _context2.stop();
 	            }
@@ -163,7 +173,7 @@ module.exports =
 	        }, _callee2, this);
 	      }));
 
-	      function query(_x3, _x4, _x5) {
+	      function query(_x3, _x4) {
 	        return _ref4.apply(this, arguments);
 	      }
 
@@ -172,7 +182,7 @@ module.exports =
 	  }, {
 	    key: 'delete',
 	    value: function () {
-	      var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(item) {
+	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(item) {
 	        return _regenerator2.default.wrap(function _callee3$(_context3) {
 	          while (1) {
 	            switch (_context3.prev = _context3.next) {
@@ -187,8 +197,8 @@ module.exports =
 	        }, _callee3, this);
 	      }));
 
-	      function _delete(_x6) {
-	        return _ref5.apply(this, arguments);
+	      function _delete(_x5) {
+	        return _ref6.apply(this, arguments);
 	      }
 
 	      return _delete;
@@ -196,9 +206,9 @@ module.exports =
 	  }, {
 	    key: 'get',
 	    value: function () {
-	      var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, _ref7) {
-	        var index = _ref7.index,
-	            keys = (0, _objectWithoutProperties3.default)(_ref7, ['index']);
+	      var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(DomainClass, _ref8) {
+	        var index = _ref8.index,
+	            keys = (0, _objectWithoutProperties3.default)(_ref8, ['index']);
 	        var list;
 	        return _regenerator2.default.wrap(function _callee4$(_context4) {
 	          while (1) {
@@ -240,8 +250,8 @@ module.exports =
 	        }, _callee4, this);
 	      }));
 
-	      function get(_x7, _x8) {
-	        return _ref6.apply(this, arguments);
+	      function get(_x6, _x7) {
+	        return _ref7.apply(this, arguments);
 	      }
 
 	      return get;
@@ -249,7 +259,7 @@ module.exports =
 	  }, {
 	    key: 'update',
 	    value: function () {
-	      var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(item) {
+	      var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(item) {
 	        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	        return _regenerator2.default.wrap(function _callee5$(_context5) {
 	          while (1) {
@@ -265,8 +275,8 @@ module.exports =
 	        }, _callee5, this);
 	      }));
 
-	      function update(_x9) {
-	        return _ref8.apply(this, arguments);
+	      function update(_x8) {
+	        return _ref9.apply(this, arguments);
 	      }
 
 	      return update;
@@ -274,7 +284,7 @@ module.exports =
 	  }, {
 	    key: 'scan',
 	    value: function () {
-	      var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(DomainClass, options) {
+	      var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(DomainClass, options) {
 	        return _regenerator2.default.wrap(function _callee6$(_context6) {
 	          while (1) {
 	            switch (_context6.prev = _context6.next) {
@@ -289,8 +299,8 @@ module.exports =
 	        }, _callee6, this);
 	      }));
 
-	      function scan(_x11, _x12) {
-	        return _ref9.apply(this, arguments);
+	      function scan(_x10, _x11) {
+	        return _ref10.apply(this, arguments);
 	      }
 
 	      return scan;
@@ -1145,10 +1155,6 @@ module.exports =
 	    key: 'query',
 	    value: function () {
 	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(params) {
-	        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-	            pageSize = _ref3.pageSize,
-	            limit = _ref3.limit;
-
 	        var options;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
@@ -1159,7 +1165,7 @@ module.exports =
 	                  limit: limit || pageSize || 100
 	                };
 	                _context2.next = 3;
-	                return this.connection.query(this.Model, params, options);
+	                return this.connection.query(this.Model, params);
 
 	              case 3:
 	                this.bucket = _context2.sent;
@@ -1182,13 +1188,13 @@ module.exports =
 	  }, {
 	    key: 'find',
 	    value: function () {
-	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-	        var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	            pageSize = _ref5.pageSize,
-	            lastIndex = _ref5.lastIndex,
-	            query = _ref5.query,
-	            indexKey = _ref5.indexKey,
-	            limit = _ref5.limit;
+	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	            pageSize = _ref4.pageSize,
+	            lastIndex = _ref4.lastIndex,
+	            query = _ref4.query,
+	            indexKey = _ref4.indexKey,
+	            limit = _ref4.limit;
 
 	        var options;
 	        return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -1214,7 +1220,7 @@ module.exports =
 	                return _context3.abrupt('return', this.bucket);
 
 	              case 6:
-	                return _context3.abrupt('return', this.query(query, options));
+	                return _context3.abrupt('return', this.query(query));
 
 	              case 7:
 	              case 'end':
@@ -1225,7 +1231,7 @@ module.exports =
 	      }));
 
 	      function find() {
-	        return _ref4.apply(this, arguments);
+	        return _ref3.apply(this, arguments);
 	      }
 
 	      return find;

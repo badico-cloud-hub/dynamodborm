@@ -8,15 +8,12 @@ class Repository {
     return this.connection.get(this.Model, filter)
   }
 
-  async query(params, {
-    pageSize,
-    limit
-  } = {}) {
+  async query(params) {
     const options = {
       pageSize: pageSize || limit || 10,
       limit: limit || pageSize || 100
     }
-    this.bucket = await this.connection.query(this.Model, params, options)
+    this.bucket = await this.connection.query(this.Model, params)
     return this.bucket
   }
 
@@ -37,7 +34,7 @@ class Repository {
       return this.bucket
     }
 
-    return this.query(query, options)
+    return this.query(query)
   }
 }
 

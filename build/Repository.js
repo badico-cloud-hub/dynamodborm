@@ -154,10 +154,6 @@ module.exports =
 	    key: 'query',
 	    value: function () {
 	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(params) {
-	        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-	            pageSize = _ref3.pageSize,
-	            limit = _ref3.limit;
-
 	        var options;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
@@ -168,7 +164,7 @@ module.exports =
 	                  limit: limit || pageSize || 100
 	                };
 	                _context2.next = 3;
-	                return this.connection.query(this.Model, params, options);
+	                return this.connection.query(this.Model, params);
 
 	              case 3:
 	                this.bucket = _context2.sent;
@@ -191,13 +187,13 @@ module.exports =
 	  }, {
 	    key: 'find',
 	    value: function () {
-	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-	        var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	            pageSize = _ref5.pageSize,
-	            lastIndex = _ref5.lastIndex,
-	            query = _ref5.query,
-	            indexKey = _ref5.indexKey,
-	            limit = _ref5.limit;
+	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	            pageSize = _ref4.pageSize,
+	            lastIndex = _ref4.lastIndex,
+	            query = _ref4.query,
+	            indexKey = _ref4.indexKey,
+	            limit = _ref4.limit;
 
 	        var options;
 	        return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -223,7 +219,7 @@ module.exports =
 	                return _context3.abrupt('return', this.bucket);
 
 	              case 6:
-	                return _context3.abrupt('return', this.query(query, options));
+	                return _context3.abrupt('return', this.query(query));
 
 	              case 7:
 	              case 'end':
@@ -234,7 +230,7 @@ module.exports =
 	      }));
 
 	      function find() {
-	        return _ref4.apply(this, arguments);
+	        return _ref3.apply(this, arguments);
 	      }
 
 	      return find;
