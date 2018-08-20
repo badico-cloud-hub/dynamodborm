@@ -25,7 +25,7 @@ class Connection {
 
   async get(DomainClass, { index, ...keys}) {
     if (index) {
-      const list = await getMappedItems(this.mapper.query(DomainClass, filter, index))
+      const list = await getMappedItems(this.mapper.query(DomainClass, keys, index))
       if (list.length > 1) {
         throw new Error('Not unique item')
       }

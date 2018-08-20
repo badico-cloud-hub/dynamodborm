@@ -210,7 +210,7 @@ module.exports =
 	                }
 
 	                _context4.next = 3;
-	                return getMappedItems(this.mapper.query(DomainClass, filter, index));
+	                return getMappedItems(this.mapper.query(DomainClass, keys, index));
 
 	              case 3:
 	                list = _context4.sent;
