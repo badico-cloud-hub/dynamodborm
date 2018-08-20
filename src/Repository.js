@@ -9,10 +9,6 @@ class Repository {
   }
 
   async query(params) {
-    const options = {
-      pageSize: pageSize || limit || 10,
-      limit: limit || pageSize || 100
-    }
     this.bucket = await this.connection.query(this.Model, params)
     return this.bucket
   }

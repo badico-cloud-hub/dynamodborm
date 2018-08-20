@@ -154,23 +154,18 @@ module.exports =
 	    key: 'query',
 	    value: function () {
 	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(params) {
-	        var options;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
-	                options = {
-	                  pageSize: pageSize || limit || 10,
-	                  limit: limit || pageSize || 100
-	                };
-	                _context2.next = 3;
+	                _context2.next = 2;
 	                return this.connection.query(this.Model, params);
 
-	              case 3:
+	              case 2:
 	                this.bucket = _context2.sent;
 	                return _context2.abrupt('return', this.bucket);
 
-	              case 5:
+	              case 4:
 	              case 'end':
 	                return _context2.stop();
 	            }
