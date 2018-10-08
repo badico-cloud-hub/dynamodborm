@@ -689,9 +689,7 @@ module.exports =
 	  var _this = this;
 
 	  var extractRawData = function extractRawData(raw, key) {
-	    return key === ('connection' || 'validator' || 'joischema' ||
-	    // 'merchantId' ||
-	    'errors') ? raw : (0, _extends4.default)({}, raw, (0, _defineProperty3.default)({}, key, _this[key]));
+	    return key === ('connection' || 'validator' || 'joischema' || 'merchantId' || 'errors') ? raw : (0, _extends4.default)({}, raw, (0, _defineProperty3.default)({}, key, _this[key]));
 	  };
 
 	  for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {

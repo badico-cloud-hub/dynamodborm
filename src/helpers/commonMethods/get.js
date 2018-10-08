@@ -4,7 +4,7 @@ export function get(...keys) {
       'connection' ||
       'validator' ||
       'joischema' ||
-      // 'merchantId' ||
+      'merchantId' ||
       'errors'
     )
       ? raw
