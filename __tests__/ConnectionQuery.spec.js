@@ -279,6 +279,53 @@ describe('AggregationRoot class', () => {
     expect(result[0].documents[0]).toHaveProperty('documentNumber', cpf)
     return done()
   })
+
+  it.only('should be able to query with the connection instance', async (done) => {
+    expect.assertions(2)
+    class AccountModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+    class DocumentModel {
+        constructor(values) {
+            Object.assign(this, values)
+        }
+    }
+
+    class Domain extends AggregationRoot {
+    }
+
+    const { Model, connection } = new Domain({
+      ModelClass: AccountModel,
+      tableName: 'accounts',
+      region,
+      schema
+    },{
+        ModelClass: DocumentModel,
+        schema: DocumentSchema,
+        className: 'Document',
+        key: 'documents'
+      },
+    )
+    expect(Model).toBeDefined()
+    const cpf = '87771502016'
+    const queryOptions = {
+        filter:
+        {
+            type: 'Equals',
+            object: cpf,
+            subject: 'documents[0].documentNumber'
+        }
+    }
+  
+    const result = await connection.query(Model, {
+        merchantId: '054bb857-7e57-4f32-972e-d70a30f8e793'
+    }, queryOptions)
+    expect(result[0].documents[0]).toHaveProperty('documentNumber', cpf)
+    return done()
+  })
+
   // moved to repository spec
   it.skip('Repository instantiantion', async (done) => {
     expect.assertions(2)
