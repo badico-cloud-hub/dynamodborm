@@ -1200,6 +1200,7 @@ module.exports =
 	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
 	            pageSize = _ref4.pageSize,
 	            lastIndex = _ref4.lastIndex,
+	            filter = _ref4.filter,
 	            query = _ref4.query,
 	            indexKey = _ref4.indexKey,
 	            limit = _ref4.limit;
@@ -1212,7 +1213,8 @@ module.exports =
 	                options = {
 	                  pageSize: pageSize || limit || 25,
 	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
-	                  limit: limit || pageSize || 25
+	                  limit: limit || pageSize || 25,
+	                  filter: filter
 	                };
 
 	                if (query) {
@@ -1228,7 +1230,7 @@ module.exports =
 	                return _context3.abrupt('return', this.bucket);
 
 	              case 6:
-	                return _context3.abrupt('return', this.query(query));
+	                return _context3.abrupt('return', this.query(query, options));
 
 	              case 7:
 	              case 'end':

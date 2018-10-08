@@ -16,6 +16,7 @@ class Repository {
   async find({
     pageSize,
     lastIndex,
+    filter,
     query,
     indexKey,
     limit
@@ -23,14 +24,15 @@ class Repository {
     const options = {
       pageSize: pageSize || limit || 25,
       startKey: lastIndex && new this.Model({ [indexKey || 'id']: lastIndex }),
-      limit: limit || pageSize || 25
+      limit: limit || pageSize || 25,
+      filter,
     }
     if (!query) {
       this.bucket = await this.connection.scan(this.Model, options)
       return this.bucket
     }
 
-    return this.query(query)
+    return this.query(query, options)
   }
 }
 
