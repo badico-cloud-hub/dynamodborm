@@ -8,8 +8,8 @@ class Repository {
     return this.connection.get(this.Model, filter)
   }
 
-  async query(params) {
-    this.bucket = await this.connection.query(this.Model, params)
+  async query(key, params) {
+    this.bucket = await this.connection.query(this.Model, key, params)
     return this.bucket
   }
 

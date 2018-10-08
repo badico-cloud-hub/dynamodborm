@@ -153,13 +153,13 @@ module.exports =
 	  }, {
 	    key: 'query',
 	    value: function () {
-	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(params) {
+	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(key, params) {
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
 	                _context2.next = 2;
-	                return this.connection.query(this.Model, params);
+	                return this.connection.query(this.Model, key, params);
 
 	              case 2:
 	                this.bucket = _context2.sent;
@@ -173,7 +173,7 @@ module.exports =
 	        }, _callee2, this);
 	      }));
 
-	      function query(_x2) {
+	      function query(_x2, _x3) {
 	        return _ref2.apply(this, arguments);
 	      }
 

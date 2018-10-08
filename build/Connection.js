@@ -148,24 +148,35 @@ module.exports =
 	  (0, _createClass3.default)(Connection, [{
 	    key: 'query',
 	    value: function () {
-	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, _ref5) {
+	      var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(DomainClass, keys, _ref5) {
 	        var index = _ref5.index,
-	            keys = (0, _objectWithoutProperties3.default)(_ref5, ['index']);
+	            filter = _ref5.filter,
+	            options = (0, _objectWithoutProperties3.default)(_ref5, ['index', 'filter']);
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
-	                if (!index) {
+	                if (!filter) {
 	                  _context2.next = 2;
 	                  break;
 	                }
 
-	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, { indexName: index })));
+	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, (0, _extends3.default)({}, index ? { indexName: index } : {}, {
+	                  filter: filter
+	                }, options))));
 
 	              case 2:
+	                if (!index) {
+	                  _context2.next = 4;
+	                  break;
+	                }
+
+	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, (0, _extends3.default)({ indexName: index }, options))));
+
+	              case 4:
 	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys)));
 
-	              case 3:
+	              case 5:
 	              case 'end':
 	                return _context2.stop();
 	            }
@@ -173,7 +184,7 @@ module.exports =
 	        }, _callee2, this);
 	      }));
 
-	      function query(_x3, _x4) {
+	      function query(_x3, _x4, _x5) {
 	        return _ref4.apply(this, arguments);
 	      }
 
@@ -197,7 +208,7 @@ module.exports =
 	        }, _callee3, this);
 	      }));
 
-	      function _delete(_x5) {
+	      function _delete(_x6) {
 	        return _ref6.apply(this, arguments);
 	      }
 
@@ -250,7 +261,7 @@ module.exports =
 	        }, _callee4, this);
 	      }));
 
-	      function get(_x6, _x7) {
+	      function get(_x7, _x8) {
 	        return _ref7.apply(this, arguments);
 	      }
 
@@ -275,7 +286,7 @@ module.exports =
 	        }, _callee5, this);
 	      }));
 
-	      function update(_x8) {
+	      function update(_x9) {
 	        return _ref9.apply(this, arguments);
 	      }
 
@@ -299,7 +310,7 @@ module.exports =
 	        }, _callee6, this);
 	      }));
 
-	      function scan(_x10, _x11) {
+	      function scan(_x11, _x12) {
 	        return _ref10.apply(this, arguments);
 	      }
 

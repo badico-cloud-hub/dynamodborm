@@ -15,11 +15,22 @@ class Connection {
     this.client = new Client({ region: region || 'us-east-1' })
     this.mapper = new DataMapper({ client: this.client })
   }
-  async query(DomainClass, {index, ...keys}) {
+  async query(DomainClass, keys, {index, filter, ...options }) {
+    if (filter) {
+      return getMappedItems(
+        this.mapper.query(
+          DomainClass, keys, {
+            ...( index ? {indexName: index } : {}),
+            filter,
+            ...options }
+        ),
+      )
+    }
+
     if (index) {
       return getMappedItems(
         this.mapper.query(
-          DomainClass, keys, { indexName: index }
+          DomainClass, keys, { indexName: index, ...options }
         ),
       )
     }
