@@ -688,8 +688,9 @@ module.exports =
 	function get() {
 	  var _this = this;
 
+	  console.log('on get');
 	  var extractRawData = function extractRawData(raw, key) {
-	    return key === ('connection' || 'validator' || 'joischema' || 'merchantId' || 'errors') ? raw : (0, _extends4.default)({}, raw, (0, _defineProperty3.default)({}, key, _this[key]));
+	    return key === 'connection' || key === 'validator' || key === 'joischema' || key === 'merchantId' || key === 'errors' ? raw : (0, _extends4.default)({}, raw, (0, _defineProperty3.default)({}, key, _this[key]));
 	  };
 
 	  for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {
@@ -702,8 +703,7 @@ module.exports =
 	  if (keys.length > 0) {
 	    return this[keys[0]];
 	  }
-	  Object.keys(this).reduce(extractRawData, {});
-	  return this;
+	  return Object.keys(this).reduce(extractRawData, {});
 	}
 
 /***/ }),

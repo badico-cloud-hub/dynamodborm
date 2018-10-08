@@ -15,7 +15,7 @@ const schema = Joi => ({
     validator: Joi.string(),
     defaultProvider: v4
   },
-  parent: {
+  merchantId: {
     type: 'String',
     validator: Joi.string()
   },
@@ -135,7 +135,32 @@ describe('AggregationRoot class', () => {
     expect(result[0]).toBeInstanceOf(AccountModel)
     return done()
   })
+  it.only('get should no have the merchantId', async (done) => {
+    expect.assertions(5)
+    class AccountModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
 
+    class Domain extends AggregationRoot {
+    }
+
+    const { Repository } = new Domain({
+      ModelClass: AccountModel,
+      tableName,
+      schema
+    })
+    const result = await Repository.find()
+    expect(result).toBeInstanceOf(Array)
+    expect(result[0]).toBeInstanceOf(AccountModel)
+    expect(result[0].get()).toHaveProperty('id')
+    console.log(result[0])
+    const d = result[0].get()
+    console.log(d)
+    expect(result[0].get()).not.toHaveProperty('merchantId')
+    return done()
+  })
   it.skip('Return of repository should have the common applied methods', async (done) => {
     expect.assertions(5)
     class AccountModel {
