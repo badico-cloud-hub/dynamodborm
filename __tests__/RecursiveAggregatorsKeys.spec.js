@@ -15,7 +15,7 @@ const schema = Joi => ({
     validator: Joi.string(),
     defaultProvider: v4
   },
-  merchantId: {
+  parent: {
     type: 'String',
     validator: Joi.string()
   },
@@ -135,32 +135,7 @@ describe('AggregationRoot class', () => {
     expect(result[0]).toBeInstanceOf(AccountModel)
     return done()
   })
-  it.only('get should no have the merchantId', async (done) => {
-    expect.assertions(5)
-    class AccountModel {
-      constructor(values) {
-        Object.assign(this, values)
-      }
-    }
 
-    class Domain extends AggregationRoot {
-    }
-
-    const { Repository } = new Domain({
-      ModelClass: AccountModel,
-      tableName,
-      schema
-    })
-    const result = await Repository.find()
-    expect(result).toBeInstanceOf(Array)
-    expect(result[0]).toBeInstanceOf(AccountModel)
-    expect(result[0].get()).toHaveProperty('id')
-    console.log(result[0])
-    const d = result[0].get()
-    console.log(d)
-    expect(result[0].get()).not.toHaveProperty('merchantId')
-    return done()
-  })
   it.skip('Return of repository should have the common applied methods', async (done) => {
     expect.assertions(5)
     class AccountModel {
@@ -254,7 +229,8 @@ describe('AggregationRoot class', () => {
         cep: { type: 'String', validator: Joi.string(), },
         city: { type: 'String', validator: Joi.string(), }
       })
-    })
+    },
+)
     expect(Address).toBeDefined()
     const address = new Address({ city: 'teste' })
     expect(address).toHaveProperty('city', 'teste')
@@ -301,6 +277,75 @@ describe('AggregationRoot class', () => {
     const address = new Address({ city: 'teste', cep: 'cepTeste' })
     expect(address.get()).toHaveProperty('city', 'teste')
     expect(address.get('cep')).toBe('cepTeste')
+    return done()
+  })
+
+  // need be implemented
+  it.skip('should be constructed a recursive model base on aggregationRoot with the chield of domain', async (done) => {
+    expect.assertions(2)
+    class Domain extends AggregationRoot {
+    }
+    class AccountModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class AddressModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class FooModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+    const embedSchema = Joi => ({
+      ...schema(Joi),
+      address: (embed, Class) => ({
+        type: 'List',
+        memberType: embed(Class)
+      })
+    })
+    const { Foo } = new Domain({
+      ModelClass: AccountModel,
+      tableName,
+      region: 'us-east-1',
+      className: 'Account',
+      schema: embedSchema
+    }, {
+      key: 'address',
+      className: 'Address',
+      ModelClass: AddressModel,
+      schema: Joi => ({
+        cep: { type: 'String', validator: Joi.string(), },
+        city: { type: 'String', validator: Joi.string(), },
+        foo: (embed, Class) => ({
+            type: 'Document',
+            member: embed(Class)
+          })
+      })
+    },
+    {
+        paths: {
+            // parent: [path]
+            Address: ['address']
+        },
+        keys: {
+            Address: ['foo']
+        },
+        className: 'Foo',
+        ModelClass: FooModel,
+        schema: Joi => ({
+          bar: { type: 'String', validator: Joi.string(), },
+        })
+      } 
+)
+    expect(Foo).toBeDefined()
+    const foo = new Foo({ bar: 'teste' })
+    expect(foo).toHaveProperty('bar', 'teste')
     return done()
   })
 })

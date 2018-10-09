@@ -15,20 +15,55 @@ class Connection {
     this.client = new Client({ region: region || 'us-east-1' })
     this.mapper = new DataMapper({ client: this.client })
   }
-  async query(DomainClass, key, options) {
-    return getMappedItems(this.mapper.query(DomainClass, key, options))
+  async query(DomainClass, keys, {index, filter, ...options }) {
+    if (filter) {
+      return getMappedItems(
+        this.mapper.query(
+          DomainClass, keys, {
+            ...( index ? {indexName: index } : {}),
+            filter,
+            ...options }
+        ),
+      )
+    }
+
+    if (index) {
+      return getMappedItems(
+        this.mapper.query(
+          DomainClass, keys, { indexName: index, ...options }
+        ),
+      )
+    }
+    return getMappedItems(
+      this.mapper.query(
+        DomainClass, keys,
+      ),
+    )
   }
 
   async delete(item) {
     return this.mapper.delete({ item })
   }
 
-  async get(DomainClass, id) {
-    return (await getMappedItems(this.mapper.query(DomainClass, { id })))[0]
+  async get(DomainClass, { index, ...keys}) {
+    if (index) {
+      const list = await getMappedItems(
+        this.mapper.query(
+          DomainClass, keys, { indexName: index }
+        ),
+      )
+
+      if (list.length > 1) {
+        throw new Error('Not unique item')
+      }
+      return list[0]
+    }
+    return (await getMappedItems(this.mapper.query(DomainClass, keys)))[0]
   }
 
-  async update(item) {
-    return this.mapper.update({ item }, this.options)
+  async update(item, options={}) {
+    console.log('item to update', item)
+    return this.mapper.update({ item }, { ...this.options, ...options})
   }
 
   async scan(DomainClass, options) {
