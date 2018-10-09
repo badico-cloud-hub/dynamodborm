@@ -527,14 +527,22 @@ module.exports =
 
 /***/ }),
 /* 22 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
 	exports.validate = validate;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function validator(joi, values, schema, self) {
 	  return new Promise(function (resolve, reject) {
 	    var _joi = joi(values, schema, { abortEarly: false }),
@@ -548,7 +556,7 @@ module.exports =
 	}
 
 	function validate() {
-	  return validator(this.validator, this.get(), this.joischema, this);
+	  return validator(this.validator, (0, _extends3.default)({}, this.get(), { merchantId: this.merchantId }), this.joischema, this);
 	}
 
 /***/ }),
