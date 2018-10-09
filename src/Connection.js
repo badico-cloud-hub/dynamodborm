@@ -62,6 +62,7 @@ class Connection {
   }
 
   async update(item, options={}) {
+    console.log('item to update', item)
     return this.mapper.update({ item }, { ...this.options, ...options})
   }
 

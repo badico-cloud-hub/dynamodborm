@@ -276,9 +276,10 @@ module.exports =
 	          while (1) {
 	            switch (_context5.prev = _context5.next) {
 	              case 0:
+	                console.log('item to update', item);
 	                return _context5.abrupt('return', this.mapper.update({ item: item }, (0, _extends3.default)({}, this.options, options)));
 
-	              case 1:
+	              case 2:
 	              case 'end':
 	                return _context5.stop();
 	            }
