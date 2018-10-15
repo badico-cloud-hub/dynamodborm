@@ -845,7 +845,7 @@ module.exports =
 	}
 
 	function validate() {
-	  return validator(this.validator, (0, _extends3.default)({}, this.get(), { merchantId: this.merchantId }), this.joischema, this);
+	  return validator(this.validator, (0, _extends3.default)({}, this.get(), this.merchantId ? { merchantId: this.merchantId } : {}), this.joischema, this);
 	}
 
 /***/ }),

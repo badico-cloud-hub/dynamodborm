@@ -11,7 +11,7 @@ function validator(joi, values, schema, self) {
 export function validate() {
  return validator(
    this.validator,
-   { ...this.get(), merchantId: this.merchantId },
+   { ...this.get(), ...(this.merchantId ? { merchantId: this.merchantId } : {}) } ,
    this.joischema,
    this,
   )
