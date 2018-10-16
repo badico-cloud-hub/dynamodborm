@@ -1,5 +1,4 @@
 export function get(...keys) {
-  console.log('on get')
   const extractRawData = (raw, key) => {
    return (
     (key === 'connection' ||

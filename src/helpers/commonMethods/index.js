@@ -1,4 +1,5 @@
 export { get } from './get'
+export { set } from './set'
 export { save } from './save'
 export { update } from './update'
 export { del as delete } from './delete'
