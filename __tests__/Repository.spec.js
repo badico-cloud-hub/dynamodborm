@@ -209,6 +209,38 @@ describe('Repository', () => {
     return done()
   })
 
+  it('should find build a expression - index', async (done) => {
+    expect.assertions(2)
+    const root = {}
+    class AccountModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+    aggregationRootModel(connection, root, {
+      ModelClass: AccountModel,
+      tableName,
+      schema,
+      className: 'Account'
+    })
+
+    const repository = new Repository(root.Model, connection)
+    const params = { pageSize: 10 }
+    let result = await repository.find({
+      query: {
+        yourKey: 'some-value',
+        index: 'your-index-name'
+      }
+    })
+    const lastId1 = result[9].id
+    params.lastIndex = lastId1
+    result = await repository.find(params)
+    expect(result).toHaveLength(10)
+    const lastId2 = result[9].id
+    expect(lastId1).not.toBe(lastId2)
+    return done()
+  })
+
   // for now not working with this cases
   it.skip('query shold work properly', async (done) => {
     const root = {}

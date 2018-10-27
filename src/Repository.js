@@ -31,8 +31,10 @@ class Repository {
       this.bucket = await this.connection.scan(this.Model, options)
       return this.bucket
     }
+    
+    const { index, ...queryKeys } = query
 
-    return this.query(query, options)
+    return this.query(queryKeys, { ...options, index })
   }
 }
 
