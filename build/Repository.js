@@ -239,7 +239,7 @@ module.exports =
 
 	              case 6:
 	                index = query.index, queryKeys = (0, _objectWithoutProperties3.default)(query, ['index']);
-	                return _context3.abrupt('return', this.query(queryKeys, (0, _extends3.default)({}, options, { indexName: index })));
+	                return _context3.abrupt('return', this.query(queryKeys, (0, _extends3.default)({}, options, { index: index })));
 
 	              case 8:
 	              case 'end':

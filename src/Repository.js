@@ -34,7 +34,7 @@ class Repository {
     
     const { index, ...queryKeys } = query
 
-    return this.query(queryKeys, { ...options, indexName: index })
+    return this.query(queryKeys, { ...options, index })
   }
 }
 
