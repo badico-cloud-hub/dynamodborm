@@ -51,6 +51,20 @@ module.exports =
 
 /***/ }),
 
+/***/ 2:
+/***/ (function(module, exports) {
+
+	module.exports = require("babel-runtime/helpers/extends");
+
+/***/ }),
+
+/***/ 3:
+/***/ (function(module, exports) {
+
+	module.exports = require("babel-runtime/helpers/objectWithoutProperties");
+
+/***/ }),
+
 /***/ 4:
 /***/ (function(module, exports) {
 
@@ -94,6 +108,14 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _objectWithoutProperties2 = __webpack_require__(3);
+
+	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
 	var _defineProperty2 = __webpack_require__(14);
 
@@ -191,7 +213,7 @@ module.exports =
 	            indexKey = _ref4.indexKey,
 	            limit = _ref4.limit;
 
-	        var options;
+	        var options, index, queryKeys;
 	        return _regenerator2.default.wrap(function _callee3$(_context3) {
 	          while (1) {
 	            switch (_context3.prev = _context3.next) {
@@ -216,9 +238,10 @@ module.exports =
 	                return _context3.abrupt('return', this.bucket);
 
 	              case 6:
-	                return _context3.abrupt('return', this.query(query, options));
+	                index = query.index, queryKeys = (0, _objectWithoutProperties3.default)(query, ['index']);
+	                return _context3.abrupt('return', this.query(queryKeys, (0, _extends3.default)({}, options, { indexName: index })));
 
-	              case 7:
+	              case 8:
 	              case 'end':
 	                return _context3.stop();
 	            }
