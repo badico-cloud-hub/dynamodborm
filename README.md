@@ -26,8 +26,10 @@ A DDD ORM make with dynamodb mapper js
 
 ## ROADMAP
 
+- publish this version on npm
+- a full documentation of operations
 - a example of extensability, adding custom methods
-- a example of a validation operation
+- coments in the code
 - migration methods for the domains, `up` and `down`
 - a commom fields, with a way for configuring it
 - a `updatedAt` field that updated itself after every change, and a way for disabiliting it
