@@ -45,7 +45,16 @@ function buildAggregationRootModels(
       [map.key]: joiSchema // map.schema(Joi)
     })
   }, {})
+  const getTableName = name => {
+    if (process.env['STAGE'] !== 'prod') {
+      if (!process.env['STAGE']) {
+        return `${name}-dev`
+      }
 
+      return `${name}-${process.env['STAGE']}`
+    }
+    return name
+  } 
   const mixedRootSchema = schema(Joi)
   const mapRootSchema = getMapperSchema(mixedRootSchema)
   const rootJoischema = getJoischema(mixedRootSchema, valueObjectsClasses)
@@ -62,7 +71,7 @@ function buildAggregationRootModels(
   )
   applyRootSchema(
     ModelClass,
-    { schema: parsedSchema, tableName },
+    { schema: parsedSchema, tableName: getTableName(tableName) },
     connection,
     Joi.validate,
     rootJoischema
