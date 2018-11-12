@@ -39,5 +39,7 @@ class Model {
     Object.assign(this, values)
   }
 }
+
+
 export { Model, parseFields }
 export default AgregationRootModel

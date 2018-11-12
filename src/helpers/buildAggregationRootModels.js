@@ -47,7 +47,10 @@ function buildAggregationRootModels(
   }, {})
   const getTableName = name => {
     if (process.env['STAGE'] !== 'prod') {
-      if (!process.env['STAGE']) {
+      if (
+        !process.env['STAGE'] ||
+        process.env['STAGE'] === undefined ||
+        process.env['STAGE'] === 'undefined') {
         return `${name}-dev`
       }
 
@@ -69,9 +72,17 @@ function buildAggregationRootModels(
       }), mapRootSchema)
       : mapRootSchema
   )
+
+  // keeping the table name inside the class
+  Object.defineProperty(ModelClass, 'tableName', {
+    enumerable: false,   // não enumerável
+    configurable: false, // não configurável
+    writable: false,     // não gravável
+    value: getTableName(tableName)
+  })
   applyRootSchema(
     ModelClass,
-    { schema: parsedSchema, tableName: getTableName(tableName) },
+    { schema: parsedSchema, tableName: ModelClass.tableName },
     connection,
     Joi.validate,
     rootJoischema
