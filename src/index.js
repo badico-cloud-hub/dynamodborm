@@ -1,6 +1,7 @@
 import Connection from './Connection'
 import Repository from './Repository'
 import parseAggregationRootModel, { parseFields, Model } from './Model'
+import Migration from './Migration'
 export { appendCustomMethods } from './helpers/appendCustomMethods'
 
 class AggregationRoot {
