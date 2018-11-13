@@ -9,7 +9,9 @@ function buildAggregationRootModels(
     ModelClass,
     schema,
     tableName,
-    className
+    className,
+    writeCapacity,
+    readCapacity
   },
   objectValuesMaps = [],
 ) {
@@ -75,11 +77,24 @@ function buildAggregationRootModels(
 
   // keeping the table name inside the class
   Object.defineProperty(ModelClass, 'tableName', {
-    enumerable: false,   // não enumerável
+    enumerable: false, // não enumerável
     configurable: false, // não configurável
-    writable: false,     // não gravável
+    writable: false, // não gravável
     value: getTableName(tableName)
   })
+  Object.defineProperty(ModelClass, 'writeCapacity', {
+    enumerable: false, // não enumerável
+    configurable: false, // não configurável
+    writable: false, // não gravável
+    value: writeCapacity
+  })
+  Object.defineProperty(ModelClass, 'readCapacity', {
+    enumerable: false, // não enumerável
+    configurable: false, // não configurável
+    writable: false, // não gravável
+    value: readCapacity
+  })
+
   applyRootSchema(
     ModelClass,
     { schema: parsedSchema, tableName: ModelClass.tableName },
@@ -87,6 +102,7 @@ function buildAggregationRootModels(
     Joi.validate,
     rootJoischema
   )
+
   applyCommonMethods(ModelClass)
   return {
     Model: ModelClass,

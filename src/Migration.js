@@ -8,20 +8,66 @@ class Migration extends Connection {
         super(...args)
         this.ChangeLogAggregator = ChangeLogAggregator
     }
-    async createTable({ Model }) {
+
+    async afterEach({ operation, completedAt, duration, tableName, migrationName }) {
+      const { ChangeLog } = this.ChangeLogAggregator
+      const log = new ChangeLog({ operation, completedAt, duration, tableName, migrationName })
+      await log.save()
+      return this
+    }
+    
+    async createTable( Model ) {
         return this.mapper.ensureTableExists(
             Model,
             {
-                readCapacityUnits: Model.readCapacity, // TODO: add readCapactity in Model
-                writeCapacityUnits: Model.writeCapacity, // TODO: add writeCapactity in Model
+                readCapacityUnits: Model.readCapacity, 
+                writeCapacityUnits: Model.writeCapacity, 
             }).then(() => this )
     }
 
-    async dropTable({ Model }) {
+    async dropTable(Model) {
         return this.mapper.ensureTableNotExists(Model).then(() => this)
     }
 
     // TODO: CHANGE
+}
+
+Migration.do = function(operation, fnList, migration, label) {
+    console.log('deploy about to start')
+    const bindedFns = fnList.map(({ fn, migrationName, DomainAggregator, kind, domain } ) => {
+        const start = Date.now()
+        console.log(`${migrationName}, ${domain} is about to start`)
+        fn.bind(migration, DomainAggregator)
+        .then( () => {
+            const duration = Date.now() - start
+            console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
+            return migration.afterEach({ 
+                operation,
+                kind,
+                completedAt: (new Date()).toISOString(), 
+                duration, 
+                domain,
+                label,
+                migrationName,
+                status: 1, // 'success'
+            })    
+        }).catch( (err) => {
+            const duration = Date.now() - start 
+            console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
+            return migration.afterEach({
+                operation,
+                completedAt: (new Date()).toISOString(), 
+                duration,
+                kind,
+                domain,
+                label,
+                migrationName,
+                status: 0, // error 
+                errorMessage: err
+            })    
+        } )
+    })
+    return Promise.all(bindedFns) 
 }
 
 
@@ -35,7 +81,6 @@ export function getMigrationsFiles(domain) {
         const hasDynamodbORM = !!_package.dependencies['@spark/dynamodborm'] || !!_package.dependencies['dynamodborm']
         return isDomain && hasDynamodbORM
     }
-
     function findDomainDeps(_package) {
         const deps = _package.dependencies
         const depsNames = Object.keys(deps)
@@ -67,7 +112,6 @@ export function getMigrationsFiles(domain) {
         }
        return getDomains()
     }
-
     function getCustomOrDefaultList(domainName) {
         if (domainName) {
             if (!validateDomainName(domainName)) {
@@ -104,7 +148,7 @@ export function getMigrationsFiles(domain) {
         const _package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json') ))
         if (checkValidDynamodbORMDomain(_package)) {
             // procceed with reading on the actual package
-            return getCustomOrDefaultList()
+            return { [_package.name]: getCustomOrDefaultList() }
         }
 
         // look for domain packages in dependencies
@@ -113,13 +157,13 @@ export function getMigrationsFiles(domain) {
             // go to domain packages
            return domains.map(
                 ({ domain }) => getCustomOrDefaultList(domain)
-            ).reduce((finalList, list) => ([
+            ).reduce((finalList, list, i) => ({
                 ...finalList,
-                ...list,
-            ]),[])
+                [domains[i]]: list,
+            }), {})
 
         }
         throw new Error('Not found a valid dynamodborm domain')
     }
-    return getCustomOrDefaultList(domain)
+    return { [domain]: getCustomOrDefaultList(domain) }
 }
