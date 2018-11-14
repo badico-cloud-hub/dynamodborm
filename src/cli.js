@@ -11,7 +11,7 @@ function deploy (label, { domain, region, force }) {
     const domainsMigrationListFiles = getMigrationsFiles(domain)
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
         const fileToRequire = filename === packageName ? 'build/index' : filename  
-        const DomainAggregator = require(filename)
+        const DomainAggregator = require(fileToRequire)
         return ChangeLogRepository.find({
             query: {
                 domain: filename
