@@ -75,6 +75,12 @@ function buildAggregationRootModels(
       : mapRootSchema
   )
 
+  // Object.assign(ModelClass, {
+  //   tableName: getTableName(tableName),
+  //   writeCapacity,
+  //   readCapacity,
+  // })
+
   // keeping the table name inside the class
   Object.defineProperty(ModelClass, 'tableName', {
     enumerable: false, // não enumerável

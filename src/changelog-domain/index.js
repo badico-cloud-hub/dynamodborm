@@ -11,11 +11,11 @@ import {
 
 const aggregationRoot = new AggregationRoot(
   {
-    ModelClass: AccountModel,
+    ModelClass: ChangeLogModel,
     tableName,
     region,
     className: 'ChangeLog',
-    schema: AccountSchema
+    schema: ChangeLogSchema
   },
 )
 

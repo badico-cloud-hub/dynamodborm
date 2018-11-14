@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(18);
+	module.exports = __webpack_require__(43);
 
 
 /***/ }),
@@ -1786,160 +1786,10 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-
-	var _extends2 = __webpack_require__(2);
-
-	var _extends3 = _interopRequireDefault(_extends2);
-
-	var _objectWithoutProperties2 = __webpack_require__(3);
-
-	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-	var _defineProperty2 = __webpack_require__(14);
-
-	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
-
-	var _regenerator = __webpack_require__(6);
-
-	var _regenerator2 = _interopRequireDefault(_regenerator);
-
-	var _asyncToGenerator2 = __webpack_require__(8);
-
-	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-	var _classCallCheck2 = __webpack_require__(4);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(5);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Repository = function () {
-	  function Repository(Model, connection) {
-	    (0, _classCallCheck3.default)(this, Repository);
-
-	    this.Model = Model;
-	    this.connection = connection;
-	    this.bucket = [];
-	  }
-
-	  (0, _createClass3.default)(Repository, [{
-	    key: 'get',
-	    value: function () {
-	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filter) {
-	        return _regenerator2.default.wrap(function _callee$(_context) {
-	          while (1) {
-	            switch (_context.prev = _context.next) {
-	              case 0:
-	                return _context.abrupt('return', this.connection.get(this.Model, filter));
-
-	              case 1:
-	              case 'end':
-	                return _context.stop();
-	            }
-	          }
-	        }, _callee, this);
-	      }));
-
-	      function get(_x) {
-	        return _ref.apply(this, arguments);
-	      }
-
-	      return get;
-	    }()
-	  }, {
-	    key: 'query',
-	    value: function () {
-	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(key, params) {
-	        return _regenerator2.default.wrap(function _callee2$(_context2) {
-	          while (1) {
-	            switch (_context2.prev = _context2.next) {
-	              case 0:
-	                _context2.next = 2;
-	                return this.connection.query(this.Model, key, params);
-
-	              case 2:
-	                this.bucket = _context2.sent;
-	                return _context2.abrupt('return', this.bucket);
-
-	              case 4:
-	              case 'end':
-	                return _context2.stop();
-	            }
-	          }
-	        }, _callee2, this);
-	      }));
-
-	      function query(_x2, _x3) {
-	        return _ref2.apply(this, arguments);
-	      }
-
-	      return query;
-	    }()
-	  }, {
-	    key: 'find',
-	    value: function () {
-	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	            scanIndexForward = _ref4.scanIndexForward,
-	            pageSize = _ref4.pageSize,
-	            lastIndex = _ref4.lastIndex,
-	            filter = _ref4.filter,
-	            query = _ref4.query,
-	            indexKey = _ref4.indexKey,
-	            limit = _ref4.limit;
-
-	        var options, index, queryKeys;
-	        return _regenerator2.default.wrap(function _callee3$(_context3) {
-	          while (1) {
-	            switch (_context3.prev = _context3.next) {
-	              case 0:
-	                options = {
-	                  pageSize: pageSize || limit || 25,
-	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
-	                  limit: limit || pageSize || 25,
-	                  filter: filter,
-	                  scanIndexForward: scanIndexForward
-	                };
-
-	                if (query) {
-	                  _context3.next = 6;
-	                  break;
-	                }
-
-	                _context3.next = 4;
-	                return this.connection.scan(this.Model, options);
-
-	              case 4:
-	                this.bucket = _context3.sent;
-	                return _context3.abrupt('return', this.bucket);
-
-	              case 6:
-	                index = query.index, queryKeys = (0, _objectWithoutProperties3.default)(query, ['index']);
-	                return _context3.abrupt('return', this.query(queryKeys, (0, _extends3.default)({}, options, { index: index })));
-
-	              case 8:
-	              case 'end':
-	                return _context3.stop();
-	            }
-	          }
-	        }, _callee3, this);
-	      }));
-
-	      function find() {
-	        return _ref3.apply(this, arguments);
-	      }
-
-	      return find;
-	    }()
-	  }]);
-	  return Repository;
-	}();
-
-	exports.default = Repository;
+	var region = exports.region = 'us-east-1';
+	var tableName = exports.tableName = 'migrations';
+	var readCapacity = exports.readCapacity = process.env['MIGRATIONS_READ_CAPACITY'] || 5;
+	var writeCapacity = exports.writeCapacity = process.env['MIGRATIONS_WRITE_CAPACITY'] || 5;
 
 /***/ }),
 /* 41 */
@@ -2021,6 +1871,332 @@ module.exports =
 	    }
 	  };
 	};
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
+
+	var _toConsumableArray2 = __webpack_require__(7);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	var _regenerator = __webpack_require__(6);
+
+	var _regenerator2 = _interopRequireDefault(_regenerator);
+
+	var _asyncToGenerator2 = __webpack_require__(8);
+
+	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+	var _fs = __webpack_require__(15);
+
+	var _fs2 = _interopRequireDefault(_fs);
+
+	var _path = __webpack_require__(16);
+
+	var _path2 = _interopRequireDefault(_path);
+
+	var _mkdirp = __webpack_require__(44);
+
+	var _mkdirp2 = _interopRequireDefault(_mkdirp);
+
+	var _commander = __webpack_require__(45);
+
+	var _commander2 = _interopRequireDefault(_commander);
+
+	var _Migration = __webpack_require__(11);
+
+	var _Migration2 = _interopRequireDefault(_Migration);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function deploy(cmd, _ref) {
+	    var _this = this;
+
+	    var domain = _ref.domain,
+	        region = _ref.region,
+	        force = _ref.force,
+	        label = _ref.label;
+
+	    var functor = 'up';
+	    var migration = new _Migration2.default({ region: region }, {});
+	    var ChangeLogRepository = migration.ChangeLogAggregator.Repository;
+
+	    var domainsMigrationListFiles = (0, _Migration.getMigrationsFiles)(domain);
+	    var listFns = Object.keys(domainsMigrationListFiles).map(function () {
+	        var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filename) {
+	            var DomainAggregator, logs;
+	            return _regenerator2.default.wrap(function _callee$(_context) {
+	                while (1) {
+	                    switch (_context.prev = _context.next) {
+	                        case 0:
+	                            DomainAggregator = __webpack_require__(46)(filename);
+	                            _context.next = 3;
+	                            return ChangeLogRepository.find({
+	                                query: {
+	                                    domain: filename
+	                                },
+	                                filter: {
+	                                    type: 'Equals',
+	                                    object: 1, // status.success
+	                                    subject: 'status'
+	                                }
+	                            });
+
+	                        case 3:
+	                            logs = _context.sent;
+	                            return _context.abrupt('return', {
+	                                DomainAggregator: DomainAggregator,
+	                                domain: filename,
+	                                logs: logs,
+	                                migrations: domainsMigrationListFiles[filename].map(function (filepath) {
+	                                    var filename = filepath.split('migrations/')[1];
+	                                    var migrationName = filename.slice(0, filename.length - 3);
+	                                    return {
+	                                        filepath: filepath,
+	                                        migrationName: migrationName
+	                                    };
+	                                })
+	                            });
+
+	                        case 5:
+	                        case 'end':
+	                            return _context.stop();
+	                    }
+	                }
+	            }, _callee, _this);
+	        }));
+
+	        return function (_x) {
+	            return _ref2.apply(this, arguments);
+	        };
+	    }()).reduce(function (_fns, _ref3) {
+	        var DomainAggregator = _ref3.DomainAggregator,
+	            domain = _ref3.domain,
+	            logs = _ref3.logs,
+	            migrations = _ref3.migrations;
+
+	        var _ref4 = logs[0] || {},
+	            lastMigrationDeployed = _ref4.migrationName,
+	            lastOperationDeployed = _ref4.operation;
+
+	        var getMigrationsToBeDeployed = function getMigrationsToBeDeployed() {
+	            var _migrations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+	            var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+	            if (!logs.length) return migrations;
+	            // TODO: find relation of deploy and rollback
+	            if (migrations[index].migrationName === lastMigrationDeployed) {
+	                if (lastOperationDeployed === 'deploy') {
+	                    return _migrations;
+	                }
+	                return [].concat((0, _toConsumableArray3.default)(_migrations), [migrations[index]]);
+	            }
+	            var nextIterator = index + 1;
+	            return getMigrationsToBeDeployed([].concat((0, _toConsumableArray3.default)(_migrations), [migrations[index]]), nextIterator);
+	        };
+	        var migrationsToBeDeployed = getMigrationsToBeDeployed();
+	        var filteredFns = migrationsToBeDeployed.map(function (_ref5) {
+	            var migrationName = _ref5.migrationName,
+	                filepath = _ref5.filepath;
+
+	            var fn = __webpack_require__(46)(filepath)[functor];
+	            return {
+	                fn: fn,
+	                migrationName: migrationName,
+	                domain: domain,
+	                DomainAggregator: DomainAggregator
+	            };
+	        });
+	        return [].concat((0, _toConsumableArray3.default)(_fns), (0, _toConsumableArray3.default)(filteredFns));
+	    }, []);
+
+	    // applied to Migration
+	    _Migration2.default.do(cmd, listFns, migration, label);
+	}
+
+	function rollback() {}
+
+	function add(migrationName, _ref6) {
+	    var kind = _ref6.kind;
+
+	    console.log('migration name: ', migrationName, 'kind: ', kind);
+
+	    // se pasta nao existir criar pasta
+	    if (!_fs2.default.existsSync(_path2.default.join(__dirname, 'src', 'migrations'))) {
+	        // mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
+	        _fs2.default.mkdirSync(_path2.default.join(__dirname, 'src', 'migrations'));
+	    }
+
+	    // carregar template
+	    var content = '\n    // migration of kind: ' + kind + ' TODO: add recomendations on template\n    module.exports.up = function(Aggregator) {\n       \n        \n    }\n\n    module.exports.down = function(Aggregator) {\n       \n        \n    }\n    ';
+	    // criar arquivo na pasta
+	    _fs2.default.writeFileSync(_path2.default.join(__dirname, 'src', 'migrations', new Date().toISOString() + '_' + migrationName + '.js'), content, 'utf8');
+	}
+
+	_commander2.default.version('v0.1.0-beta.0', '-v, --version').description('DynamodbORM command line interface');
+
+	_commander2.default.command('deploy').option('-f, --force', 'Ignore the existence of actual instance').option('-r, --region', 'Choose a region different from us-east-1').option('-d, --domain', 'Name of domain for put up').option('-l, --label', 'Label for operation').action(deploy);
+
+	_commander2.default.command('rollback').option('-f, --force', 'Ignore the existence of actual instance').option('-d, --domain', 'Name of domain for put down').action(rollback);
+
+	_commander2.default.command('add <migrationName>').option('-k, --kind [value]', 'The Kind of the migration') // table, seed, schema
+	.action(add);
+
+	_commander2.default.parse(process.argv);
+	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports) {
+
+	module.exports = require("mkdirp");
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports) {
+
+	module.exports = require("commander");
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./Connection": 1,
+		"./Connection.js": 1,
+		"./Migration": 11,
+		"./Migration.js": 11,
+		"./Model": 21,
+		"./Model.js": 21,
+		"./Repository": 20,
+		"./Repository.js": 20,
+		"./changelog-domain/config": 40,
+		"./changelog-domain/config.js": 40,
+		"./changelog-domain/index": 17,
+		"./changelog-domain/index.js": 17,
+		"./changelog-domain/models": 41,
+		"./changelog-domain/models.js": 41,
+		"./changelog-domain/schemas": 42,
+		"./changelog-domain/schemas.js": 42,
+		"./cli": 43,
+		"./cli.js": 43,
+		"./default-migrations/default": 47,
+		"./default-migrations/default.js": 47,
+		"./deploy": 48,
+		"./deploy.js": 48,
+		"./helpers/appendCustomMethods": 19,
+		"./helpers/appendCustomMethods.js": 19,
+		"./helpers/applyAggregationRootSchema": 24,
+		"./helpers/applyAggregationRootSchema.js": 24,
+		"./helpers/applyCommonMethods": 25,
+		"./helpers/applyCommonMethods.js": 25,
+		"./helpers/applyValueObjectSchema": 23,
+		"./helpers/applyValueObjectSchema.js": 23,
+		"./helpers/buildAggregationRootModels": 37,
+		"./helpers/buildAggregationRootModels.js": 37,
+		"./helpers/commonMethods/addItem": 34,
+		"./helpers/commonMethods/addItem.js": 34,
+		"./helpers/commonMethods/delete": 31,
+		"./helpers/commonMethods/delete.js": 31,
+		"./helpers/commonMethods/get": 27,
+		"./helpers/commonMethods/get.js": 27,
+		"./helpers/commonMethods/getItem": 33,
+		"./helpers/commonMethods/getItem.js": 33,
+		"./helpers/commonMethods/index": 26,
+		"./helpers/commonMethods/index.js": 26,
+		"./helpers/commonMethods/removeItem": 35,
+		"./helpers/commonMethods/removeItem.js": 35,
+		"./helpers/commonMethods/save": 29,
+		"./helpers/commonMethods/save.js": 29,
+		"./helpers/commonMethods/set": 28,
+		"./helpers/commonMethods/set.js": 28,
+		"./helpers/commonMethods/update": 30,
+		"./helpers/commonMethods/update.js": 30,
+		"./helpers/commonMethods/updateItem": 36,
+		"./helpers/commonMethods/updateItem.js": 36,
+		"./helpers/commonMethods/validate": 32,
+		"./helpers/commonMethods/validate.js": 32,
+		"./helpers/commonSchema": 49,
+		"./helpers/commonSchema.js": 49,
+		"./helpers/parseFields": 38,
+		"./helpers/parseFields.js": 38,
+		"./index": 18,
+		"./index.js": 18,
+		"./rollback": 50,
+		"./rollback.js": 50
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 46;
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	module.exports.up = function (aggregator) {
+	    var Model = aggregator.Model;
+
+
+	    return this.createTable(Model);
+	};
+
+	module.exports.down = function (aggregator) {};
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var commonSchema = exports.commonSchema = function commonSchema(hasToBe) {
+	  return {
+	    createdAt: {
+	      type: 'Number',
+	      validator: hasToBe.date().timestamp(),
+	      defaultProvider: function defaultProvider() {
+	        return new Date();
+	      }
+	    },
+	    updatedAt: {
+	      type: 'Number',
+	      validator: hasToBe.date().timestamp(),
+	      defaultProvider: function defaultProvider() {
+	        return new Date();
+	      }
+	    }
+	  };
+	};
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
+
+	"use strict";
 
 /***/ })
 /******/ ]);
