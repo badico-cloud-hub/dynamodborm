@@ -82,7 +82,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
         }, [])
 
         // applied to Migration
-        Migration.do(cmd, listFns, migration, label)
+        Migration.do('deploy', listFns, migration, label)
     }) 
 }
 
