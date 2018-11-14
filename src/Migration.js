@@ -126,28 +126,26 @@ export function getMigrationsFiles(domain) {
             'migrations'
         ])
 
-        console.log('fullpath: ', fullpath)
 
         if (fs.existsSync(fullpath)) {
-            console.log('custom one!!!')
             const migrationsfile = fs.readdirSync(fullpath)
             if (migrationsfile.length) {
-                return migrationsfile
+                return migrationsfile.map(filepath => path.join(fullpath, filepath))
             }
         }
-
+        const defaultPath = path.join(
+            // __dirname,
+            ...(domainName ? domainName.split('/') : []),
+            'node_modules',
+            '@spark',
+            'dynamodborm',
+            'migrate',
+            'default-migrations'
+        )
         // default create-table
         return fs.readdirSync(
-            path.join(
-                // __dirname,
-                ...(domainName ? domainName.split('/') : []),
-                'node_modules',
-                '@spark',
-                'dynamodborm',
-                'migrate',
-                'default-migrations'
-            )
-        )
+            defaultPath
+        ).map(filepath => path.join(defaultPath, filepath))
     }
 
     if (!domain) {
