@@ -5,15 +5,13 @@ const cli = require('commander')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
 
 function deploy (label, { domain, region, force }) {
-
-    // return console.log(label, domain, region)
     const functor = 'up'
     const migration = new Migration({ region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
-    const listFns = Object.keys(domainsMigrationListFiles).map(async (filename) => {
+    return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
         const DomainAggregator = require(filename)
-        const logs = await ChangeLogRepository.find({
+        return ChangeLogRepository.find({
             query: {
                 domain: filename
             },
@@ -22,70 +20,73 @@ function deploy (label, { domain, region, force }) {
                 object: 1, // status.success
                 subject: 'status'
             }
+        }).then((logs) => {
+            return {
+                DomainAggregator,
+                domain: filename,
+                logs,
+                migrations: domainsMigrationListFiles[filename].map(filepath => {
+                    const filename = filepath.split('migrations/')[1]
+                    const migrationName = filename.slice(0, filename.length - 3)
+                    return ({
+                        filepath,
+                        migrationName,
+                    })
+                }),
+            }
         })
-       
-        return {
+        
+    })).then((resolveds) => {
+        const listFns = resolveds.reduce((_fns, {
             DomainAggregator,
-            domain: filename,
+            domain,
             logs,
-            migrations: domainsMigrationListFiles[filename].map(filepath => {
-                const filename = filepath.split('migrations/')[1]
-                const migrationName = filename.slice(0, filename.length - 3)
-                return ({
-                    filepath,
-                    migrationName,
-                })
-            }),
-        }
-    }).reduce((_fns, {
-        DomainAggregator,
-        domain,
-        logs,
-        migrations,
-    }) => {
-        const {
-            migrationName: lastMigrationDeployed,
-            operation: lastOperationDeployed,
-        } = logs[0] || {}
-        const getMigrationsToBeDeployed = (
-            _migrations = [],
-            index = 0,
-        ) => {
-            if (!logs.length) return migrations
-            // TODO: find relation of deploy and rollback
-            if (migrations[index].migrationName === lastMigrationDeployed) {
-                if (lastOperationDeployed === 'deploy') {
-                    return _migrations
+            migrations,
+        }) => {
+            const {
+                migrationName: lastMigrationDeployed,
+                operation: lastOperationDeployed,
+            } = logs[0] || {}
+            const getMigrationsToBeDeployed = (
+                _migrations = [],
+                index = 0,
+            ) => {
+                if (!logs.length) return migrations
+                // TODO: find relation of deploy and rollback
+                if (migrations[index].migrationName === lastMigrationDeployed) {
+                    if (lastOperationDeployed === 'deploy') {
+                        return _migrations
+                    }
+                    return [
+                        ..._migrations,
+                        migrations[index]
+                    ]
                 }
-                return [
+                const nextIterator = index + 1
+                return getMigrationsToBeDeployed([
                     ..._migrations,
                     migrations[index]
-                ]
+                ], nextIterator)
             }
-            const nextIterator = index + 1
-            return getMigrationsToBeDeployed([
-                ..._migrations,
-                migrations[index]
-            ], nextIterator)
-        }
-        const migrationsToBeDeployed = getMigrationsToBeDeployed()
-        const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
-            const fn = require(filepath)[functor]
-            return ({
-                fn,
-                migrationName,
-                domain,
-                DomainAggregator
+            const migrationsToBeDeployed = getMigrationsToBeDeployed()
+            const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
+                const fn = require(filepath)[functor]
+                return ({
+                    fn,
+                    migrationName,
+                    domain,
+                    DomainAggregator
+            })
         })
-    })
-        return [
-            ..._fns,
-            ...filteredFns,
-        ]
-    }, [])
-    
-    // applied to Migration
-    Migration.do(cmd, listFns, migration, label)
+            return [
+                ..._fns,
+                ...filteredFns,
+            ]
+        }, [])
+
+        // applied to Migration
+        Migration.do(cmd, listFns, migration, label)
+    }) 
 }
 
 function rollback() {}

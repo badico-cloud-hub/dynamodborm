@@ -385,6 +385,7 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.Migration = undefined;
 
 	var _extends3 = __webpack_require__(2);
 
@@ -442,7 +443,7 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Migration = function (_Connection) {
+	var Migration = exports.Migration = function (_Connection) {
 	    (0, _inherits3.default)(Migration, _Connection);
 
 	    function Migration() {
@@ -682,8 +683,6 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
-
-	exports.default = Migration;
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
