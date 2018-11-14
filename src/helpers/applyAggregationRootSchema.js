@@ -7,7 +7,7 @@ function applyAgregationRootSchema(
   validator,
   joischema
 ) {
-  console.log('TABLE NAME Being applyed', tableName)
+  console.log('TABLE NAME Being applyed ', tableName)
   Object.assign(classDefinition.prototype, {
     connection,
     validator,

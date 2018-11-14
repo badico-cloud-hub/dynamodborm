@@ -858,7 +858,7 @@ module.exports =
 
 	  var _Object$definePropert;
 
-	  console.log('TABLE NAME Being applyed', tableName);
+	  console.log('TABLE NAME Being applyed ', tableName);
 	  Object.assign(classDefinition.prototype, {
 	    connection: connection,
 	    validator: validator,

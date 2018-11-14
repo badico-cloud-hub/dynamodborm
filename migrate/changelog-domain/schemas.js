@@ -18,13 +18,16 @@ const ChangeLogSchema = hasToBe => ({
     },
     label: {
       type: 'String',
+      indexKeyConfigurations: {
+        'label-completedAt-index': 'HASH'
+      },
       validator: hasToBe.string()
     },
     completedAt: {
       type: 'String',
       keyType: 'RANGE',
       indexKeyConfigurations: {
-        'label-changeNumber-index': 'RANGE'
+        'label-completedAt-index': 'RANGE'
       },
       validator: hasToBe.string().required()
     },
