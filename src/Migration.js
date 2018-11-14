@@ -3,7 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import Connection from './Connection'
 import ChangeLogAggregator from './changelog-domain'
-class Migration extends Connection {
+
+
+export class Migration extends Connection {
     constructor (...args) {
         super(...args)
         this.ChangeLogAggregator = ChangeLogAggregator
@@ -168,4 +170,3 @@ export function getMigrationsFiles(domain) {
     return { [domain]: getCustomOrDefaultList(domain) }
 }
 
-export default Migration

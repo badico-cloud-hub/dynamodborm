@@ -1,8 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import mkdirp from 'mkdirp'
-import cli from 'commander'
-import Migration, { getMigrationsFiles } from './Migration'
+const fs = require('fs')
+const path = require('path')
+const mkdirp = require('mkdirp')
+const cli = require('commander')
+const { Migration, getMigrationsFiles } = require('../build/Migration')
 
 function deploy (label, { domain, region, force }) {
 
@@ -94,11 +94,10 @@ function add(migrationName, { kind }) {
     console.log('migration name: ', migrationName, 'kind: ', kind)
     
     // se pasta nao existir criar pasta
-    // if(!fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory()) {
-    //     // mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
-    //     const r = fs.mkdirSync(path.join(__dirname, 'src', 'migrations'))
-    //     console.log(r, fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory())
-    // }
+    if(!fs.existsSync(path.join('src', 'migrations'))) {
+        mkdirp.sync(path.join('src', 'migrations'))
+        // const r = fs.mkdirSync(path.join(__dirname, 'src', 'migrations'))
+    }
 
     // carregar template
     const content = `
@@ -114,19 +113,12 @@ function add(migrationName, { kind }) {
     }
     `
     // criar arquivo na pasta
-    console.log(path.join(
-        __dirname,
-        'src',
-        'migrations',
-        `${(new Date()).toISOString()}_${migrationName}.js`
-    ))
     fs.writeFileSync(
         path.join(
-            __dirname,
+            // __dirname,
             'src',
             'migrations',
-            `${migrationName}.js`
-            // `${(new Date()).toISOString()}_${migrationName}.js`
+            `${(new Date()).toISOString()}_${migrationName}.js`
         ),
         content,
         'utf8',
