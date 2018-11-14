@@ -1,3 +1,4 @@
+const utils = require('utils')
 function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
@@ -80,7 +81,8 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 ...filteredFns,
             ]
         }, [])
-
+        utils.inspect(listFns
+            )
         // applied to Migration
         Migration.do('deploy', listFns, migration, label)
     }) 
