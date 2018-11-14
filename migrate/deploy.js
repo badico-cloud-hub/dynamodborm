@@ -1,6 +1,6 @@
-function deploy (label, { domain, region, force }) {
+function deploy (Migration, ChangeLogAggregator, label, { domain, region, force }) {
     const functor = 'up'
-    const migration = new Migration({ region }, {})
+    const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {

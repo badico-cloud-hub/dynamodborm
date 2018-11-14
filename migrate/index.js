@@ -2,10 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
 const cli = require('commander')
+const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
 const packageName = JSON.parse(fs.readFileSync('package.json')).name
-
+const actionDeploy = deploy.bind(null, Migration, ChangeLogAggregator)
 
 function rollback() {}
 
@@ -54,7 +55,7 @@ cli
     .option('-r, --region [value]', 'Choose a region different from us-east-1')
     .option('-d, --domain [value]', 'Name of domain for put up')
     // .option('-l, --label', 'Label for operation')
-    .action(deploy)
+    .action(actionDeploy)
 
 cli
     .command('rollback')
