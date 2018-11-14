@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(18);
+	module.exports = __webpack_require__(37);
 
 
 /***/ }),
@@ -437,27 +437,26 @@ module.exports =
 
 	var _Connection3 = _interopRequireDefault(_Connection2);
 
-	var _changelogDomain = __webpack_require__(17);
-
-	var _changelogDomain2 = _interopRequireDefault(_changelogDomain);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// import ChangeLogAggregator from './changelog-domain'
+
 
 	var Migration = exports.Migration = function (_Connection) {
 	    (0, _inherits3.default)(Migration, _Connection);
 
-	    function Migration() {
+	    function Migration(ChangeLogAggregator) {
 	        var _ref;
 
 	        (0, _classCallCheck3.default)(this, Migration);
 
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
+	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	            args[_key - 1] = arguments[_key];
 	        }
 
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (_ref = Migration.__proto__ || Object.getPrototypeOf(Migration)).call.apply(_ref, [this].concat(args)));
 
-	        _this.ChangeLogAggregator = _changelogDomain2.default;
+	        _this.ChangeLogAggregator = ChangeLogAggregator;
 	        return _this;
 	    }
 
@@ -723,285 +722,6 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Repository = exports.connection = exports.parseFields = exports.ChangeLog = exports.Model = undefined;
-
-	var _ = __webpack_require__(18);
-
-	var _2 = _interopRequireDefault(_);
-
-	var _config = __webpack_require__(40);
-
-	var _models = __webpack_require__(41);
-
-	var _schemas = __webpack_require__(42);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var aggregationRoot = new _2.default({
-	  ModelClass: _models.ChangeLogModel,
-	  tableName: _config.tableName,
-	  region: _config.region,
-	  className: 'ChangeLog',
-	  schema: _schemas.ChangeLogSchema
-	});
-
-	var Model = aggregationRoot.Model,
-	    ChangeLog = aggregationRoot.ChangeLog,
-	    parseFields = aggregationRoot.parseFields,
-	    connection = aggregationRoot.connection,
-	    Repository = aggregationRoot.Repository;
-	exports.Model = Model;
-	exports.ChangeLog = ChangeLog;
-	exports.parseFields = parseFields;
-	exports.connection = connection;
-	exports.Repository = Repository;
-	exports.default = aggregationRoot;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.Model = exports.appendCustomMethods = undefined;
-
-	var _classCallCheck2 = __webpack_require__(4);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _appendCustomMethods = __webpack_require__(19);
-
-	Object.defineProperty(exports, 'appendCustomMethods', {
-	  enumerable: true,
-	  get: function get() {
-	    return _appendCustomMethods.appendCustomMethods;
-	  }
-	});
-
-	var _Connection = __webpack_require__(1);
-
-	var _Connection2 = _interopRequireDefault(_Connection);
-
-	var _Repository = __webpack_require__(20);
-
-	var _Repository2 = _interopRequireDefault(_Repository);
-
-	var _Model = __webpack_require__(21);
-
-	var _Model2 = _interopRequireDefault(_Model);
-
-	var _Migration = __webpack_require__(11);
-
-	var _Migration2 = _interopRequireDefault(_Migration);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var AggregationRoot = function AggregationRoot(modelRoot) {
-	  (0, _classCallCheck3.default)(this, AggregationRoot);
-
-	  this.connection = new _Connection2.default(modelRoot);
-
-	  for (var _len = arguments.length, objectsValuesMaps = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    objectsValuesMaps[_key - 1] = arguments[_key];
-	  }
-
-	  (0, _Model2.default)(this.connection, this, modelRoot, objectsValuesMaps);
-	  this.parseFields = _Model.parseFields.apply(undefined, [modelRoot.schema].concat(objectsValuesMaps));
-	  this.Repository = new _Repository2.default(this.Model, this.connection);
-	};
-
-	exports.Model = _Model.Model;
-	exports.default = AggregationRoot;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.appendCustomMethods = appendCustomMethods;
-	function appendCustomMethods(funcInst, methods) {
-	    Object.assign(funcInst.prototype || funcInst, methods);
-	    return undefined;
-	}
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends2 = __webpack_require__(2);
-
-	var _extends3 = _interopRequireDefault(_extends2);
-
-	var _objectWithoutProperties2 = __webpack_require__(3);
-
-	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-	var _defineProperty2 = __webpack_require__(12);
-
-	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
-
-	var _regenerator = __webpack_require__(6);
-
-	var _regenerator2 = _interopRequireDefault(_regenerator);
-
-	var _asyncToGenerator2 = __webpack_require__(8);
-
-	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-	var _classCallCheck2 = __webpack_require__(4);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(5);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Repository = function () {
-	  function Repository(Model, connection) {
-	    (0, _classCallCheck3.default)(this, Repository);
-
-	    this.Model = Model;
-	    this.connection = connection;
-	    this.bucket = [];
-	  }
-
-	  (0, _createClass3.default)(Repository, [{
-	    key: 'get',
-	    value: function () {
-	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filter) {
-	        return _regenerator2.default.wrap(function _callee$(_context) {
-	          while (1) {
-	            switch (_context.prev = _context.next) {
-	              case 0:
-	                return _context.abrupt('return', this.connection.get(this.Model, filter));
-
-	              case 1:
-	              case 'end':
-	                return _context.stop();
-	            }
-	          }
-	        }, _callee, this);
-	      }));
-
-	      function get(_x) {
-	        return _ref.apply(this, arguments);
-	      }
-
-	      return get;
-	    }()
-	  }, {
-	    key: 'query',
-	    value: function () {
-	      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(key, params) {
-	        return _regenerator2.default.wrap(function _callee2$(_context2) {
-	          while (1) {
-	            switch (_context2.prev = _context2.next) {
-	              case 0:
-	                _context2.next = 2;
-	                return this.connection.query(this.Model, key, params);
-
-	              case 2:
-	                this.bucket = _context2.sent;
-	                return _context2.abrupt('return', this.bucket);
-
-	              case 4:
-	              case 'end':
-	                return _context2.stop();
-	            }
-	          }
-	        }, _callee2, this);
-	      }));
-
-	      function query(_x2, _x3) {
-	        return _ref2.apply(this, arguments);
-	      }
-
-	      return query;
-	    }()
-	  }, {
-	    key: 'find',
-	    value: function () {
-	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	            pageSize = _ref4.pageSize,
-	            lastIndex = _ref4.lastIndex,
-	            filter = _ref4.filter,
-	            query = _ref4.query,
-	            indexKey = _ref4.indexKey,
-	            limit = _ref4.limit;
-
-	        var options, index, queryKeys;
-	        return _regenerator2.default.wrap(function _callee3$(_context3) {
-	          while (1) {
-	            switch (_context3.prev = _context3.next) {
-	              case 0:
-	                options = {
-	                  pageSize: pageSize || limit || 25,
-	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
-	                  limit: limit || pageSize || 25,
-	                  filter: filter
-	                };
-
-	                if (query) {
-	                  _context3.next = 6;
-	                  break;
-	                }
-
-	                _context3.next = 4;
-	                return this.connection.scan(this.Model, options);
-
-	              case 4:
-	                this.bucket = _context3.sent;
-	                return _context3.abrupt('return', this.bucket);
-
-	              case 6:
-	                index = query.index, queryKeys = (0, _objectWithoutProperties3.default)(query, ['index']);
-	                return _context3.abrupt('return', this.query(queryKeys, (0, _extends3.default)({}, options, { index: index })));
-
-	              case 8:
-	              case 'end':
-	                return _context3.stop();
-	            }
-	          }
-	        }, _callee3, this);
-	      }));
-
-	      function find() {
-	        return _ref3.apply(this, arguments);
-	      }
-
-	      return find;
-	    }()
-	  }]);
-	  return Repository;
-	}();
-
-	exports.default = Repository;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 	exports.parseFields = exports.Model = undefined;
 
 	var _classCallCheck2 = __webpack_require__(4);
@@ -1010,27 +730,27 @@ module.exports =
 
 	var _dynamodbDataMapper = __webpack_require__(9);
 
-	var _joi = __webpack_require__(22);
+	var _joi = __webpack_require__(18);
 
 	var _joi2 = _interopRequireDefault(_joi);
 
-	var _applyValueObjectSchema = __webpack_require__(23);
+	var _applyValueObjectSchema = __webpack_require__(19);
 
 	var _applyValueObjectSchema2 = _interopRequireDefault(_applyValueObjectSchema);
 
-	var _applyAggregationRootSchema = __webpack_require__(24);
+	var _applyAggregationRootSchema = __webpack_require__(20);
 
 	var _applyAggregationRootSchema2 = _interopRequireDefault(_applyAggregationRootSchema);
 
-	var _applyCommonMethods = __webpack_require__(25);
+	var _applyCommonMethods = __webpack_require__(21);
 
 	var _applyCommonMethods2 = _interopRequireDefault(_applyCommonMethods);
 
-	var _buildAggregationRootModels = __webpack_require__(37);
+	var _buildAggregationRootModels = __webpack_require__(33);
 
 	var _buildAggregationRootModels2 = _interopRequireDefault(_buildAggregationRootModels);
 
-	var _parseFields = __webpack_require__(38);
+	var _parseFields = __webpack_require__(34);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1061,13 +781,13 @@ module.exports =
 	exports.default = AgregationRootModel;
 
 /***/ }),
-/* 22 */
+/* 18 */
 /***/ (function(module, exports) {
 
 	module.exports = require("joi");
 
 /***/ }),
-/* 23 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1105,7 +825,7 @@ module.exports =
 	exports.default = applyObjectValueSchemaFactory;
 
 /***/ }),
-/* 24 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1149,7 +869,7 @@ module.exports =
 	exports.default = applyAgregationRootSchemaFactory;
 
 /***/ }),
-/* 25 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1166,7 +886,7 @@ module.exports =
 
 	var _extends4 = _interopRequireDefault(_extends3);
 
-	var _commonMethods = __webpack_require__(26);
+	var _commonMethods = __webpack_require__(22);
 
 	var commons = _interopRequireWildcard(_commonMethods);
 
@@ -1184,7 +904,7 @@ module.exports =
 	exports.default = applyCommonMethods;
 
 /***/ }),
-/* 26 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1193,7 +913,7 @@ module.exports =
 	  value: true
 	});
 
-	var _get = __webpack_require__(27);
+	var _get = __webpack_require__(23);
 
 	Object.defineProperty(exports, 'get', {
 	  enumerable: true,
@@ -1202,7 +922,7 @@ module.exports =
 	  }
 	});
 
-	var _set = __webpack_require__(28);
+	var _set = __webpack_require__(24);
 
 	Object.defineProperty(exports, 'set', {
 	  enumerable: true,
@@ -1211,7 +931,7 @@ module.exports =
 	  }
 	});
 
-	var _save = __webpack_require__(29);
+	var _save = __webpack_require__(25);
 
 	Object.defineProperty(exports, 'save', {
 	  enumerable: true,
@@ -1220,7 +940,7 @@ module.exports =
 	  }
 	});
 
-	var _update = __webpack_require__(30);
+	var _update = __webpack_require__(26);
 
 	Object.defineProperty(exports, 'update', {
 	  enumerable: true,
@@ -1229,7 +949,7 @@ module.exports =
 	  }
 	});
 
-	var _delete = __webpack_require__(31);
+	var _delete = __webpack_require__(27);
 
 	Object.defineProperty(exports, 'delete', {
 	  enumerable: true,
@@ -1238,7 +958,7 @@ module.exports =
 	  }
 	});
 
-	var _validate = __webpack_require__(32);
+	var _validate = __webpack_require__(28);
 
 	Object.defineProperty(exports, 'validate', {
 	  enumerable: true,
@@ -1247,7 +967,7 @@ module.exports =
 	  }
 	});
 
-	var _getItem = __webpack_require__(33);
+	var _getItem = __webpack_require__(29);
 
 	Object.defineProperty(exports, 'getItem', {
 	  enumerable: true,
@@ -1256,7 +976,7 @@ module.exports =
 	  }
 	});
 
-	var _addItem = __webpack_require__(34);
+	var _addItem = __webpack_require__(30);
 
 	Object.defineProperty(exports, 'addItem', {
 	  enumerable: true,
@@ -1265,7 +985,7 @@ module.exports =
 	  }
 	});
 
-	var _removeItem = __webpack_require__(35);
+	var _removeItem = __webpack_require__(31);
 
 	Object.defineProperty(exports, 'removeItem', {
 	  enumerable: true,
@@ -1274,7 +994,7 @@ module.exports =
 	  }
 	});
 
-	var _updateItem = __webpack_require__(36);
+	var _updateItem = __webpack_require__(32);
 
 	Object.defineProperty(exports, 'updateItem', {
 	  enumerable: true,
@@ -1284,7 +1004,7 @@ module.exports =
 	});
 
 /***/ }),
-/* 27 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1326,7 +1046,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 28 */
+/* 24 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1340,7 +1060,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 29 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1389,7 +1109,7 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 30 */
+/* 26 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1404,7 +1124,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 31 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1447,7 +1167,7 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 32 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1481,7 +1201,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 33 */
+/* 29 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1499,7 +1219,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 34 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1524,7 +1244,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 35 */
+/* 31 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1542,7 +1262,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 36 */
+/* 32 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1560,7 +1280,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 37 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1680,7 +1400,7 @@ module.exports =
 	exports.default = buildAggregationRootModelsFactory;
 
 /***/ }),
-/* 38 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1693,7 +1413,7 @@ module.exports =
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-	var _typeof2 = __webpack_require__(39);
+	var _typeof2 = __webpack_require__(35);
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -1772,14 +1492,14 @@ module.exports =
 	}
 
 /***/ }),
-/* 39 */
+/* 35 */
 /***/ (function(module, exports) {
 
 	module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
-/* 40 */
-/***/ (function(module, exports) {
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1795,7 +1515,11 @@ module.exports =
 
 	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
+<<<<<<< HEAD
 	var _defineProperty2 = __webpack_require__(14);
+=======
+	var _defineProperty2 = __webpack_require__(12);
+>>>>>>> migration assets splited [build]
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1884,7 +1608,10 @@ module.exports =
 	    value: function () {
 	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
 	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+<<<<<<< HEAD
 	            scanIndexForward = _ref4.scanIndexForward,
+=======
+>>>>>>> migration assets splited [build]
 	            pageSize = _ref4.pageSize,
 	            lastIndex = _ref4.lastIndex,
 	            filter = _ref4.filter,
@@ -1901,8 +1628,12 @@ module.exports =
 	                  pageSize: pageSize || limit || 25,
 	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
 	                  limit: limit || pageSize || 25,
+<<<<<<< HEAD
 	                  filter: filter,
 	                  scanIndexForward: scanIndexForward
+=======
+	                  filter: filter
+>>>>>>> migration assets splited [build]
 	                };
 
 	                if (query) {
@@ -1942,7 +1673,7 @@ module.exports =
 	exports.default = Repository;
 
 /***/ }),
-/* 41 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1950,77 +1681,70 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ChangeLogModel = undefined;
+	exports.Model = exports.appendCustomMethods = undefined;
 
 	var _classCallCheck2 = __webpack_require__(4);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _possibleConstructorReturn2 = __webpack_require__(13);
+	var _appendCustomMethods = __webpack_require__(38);
 
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	Object.defineProperty(exports, 'appendCustomMethods', {
+	  enumerable: true,
+	  get: function get() {
+	    return _appendCustomMethods.appendCustomMethods;
+	  }
+	});
 
-	var _inherits2 = __webpack_require__(14);
+	var _Connection = __webpack_require__(1);
 
-	var _inherits3 = _interopRequireDefault(_inherits2);
+	var _Connection2 = _interopRequireDefault(_Connection);
 
-	var _ = __webpack_require__(18);
+	var _Repository = __webpack_require__(36);
+
+	var _Repository2 = _interopRequireDefault(_Repository);
+
+	var _Model = __webpack_require__(17);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Migration = __webpack_require__(11);
+
+	var _Migration2 = _interopRequireDefault(_Migration);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var ChangeLogModel = exports.ChangeLogModel = function (_Model) {
-	  (0, _inherits3.default)(ChangeLogModel, _Model);
+	var AggregationRoot = function AggregationRoot(modelRoot) {
+	  (0, _classCallCheck3.default)(this, AggregationRoot);
 
-	  function ChangeLogModel() {
-	    (0, _classCallCheck3.default)(this, ChangeLogModel);
-	    return (0, _possibleConstructorReturn3.default)(this, (ChangeLogModel.__proto__ || Object.getPrototypeOf(ChangeLogModel)).apply(this, arguments));
+	  this.connection = new _Connection2.default(modelRoot);
+
+	  for (var _len = arguments.length, objectsValuesMaps = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    objectsValuesMaps[_key - 1] = arguments[_key];
 	  }
 
-	  return ChangeLogModel;
-	}(_.Model);
+	  (0, _Model2.default)(this.connection, this, modelRoot, objectsValuesMaps);
+	  this.parseFields = _Model.parseFields.apply(undefined, [modelRoot.schema].concat(objectsValuesMaps));
+	  this.Repository = new _Repository2.default(this.Model, this.connection);
+	};
+
+	exports.Model = _Model.Model;
+	exports.default = AggregationRoot;
 
 /***/ }),
-/* 42 */
+/* 38 */
 /***/ (function(module, exports) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
-	var ChangeLogSchema = exports.ChangeLogSchema = function ChangeLogSchema(hasToBe) {
-	  return {
-	    domain: {
-	      type: 'String',
-	      keyType: 'HASH',
-	      validator: hasToBe.string().required()
-	    },
-	    appliedBy: {
-	      type: 'String',
-	      validator: hasToBe.string()
-	    },
-	    migrationName: {
-	      type: 'String',
-	      validator: hasToBe.string().required()
-	    },
-	    operation: {
-	      type: 'String',
-	      validator: hasToBe.string().valid('Deploy', 'Rollback').required()
-	    },
-	    label: {
-	      type: 'String',
-	      validator: hasToBe.string()
-	    },
-	    completedAt: {
-	      type: 'String',
-	      keyType: 'RANGE',
-	      indexKeyConfigurations: {
-	        'changeNumber-index': 'HASH'
-	      },
-	      validator: hasToBe.string().required()
-	    }
-	  };
-	};
+	exports.appendCustomMethods = appendCustomMethods;
+	function appendCustomMethods(funcInst, methods) {
+	    Object.assign(funcInst.prototype || funcInst, methods);
+	    return undefined;
+	}
 
 /***/ })
 /******/ ]);
