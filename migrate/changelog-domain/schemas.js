@@ -1,4 +1,4 @@
-export const ChangeLogSchema = hasToBe => ({
+const ChangeLogSchema = hasToBe => ({
     domain: {
       type: 'String',
       keyType: 'HASH',
@@ -29,3 +29,7 @@ export const ChangeLogSchema = hasToBe => ({
       validator: hasToBe.string().required()
     },
 })
+
+module.exports = {
+  ChangeLogSchema,
+}

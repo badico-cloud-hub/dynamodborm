@@ -1,12 +1,15 @@
-import AggregationRoot, { appendCustomMethods } from '../'
-import { region, tableName } from './config'
-import {
+const {
+  appendCustomMethods,
+  default: AggregationRoot,
+} = require('../../build')
+const { region, tableName } = require('./config')
+const {
   ChangeLogModel,
-} from './models'
+} = require('./models')
 
-import {
+const {
     ChangeLogSchema,
-} from './schemas'
+} = require('./schemas')
 
 
 const aggregationRoot = new AggregationRoot(
@@ -29,11 +32,10 @@ const {
 } = aggregationRoot
 
 
-export {
+module.exports = {
   Model,
   ChangeLog,
   parseFields,
   connection,
   Repository,
 }
-export default aggregationRoot

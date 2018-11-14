@@ -2,11 +2,11 @@
 import fs from 'fs'
 import path from 'path'
 import Connection from './Connection'
-import ChangeLogAggregator from './changelog-domain'
+// import ChangeLogAggregator from './changelog-domain'
 
 
 export class Migration extends Connection {
-    constructor (...args) {
+    constructor (ChangeLogAggregator, ...args) {
         super(...args)
         this.ChangeLogAggregator = ChangeLogAggregator
     }
