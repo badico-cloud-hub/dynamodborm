@@ -380,7 +380,7 @@ module.exports =
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -653,14 +653,14 @@ module.exports =
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
 	            if (migrationsfile.length) {
 	                return migrationsfile.map(function (filepath) {
-	                    return './' + _path2.default.join(fullpath, filepath);
+	                    return '' + _path2.default.join(__dirname, fullpath, filepath);
 	                });
 	            }
 	        }
-	        var defaultPath = _path2.default.join.apply(_path2.default, (0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []).concat(['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
+	        var defaultPath = _path2.default.join.apply(_path2.default, [__dirname].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
 	        // default create-table
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
-	            return './' + _path2.default.join(defaultPath, filepath);
+	            return '' + _path2.default.join(defaultPath, filepath);
 	        });
 	    }
 
@@ -686,6 +686,7 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
+	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
 /* 12 */
