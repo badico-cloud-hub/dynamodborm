@@ -23,7 +23,17 @@ export class Migration extends Connection {
             Model,
             {
                 readCapacityUnits: Model.readCapacity, 
-                writeCapacityUnits: Model.writeCapacity, 
+                writeCapacityUnits: Model.writeCapacity,
+                indexOptions: Model.indexes.reduce((options, index) => ({
+                    ...options,
+                    [index.name]: {
+                        readCapacityUnits: index.readCapacity, 
+                        writeCapacityUnits: index.writeCapacity,
+                        projection: index.projection,
+                        type: index.type,
+                        
+                    }
+                }),{})
             }).then(() => this )
     }
 

@@ -10,6 +10,7 @@ function buildAggregationRootModels(
     schema,
     tableName,
     className,
+    indexes,
     writeCapacity,
     readCapacity
   },
@@ -99,6 +100,13 @@ function buildAggregationRootModels(
     configurable: false, // não configurável
     writable: false, // não gravável
     value: readCapacity
+  })
+
+  Object.defineProperty(ModelClass, 'indexes', {
+    enumerable: false, // não enumerável
+    configurable: false, // não configurável
+    writable: false, // não gravável
+    value: indexes
   })
 
   applyRootSchema(

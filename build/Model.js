@@ -692,6 +692,7 @@ module.exports =
 	      schema = _ref.schema,
 	      tableName = _ref.tableName,
 	      className = _ref.className,
+	      indexes = _ref.indexes,
 	      writeCapacity = _ref.writeCapacity,
 	      readCapacity = _ref.readCapacity;
 	  var objectValuesMaps = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : [];
@@ -763,6 +764,13 @@ module.exports =
 	    configurable: false, // não configurável
 	    writable: false, // não gravável
 	    value: readCapacity
+	  });
+
+	  Object.defineProperty(ModelClass, 'indexes', {
+	    enumerable: false, // não enumerável
+	    configurable: false, // não configurável
+	    writable: false, // não gravável
+	    value: indexes
 	  });
 
 	  applyRootSchema(ModelClass, { schema: parsedSchema, tableName: ModelClass.tableName }, connection, Joi.validate, rootJoischema);

@@ -2,7 +2,13 @@ const {
   appendCustomMethods,
   default: AggregationRoot,
 } = require('../../build')
-const { region, tableName } = require('./config')
+const {
+  region,
+  tableName,
+  readCapacity,
+  writeCapacity,
+  indexes,
+} = require('./config')
 const {
   ChangeLogModel,
 } = require('./models')
@@ -17,6 +23,9 @@ const aggregationRoot = new AggregationRoot(
     ModelClass: ChangeLogModel,
     tableName,
     region,
+    readCapacity,
+    writeCapacity,
+    indexes,
     className: 'ChangeLog',
     schema: ChangeLogSchema
   },

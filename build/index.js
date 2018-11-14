@@ -387,17 +387,17 @@ module.exports =
 	});
 	exports.Migration = undefined;
 
-	var _extends3 = __webpack_require__(2);
+	var _toConsumableArray2 = __webpack_require__(7);
 
-	var _extends4 = _interopRequireDefault(_extends3);
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 	var _defineProperty2 = __webpack_require__(12);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-	var _toConsumableArray2 = __webpack_require__(7);
+	var _extends4 = __webpack_require__(2);
 
-	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+	var _extends5 = _interopRequireDefault(_extends4);
 
 	var _regenerator = __webpack_require__(6);
 
@@ -508,7 +508,16 @@ module.exports =
 	                            case 0:
 	                                return _context2.abrupt('return', this.mapper.ensureTableExists(Model, {
 	                                    readCapacityUnits: Model.readCapacity,
-	                                    writeCapacityUnits: Model.writeCapacity
+	                                    writeCapacityUnits: Model.writeCapacity,
+	                                    indexOptions: Model.indexes.reduce(function (options, index) {
+	                                        return (0, _extends5.default)({}, options, (0, _defineProperty3.default)({}, index.name, {
+	                                            readCapacityUnits: index.readCapacity,
+	                                            writeCapacityUnits: index.writeCapacity,
+	                                            projection: index.projection,
+	                                            type: index.type
+
+	                                        }));
+	                                    }, {})
 	                                }).then(function () {
 	                                    return _this2;
 	                                }));
@@ -686,7 +695,7 @@ module.exports =
 	                var domain = _ref8.domain;
 	                return getCustomOrDefaultList(domain);
 	            }).reduce(function (finalList, list, i) {
-	                return (0, _extends4.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i], list));
+	                return (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i], list));
 	            }, {});
 	        }
 	        throw new Error('Not found a valid dynamodborm domain');
@@ -1317,6 +1326,7 @@ module.exports =
 	      schema = _ref.schema,
 	      tableName = _ref.tableName,
 	      className = _ref.className,
+	      indexes = _ref.indexes,
 	      writeCapacity = _ref.writeCapacity,
 	      readCapacity = _ref.readCapacity;
 	  var objectValuesMaps = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : [];
@@ -1388,6 +1398,13 @@ module.exports =
 	    configurable: false, // não configurável
 	    writable: false, // não gravável
 	    value: readCapacity
+	  });
+
+	  Object.defineProperty(ModelClass, 'indexes', {
+	    enumerable: false, // não enumerável
+	    configurable: false, // não configurável
+	    writable: false, // não gravável
+	    value: indexes
 	  });
 
 	  applyRootSchema(ModelClass, { schema: parsedSchema, tableName: ModelClass.tableName }, connection, Joi.validate, rootJoischema);
