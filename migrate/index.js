@@ -6,7 +6,13 @@ const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
 const packageName = JSON.parse(fs.readFileSync('package.json')).name
-const actionDeploy = deploy.bind(null, Migration, ChangeLogAggregator, getMigrationsFiles)
+const actionDeploy = deploy.bind(
+    null,
+    packageName,
+    Migration,
+    ChangeLogAggregator,
+    getMigrationsFiles,
+)
 
 function rollback() {}
 
