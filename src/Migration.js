@@ -41,7 +41,8 @@ Migration.do = function(operation, fnList, migration, label) {
         console.log(`${migrationName}, ${domain} is about to start`)
         const bindedFn = fn.bind(migration)
         return bindedFn(DomainAggregator)
-        .then( () => {
+        .then( (data) => {
+            console.log('done data ::: ', data)
             const duration = Date.now() - start
             console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
             return migration.afterEach({ 
@@ -56,7 +57,9 @@ Migration.do = function(operation, fnList, migration, label) {
             })    
         }).catch( (err) => {
             const duration = Date.now() - start 
-            console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
+
+            console.log(`${migrationName}, ${domain} has errored : ${duration} seconds`)
+            console.log('ERROR:::', err)
             return migration.afterEach({
                 operation,
                 completedAt: (new Date()).toISOString(), 
