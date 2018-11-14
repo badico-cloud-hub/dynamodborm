@@ -649,6 +649,8 @@ module.exports =
 	        }
 	        var fullpath = _path2.default.join.apply(_path2.default, [].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
 
+	        console.log('fullpath: ', fullpath);
+
 	        if (_fs2.default.existsSync(fullpath)) {
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
 	            if (migrationsfile.length) {

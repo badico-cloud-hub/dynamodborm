@@ -125,6 +125,8 @@ export function getMigrationsFiles(domain) {
             'migrations'
         ])
 
+        console.log('fullpath: ', fullpath)
+
         if (fs.existsSync(fullpath)) {
             const migrationsfile = fs.readdirSync(fullpath)
             if (migrationsfile.length) {
