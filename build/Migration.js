@@ -380,7 +380,7 @@ module.exports =
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -647,17 +647,20 @@ module.exports =
 	                throw new Error('Not a valid domain name');
 	            }
 	        }
-	        var fullpath = _path2.default.join.apply(_path2.default, ['src'].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
+	        var fullpath = _path2.default.join.apply(_path2.default, [process.cwd(), 'src'].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
 
 	        if (_fs2.default.existsSync(fullpath)) {
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
 	            if (migrationsfile.length) {
 	                return migrationsfile.map(function (filepath) {
-	                    return '' + _path2.default.join(__dirname, fullpath, filepath);
+	                    return '' + _path2.default.join(fullpath, filepath);
 	                });
 	            }
 	        }
-	        var defaultPath = _path2.default.join.apply(_path2.default, [__dirname].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
+	        console.log('dirname', __);
+	        var defaultPath = _path2.default.join.apply(_path2.default, [
+	        // __dirname,
+	        process.cwd()].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
 	        // default create-table
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
 	            return '' + _path2.default.join(defaultPath, filepath);
@@ -686,7 +689,6 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
 /* 12 */

@@ -121,6 +121,7 @@ export function getMigrationsFiles(domain) {
             }
         }
         const fullpath = path.join(...[
+            process.cwd(),
             'src',
             ...(domainName ? domainName.split('/') : []),
             'migrations'
@@ -130,11 +131,13 @@ export function getMigrationsFiles(domain) {
         if (fs.existsSync(fullpath)) {
             const migrationsfile = fs.readdirSync(fullpath)
             if (migrationsfile.length) {
-                return migrationsfile.map(filepath => `${path.join(__dirname, fullpath, filepath)}`)
+                return migrationsfile.map(filepath => `${path.join(fullpath, filepath)}`)
             }
         }
+        console.log('dirname', __)
         const defaultPath = path.join(
-            __dirname,
+            // __dirname,
+            process.cwd(),
             ...(domainName ? domainName.split('/') : []),
             'node_modules',
             '@spark',

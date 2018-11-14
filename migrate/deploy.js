@@ -66,6 +66,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
             }
             const migrationsToBeDeployed = getMigrationsToBeDeployed()
             const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
+                
                 const fn = require(filepath)[functor]
                 return ({
                     fn,
