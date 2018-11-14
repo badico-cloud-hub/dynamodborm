@@ -4,7 +4,9 @@ import mkdirp from 'mkdirp'
 import cli from 'commander'
 import Migration, { getMigrationsFiles } from './Migration'
 
-function deploy (cmd, { domain, region, force, label }) {
+function deploy (label, { domain, region, force }) {
+
+    // return console.log(label, domain, region)
     const functor = 'up'
     const migration = new Migration({ region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
@@ -123,7 +125,8 @@ function add(migrationName, { kind }) {
             __dirname,
             'src',
             'migrations',
-            `${(new Date()).toISOString()}_${migrationName}.js`
+            `${migrationName}.js`
+            // `${(new Date()).toISOString()}_${migrationName}.js`
         ),
         content,
         'utf8',
@@ -135,11 +138,11 @@ cli
     .description('DynamodbORM command line interface')
 
 cli
-    .command('deploy')
+    .command('deploy <label>')
     .option('-f, --force', 'Ignore the existence of actual instance')
-    .option('-r, --region', 'Choose a region different from us-east-1')
-    .option('-d, --domain', 'Name of domain for put up')
-    .option('-l, --label', 'Label for operation')
+    .option('-r, --region [value]', 'Choose a region different from us-east-1')
+    .option('-d, --domain [value]', 'Name of domain for put up')
+    // .option('-l, --label', 'Label for operation')
     .action(deploy)
 
 cli

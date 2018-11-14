@@ -682,6 +682,8 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
+
+	exports.default = Migration;
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
@@ -1912,14 +1914,15 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function deploy(cmd, _ref) {
+	function deploy(label, _ref) {
 	    var _this = this;
 
 	    var domain = _ref.domain,
 	        region = _ref.region,
-	        force = _ref.force,
-	        label = _ref.label;
+	        force = _ref.force;
 
+
+	    // return console.log(label, domain, region)
 	    var functor = 'up';
 	    var migration = new _Migration2.default({ region: region }, {});
 	    var ChangeLogRepository = migration.ChangeLogAggregator.Repository;
@@ -2036,12 +2039,16 @@ module.exports =
 	    var content = '\n    // migration of kind: ' + kind + ' TODO: add recomendations on template\n    module.exports.up = function(Aggregator) {\n       \n        \n    }\n\n    module.exports.down = function(Aggregator) {\n       \n        \n    }\n    ';
 	    // criar arquivo na pasta
 	    console.log(_path2.default.join(__dirname, 'src', 'migrations', new Date().toISOString() + '_' + migrationName + '.js'));
-	    _fs2.default.writeFileSync(_path2.default.join(__dirname, 'src', 'migrations', new Date().toISOString() + '_' + migrationName + '.js'), content, 'utf8');
+	    _fs2.default.writeFileSync(_path2.default.join(__dirname, 'src', 'migrations', migrationName + '.js'
+	    // `${(new Date()).toISOString()}_${migrationName}.js`
+	    ), content, 'utf8');
 	}
 
 	_commander2.default.version('v0.1.0-beta.0', '-v, --version').description('DynamodbORM command line interface');
 
-	_commander2.default.command('deploy').option('-f, --force', 'Ignore the existence of actual instance').option('-r, --region', 'Choose a region different from us-east-1').option('-d, --domain', 'Name of domain for put up').option('-l, --label', 'Label for operation').action(deploy);
+	_commander2.default.command('deploy <label>').option('-f, --force', 'Ignore the existence of actual instance').option('-r, --region [value]', 'Choose a region different from us-east-1').option('-d, --domain [value]', 'Name of domain for put up')
+	// .option('-l, --label', 'Label for operation')
+	.action(deploy);
 
 	_commander2.default.command('rollback').option('-f, --force', 'Ignore the existence of actual instance').option('-d, --domain', 'Name of domain for put down').action(rollback);
 
@@ -2128,8 +2135,10 @@ module.exports =
 		"./helpers/parseFields.js": 38,
 		"./index": 18,
 		"./index.js": 18,
-		"./rollback": 50,
-		"./rollback.js": 50
+		"./migrations/myMigrationName": 50,
+		"./migrations/myMigrationName.js": 50,
+		"./rollback": 51,
+		"./rollback.js": 51
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -2196,6 +2205,12 @@ module.exports =
 
 /***/ }),
 /* 50 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+/***/ }),
+/* 51 */
 /***/ (function(module, exports) {
 
 	"use strict";

@@ -167,3 +167,5 @@ export function getMigrationsFiles(domain) {
     }
     return { [domain]: getCustomOrDefaultList(domain) }
 }
+
+export default Migration

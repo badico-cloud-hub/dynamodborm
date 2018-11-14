@@ -682,6 +682,8 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
+
+	exports.default = Migration;
 	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
