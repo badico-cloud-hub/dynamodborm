@@ -3,13 +3,14 @@ const path = require('path')
 const mkdirp = require('mkdirp')
 const cli = require('commander')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
-
+const packageName = JSON.parse(fs.readFileSync('package.json')).name
 function deploy (label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration({ region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
+        const fileToRequire = filename === packageName ? 'build/index' : filename  
         const DomainAggregator = require(filename)
         return ChangeLogRepository.find({
             query: {
