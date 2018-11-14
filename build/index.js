@@ -653,14 +653,14 @@ module.exports =
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
 	            if (migrationsfile.length) {
 	                return migrationsfile.map(function (filepath) {
-	                    return _path2.default.join(fullpath, filepath);
+	                    return './' + _path2.default.join(fullpath, filepath);
 	                });
 	            }
 	        }
 	        var defaultPath = _path2.default.join.apply(_path2.default, (0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []).concat(['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
 	        // default create-table
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
-	            return _path2.default.join(defaultPath, filepath);
+	            return './' + _path2.default.join(defaultPath, filepath);
 	        });
 	    }
 

@@ -130,7 +130,7 @@ export function getMigrationsFiles(domain) {
         if (fs.existsSync(fullpath)) {
             const migrationsfile = fs.readdirSync(fullpath)
             if (migrationsfile.length) {
-                return migrationsfile.map(filepath => path.join(fullpath, filepath))
+                return migrationsfile.map(filepath => `./${path.join(fullpath, filepath)}`)
             }
         }
         const defaultPath = path.join(
@@ -145,7 +145,7 @@ export function getMigrationsFiles(domain) {
         // default create-table
         return fs.readdirSync(
             defaultPath
-        ).map(filepath => path.join(defaultPath, filepath))
+        ).map(filepath => `./${path.join(defaultPath, filepath)}`)
     }
 
     if (!domain) {
