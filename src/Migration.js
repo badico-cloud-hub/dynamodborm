@@ -24,7 +24,7 @@ export class Migration extends Connection {
             {
                 readCapacityUnits: Model.readCapacity, 
                 writeCapacityUnits: Model.writeCapacity,
-                indexOptions: Model.indexes.reduce((options, index) => ({
+                ...(Model.indexes && Model.indexes.length ? { indexOptions: Model.indexes.reduce((options, index) => ({
                     ...options,
                     [index.name]: {
                         readCapacityUnits: index.readCapacity, 
@@ -34,6 +34,7 @@ export class Migration extends Connection {
 
                     }
                 }),{})
+             } : {})
             }).then(() => this )
     }
 

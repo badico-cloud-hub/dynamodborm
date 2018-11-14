@@ -506,10 +506,10 @@ module.exports =
 	                    while (1) {
 	                        switch (_context2.prev = _context2.next) {
 	                            case 0:
-	                                return _context2.abrupt('return', this.mapper.ensureTableExists(Model, {
+	                                return _context2.abrupt('return', this.mapper.ensureTableExists(Model, (0, _extends5.default)({
 	                                    readCapacityUnits: Model.readCapacity,
-	                                    writeCapacityUnits: Model.writeCapacity,
-	                                    indexOptions: Model.indexes.reduce(function (options, index) {
+	                                    writeCapacityUnits: Model.writeCapacity
+	                                }, Model.indexes && Model.indexes.length ? { indexOptions: Model.indexes.reduce(function (options, index) {
 	                                        return (0, _extends5.default)({}, options, (0, _defineProperty3.default)({}, index.name, {
 	                                            readCapacityUnits: index.readCapacity,
 	                                            writeCapacityUnits: index.writeCapacity,
@@ -518,7 +518,7 @@ module.exports =
 
 	                                        }));
 	                                    }, {})
-	                                }).then(function () {
+	                                } : {})).then(function () {
 	                                    return _this2;
 	                                }));
 
