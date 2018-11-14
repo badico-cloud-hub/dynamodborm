@@ -140,7 +140,7 @@ export function getMigrationsFiles(domain) {
                 'node_modules',
                 '@spark',
                 'dynamodborm',
-                'src',
+                'migrate',
                 'default-migrations'
             )
         )

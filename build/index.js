@@ -657,7 +657,7 @@ module.exports =
 	        }
 
 	        // default create-table
-	        return _fs2.default.readdirSync(_path2.default.join.apply(_path2.default, (0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []).concat(['node_modules', '@spark', 'dynamodborm', 'src', 'default-migrations'])));
+	        return _fs2.default.readdirSync(_path2.default.join.apply(_path2.default, (0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []).concat(['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations'])));
 	    }
 
 	    if (!domain) {
