@@ -574,7 +574,8 @@ module.exports =
 	        var start = Date.now();
 	        console.log(migrationName + ', ' + domain + ' is about to start');
 	        var bindedFn = fn.bind(migration);
-	        return bindedFn(DomainAggregator).then(function () {
+	        return bindedFn(DomainAggregator).then(function (data) {
+	            console.log('done data ::: ', data);
 	            var duration = Date.now() - start;
 	            console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
 	            return migration.afterEach({
@@ -589,7 +590,9 @@ module.exports =
 	            });
 	        }).catch(function (err) {
 	            var duration = Date.now() - start;
-	            console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
+
+	            console.log(migrationName + ', ' + domain + ' has errored : ' + duration + ' seconds');
+	            console.log('ERROR:::', err);
 	            return migration.afterEach({
 	                operation: operation,
 	                completedAt: new Date().toISOString(),
@@ -836,7 +839,7 @@ module.exports =
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -855,6 +858,7 @@ module.exports =
 
 	  var _Object$definePropert;
 
+	  console.log('TABLE NAME Being applyed', tableName);
 	  Object.assign(classDefinition.prototype, {
 	    connection: connection,
 	    validator: validator,
