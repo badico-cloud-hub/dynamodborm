@@ -81,8 +81,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 ...filteredFns,
             ]
         }, [])
-        utils.inspect(listFns
-            )
+        console.log(utils.inspect(listFns))
         // applied to Migration
         Migration.do('deploy', listFns, migration, label)
     }) 
