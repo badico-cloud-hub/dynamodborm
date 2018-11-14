@@ -121,6 +121,7 @@ export function getMigrationsFiles(domain) {
             }
         }
         const fullpath = path.join(...[
+            'src',
             ...(domainName ? domainName.split('/') : []),
             'migrations'
         ])
@@ -128,6 +129,7 @@ export function getMigrationsFiles(domain) {
         console.log('fullpath: ', fullpath)
 
         if (fs.existsSync(fullpath)) {
+            console.log('custom one!!!')
             const migrationsfile = fs.readdirSync(fullpath)
             if (migrationsfile.length) {
                 return migrationsfile
