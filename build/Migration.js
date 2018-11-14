@@ -380,7 +380,7 @@ module.exports =
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -648,7 +648,7 @@ module.exports =
 	                throw new Error('Not a valid domain name');
 	            }
 	        }
-	        var fullpath = _path2.default.join(__dirname, [].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
+	        var fullpath = _path2.default.join.apply(_path2.default, [].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
 
 	        if (_fs2.default.existsSync(fullpath)) {
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
@@ -658,11 +658,11 @@ module.exports =
 	        }
 
 	        // default create-table
-	        return _fs2.default.readdirSync(_path2.default.join.apply(_path2.default, [__dirname].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'src', 'default-migrations'])));
+	        return _fs2.default.readdirSync(_path2.default.join.apply(_path2.default, (0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []).concat(['node_modules', '@spark', 'dynamodborm', 'src', 'default-migrations'])));
 	    }
 
 	    if (!domain) {
-	        var _package = JSON.parse(_fs2.default.readFileSync(_path2.default.join(__dirname, 'package.json')));
+	        var _package = JSON.parse(_fs2.default.readFileSync('package.json'));
 	        if (checkValidDynamodbORMDomain(_package)) {
 	            // procceed with reading on the actual package
 	            return (0, _defineProperty3.default)({}, _package.name, getCustomOrDefaultList());
@@ -683,7 +683,6 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
 /* 12 */

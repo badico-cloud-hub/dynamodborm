@@ -18,7 +18,7 @@ export class Migration extends Connection {
       return this
     }
     
-    async createTable( Model ) {
+    async createTable(Model) {
         return this.mapper.ensureTableExists(
             Model,
             {
@@ -120,7 +120,7 @@ export function getMigrationsFiles(domain) {
                 throw new Error('Not a valid domain name')
             }
         }
-        const fullpath = path.join(__dirname, [
+        const fullpath = path.join(...[
             ...(domainName ? domainName.split('/') : []),
             'migrations'
         ])
@@ -135,7 +135,7 @@ export function getMigrationsFiles(domain) {
         // default create-table
         return fs.readdirSync(
             path.join(
-                __dirname,
+                // __dirname,
                 ...(domainName ? domainName.split('/') : []),
                 'node_modules',
                 '@spark',
@@ -147,7 +147,7 @@ export function getMigrationsFiles(domain) {
     }
 
     if (!domain) {
-        const _package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json') ))
+        const _package = JSON.parse(fs.readFileSync('package.json'))
         if (checkValidDynamodbORMDomain(_package)) {
             // procceed with reading on the actual package
             return { [_package.name]: getCustomOrDefaultList() }
