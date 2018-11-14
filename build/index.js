@@ -586,7 +586,7 @@ module.exports =
 	        return bindedFn(DomainAggregator).then(function (data) {
 	            console.log('done data ::: ', data);
 	            var duration = Date.now() - start;
-	            console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
+	            return console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
 	            return migration.afterEach({
 	                operation: operation,
 	                kind: kind,
@@ -601,7 +601,7 @@ module.exports =
 	            var duration = Date.now() - start;
 
 	            console.log(migrationName + ', ' + domain + ' has errored : ' + duration + ' seconds');
-	            console.log('ERROR:::', err);
+	            return console.log('ERROR:::', err);
 	            return migration.afterEach({
 	                operation: operation,
 	                completedAt: new Date().toISOString(),

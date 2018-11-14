@@ -31,7 +31,7 @@ export class Migration extends Connection {
                         writeCapacityUnits: index.writeCapacity,
                         projection: index.projection,
                         type: index.type,
-                        
+
                     }
                 }),{})
             }).then(() => this )
@@ -54,7 +54,7 @@ Migration.do = function(operation, fnList, migration, label) {
         .then( (data) => {
             console.log('done data ::: ', data)
             const duration = Date.now() - start
-            console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
+            return console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
             return migration.afterEach({ 
                 operation,
                 kind,
@@ -69,7 +69,7 @@ Migration.do = function(operation, fnList, migration, label) {
             const duration = Date.now() - start 
 
             console.log(`${migrationName}, ${domain} has errored : ${duration} seconds`)
-            console.log('ERROR:::', err)
+            return console.log('ERROR:::', err)
             return migration.afterEach({
                 operation,
                 completedAt: (new Date()).toISOString(), 
