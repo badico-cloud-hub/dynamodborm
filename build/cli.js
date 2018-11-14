@@ -2026,14 +2026,16 @@ module.exports =
 	    console.log('migration name: ', migrationName, 'kind: ', kind);
 
 	    // se pasta nao existir criar pasta
-	    if (!_fs2.default.existsSync(_path2.default.join(__dirname, 'src', 'migrations'))) {
-	        // mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
-	        _fs2.default.mkdirSync(_path2.default.join(__dirname, 'src', 'migrations'));
-	    }
+	    // if(!fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory()) {
+	    //     // mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
+	    //     const r = fs.mkdirSync(path.join(__dirname, 'src', 'migrations'))
+	    //     console.log(r, fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory())
+	    // }
 
 	    // carregar template
 	    var content = '\n    // migration of kind: ' + kind + ' TODO: add recomendations on template\n    module.exports.up = function(Aggregator) {\n       \n        \n    }\n\n    module.exports.down = function(Aggregator) {\n       \n        \n    }\n    ';
 	    // criar arquivo na pasta
+	    console.log(_path2.default.join(__dirname, 'src', 'migrations', new Date().toISOString() + '_' + migrationName + '.js'));
 	    _fs2.default.writeFileSync(_path2.default.join(__dirname, 'src', 'migrations', new Date().toISOString() + '_' + migrationName + '.js'), content, 'utf8');
 	}
 

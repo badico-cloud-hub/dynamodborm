@@ -90,12 +90,13 @@ function rollback() {}
 
 function add(migrationName, { kind }) {
     console.log('migration name: ', migrationName, 'kind: ', kind)
-
+    
     // se pasta nao existir criar pasta
-    if(!fs.existsSync(path.join(__dirname, 'src', 'migrations'))) {
-        mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
-        // fs.mkdirSync(path.join(__dirname, 'src', 'migrations'))
-    }
+    // if(!fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory()) {
+    //     // mkdirp.sync(path.join(__dirname, 'src', 'migrations'))
+    //     const r = fs.mkdirSync(path.join(__dirname, 'src', 'migrations'))
+    //     console.log(r, fs.statSync(path.join(__dirname, 'src', 'migrations')).isDirectory())
+    // }
 
     // carregar template
     const content = `
@@ -111,6 +112,12 @@ function add(migrationName, { kind }) {
     }
     `
     // criar arquivo na pasta
+    console.log(path.join(
+        __dirname,
+        'src',
+        'migrations',
+        `${(new Date()).toISOString()}_${migrationName}.js`
+    ))
     fs.writeFileSync(
         path.join(
             __dirname,
