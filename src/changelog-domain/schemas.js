@@ -14,7 +14,7 @@ export const ChangeLogSchema = hasToBe => ({
     },
     operation: {
       type: 'String',
-      validator: hasToBe.string().valid('Deploy', 'Rollback').required()
+      validator: hasToBe.string().valid('deploy', 'rollback').required()
     },
     label: {
       type: 'String',
@@ -24,7 +24,7 @@ export const ChangeLogSchema = hasToBe => ({
       type: 'String',
       keyType: 'RANGE',
       indexKeyConfigurations: {
-        'changeNumber-index': 'HASH'
+        'label-changeNumber-index': 'RANGE'
       },
       validator: hasToBe.string().required()
     },
