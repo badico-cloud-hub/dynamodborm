@@ -6,7 +6,7 @@ const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
 const packageName = JSON.parse(fs.readFileSync('package.json')).name
-const actionDeploy = deploy.bind(null, Migration, ChangeLogAggregator)
+const actionDeploy = deploy.bind(null, Migration, ChangeLogAggregator, getMigrationsFiles)
 
 function rollback() {}
 
@@ -21,16 +21,16 @@ function add(migrationName, { kind }) {
 
     // carregar template
     const content = `
-    // migration of kind: ${kind} TODO: add recomendations on template
-    module.exports.up = function(Aggregator) {
-       
-        
-    }
+// migration of kind: ${kind} TODO: add recomendations on template
+module.exports.up = function(Aggregator) {
+    
+    
+}
 
-    module.exports.down = function(Aggregator) {
-       
-        
-    }
+module.exports.down = function(Aggregator) {
+    
+    
+}
     `
     // criar arquivo na pasta
     fs.writeFileSync(

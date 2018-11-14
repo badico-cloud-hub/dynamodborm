@@ -1,4 +1,4 @@
-function deploy (Migration, ChangeLogAggregator, label, { domain, region, force }) {
+function deploy (Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
