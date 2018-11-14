@@ -573,7 +573,8 @@ module.exports =
 
 	        var start = Date.now();
 	        console.log(migrationName + ', ' + domain + ' is about to start');
-	        fn.bind(migration, DomainAggregator).then(function () {
+	        var bindedFn = fn.bind(migration);
+	        return bindedFn(DomainAggregator).then(function () {
 	            var duration = Date.now() - start;
 	            console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
 	            return migration.afterEach({

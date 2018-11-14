@@ -39,7 +39,8 @@ Migration.do = function(operation, fnList, migration, label) {
     const bindedFns = fnList.map(({ fn, migrationName, DomainAggregator, kind, domain } ) => {
         const start = Date.now()
         console.log(`${migrationName}, ${domain} is about to start`)
-        fn.bind(migration, DomainAggregator)
+        const bindedFn = fn.bind(migration)
+        return bindedFn(DomainAggregator)
         .then( () => {
             const duration = Date.now() - start
             console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
