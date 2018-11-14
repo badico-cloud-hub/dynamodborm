@@ -21,6 +21,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 domain: filename,
                 logs,
                 migrations: domainsMigrationListFiles[filename].map(filepath => {
+                    console.log('filepath: ', filepath)
                     const filename = filepath.split('migrations/')[1]
                     const migrationName = filename.slice(0, filename.length - 3)
                     return ({
