@@ -1,4 +1,4 @@
-const utils = require('utils')
+const utils = require('util')
 function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
