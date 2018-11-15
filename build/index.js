@@ -704,7 +704,6 @@ module.exports =
 	                });
 	            }
 	        }
-	        console.log('dirname', __);
 	        var defaultPath = _path2.default.join.apply(_path2.default, [
 	        // __dirname,
 	        process.cwd()].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));

@@ -184,7 +184,6 @@ export function getMigrationsFiles(domain) {
                 return migrationsfile.map(filepath => `${path.join(fullpath, filepath)}`)
             }
         }
-        console.log('dirname', __)
         const defaultPath = path.join(
             // __dirname,
             process.cwd(),
