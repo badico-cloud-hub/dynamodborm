@@ -53,6 +53,8 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
             ) => {
                 if (!logs.length) return migrations
                 // TODO: find relation of deploy and rollback
+                console.log('last log', utils.inspect(logs[0]))
+                console.log(index, '-', migrations[index])
                 if (migrations[index].migrationName === lastMigrationDeployed) {
                     if (lastOperationDeployed === 'deploy') {
                         return _migrations
