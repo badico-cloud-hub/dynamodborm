@@ -657,7 +657,11 @@ module.exports =
 	    try {
 	        console.log(operation + ' about to start');
 	        var _start = Date.now();
-	        return migration.createTable(migration.ChangeLogAggregator.Model).then(function () {
+	        var ChangeLog = migration.ChangeLogAggregator.ChangeLog;
+
+	        console.log('migration table to be created', _util2.default.inspect(ChangeLog));
+	        return migration.createTable(ChangeLog).then(function () {
+	            console.log('migration table created :::');
 	            return lineupMigrations(bindedFns).then(function (lastFnCompleted) {
 	                return console.log(operation + ' has being completed, duration: ' + (Date.now() - _start) + ' seconds');
 	            });

@@ -114,7 +114,10 @@ Migration.do = function(operation, fnList, migration, label) {
     try {
         console.log(`${operation} about to start`)
         const start = Date.now()
-        return migration.createTable(migration.ChangeLogAggregator.Model).then(() => {
+        const { ChangeLog } = migration.ChangeLogAggregator
+        console.log('migration table to be created', util.inspect(ChangeLog))
+        return migration.createTable(ChangeLog).then(() => {
+            console.log('migration table created :::')
             return lineupMigrations(bindedFns).then(lastFnCompleted =>
                 console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
             )
