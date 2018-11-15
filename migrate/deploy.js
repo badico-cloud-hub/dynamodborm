@@ -17,6 +17,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 subject: 'status'
             }
         }).then((logs) => {
+            console.log(utils.inspect(logs))
             return {
                 DomainAggregator,
                 domain: filename,
@@ -25,6 +26,8 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                     console.log('filepath: ', filepath)
                     const filename = filepath.split('migrations/')[1]
                     const migrationName = filename.slice(0, filename.length - 3)
+                    console.log(`filename: ${filename}`)
+                    console.log(`migrationName: ${migrationName}`)
                     return ({
                         filepath,
                         migrationName,
