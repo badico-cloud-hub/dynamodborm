@@ -23,11 +23,8 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 domain: filename,
                 logs,
                 migrations: domainsMigrationListFiles[filename].map(filepath => {
-                    console.log('filepath: ', filepath)
                     const filename = filepath.split('migrations/')[1]
                     const migrationName = filename.slice(0, filename.length - 3)
-                    console.log(`filename: ${filename}`)
-                    console.log(`migrationName: ${migrationName}`)
                     return ({
                         filepath,
                         migrationName,
@@ -53,11 +50,6 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
             ) => {
                 if (!logs.length) return migrations
                 // TODO: find relation of deploy and rollback
-                console.log('last log', utils.inspect(logs[logs.length - 1]))
-                console.log(`LOGS ::: `, utils.inspect(logs))
-                console.log(`migrations ::: `, utils.inspect(migrations))
-                console.log(`${index} ::: `, utils.inspect(migrations[index]))
-                console.log('EQUAAAAAALS ::::: ', migrations[index].migrationName === lastMigrationDeployed)
                 const reversedMigrations = migrations.slice().reverse();
                 if (reversedMigrations[index].migrationName === lastMigrationDeployed) {
                     if (lastOperationDeployed === 'deploy') {
