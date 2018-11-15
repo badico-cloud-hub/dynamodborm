@@ -391,6 +391,10 @@ module.exports =
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
+	var _objectWithoutProperties2 = __webpack_require__(3);
+
+	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
 	var _defineProperty2 = __webpack_require__(12);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
@@ -572,50 +576,67 @@ module.exports =
 	}(_Connection3.default);
 
 	Migration.do = function (operation, fnList, migration, label) {
-	    console.log('deploy about to start');
-	    var bindedFns = fnList.map(function (_ref6) {
-	        var fn = _ref6.fn,
-	            migrationName = _ref6.migrationName,
-	            DomainAggregator = _ref6.DomainAggregator,
-	            kind = _ref6.kind,
-	            domain = _ref6.domain;
+	    var lineupMigrations = function lineupMigrations(funcs) {
+	        return funcs.reduce(function (promise, _ref6) {
+	            var fn = _ref6.fn,
+	                migrationName = _ref6.migrationName,
+	                DomainAggregator = _ref6.DomainAggregator,
+	                kind = _ref6.kind,
+	                domain = _ref6.domain;
 
-	        var start = Date.now();
-	        console.log(migrationName + ', ' + domain + ' is about to start');
-	        var bindedFn = fn.bind(migration);
-	        return bindedFn(DomainAggregator).then(function (data) {
-	            console.log('done data ::: ', data);
-	            var duration = Date.now() - start;
-	            return console.log(migrationName + ', ' + domain + ' has ended: ' + duration + ' seconds');
-	            return migration.afterEach({
-	                operation: operation,
-	                kind: kind,
-	                completedAt: new Date().toISOString(),
-	                duration: duration,
-	                domain: domain,
-	                label: label,
-	                migrationName: migrationName,
-	                status: 1 // 'success'
-	            });
-	        }).catch(function (err) {
-	            var duration = Date.now() - start;
+	            // log begin here
+	            var start = Date.now();
+	            return promise.then(function (lastFnCompleted) {
+	                console.log(migrationName + ', ' + domain + ' is about to start');
+	                return fn(DomainAggregator).then(function (m) {
+	                    var duration = Date.now() - start;
+	                    console.log(migrationName + ', ' + domain + ' has completed: ' + duration + ' seconds');
 
-	            console.log(migrationName + ', ' + domain + ' has errored : ' + duration + ' seconds');
-	            return console.log('ERROR:::', err);
-	            return migration.afterEach({
-	                operation: operation,
-	                completedAt: new Date().toISOString(),
-	                duration: duration,
-	                kind: kind,
-	                domain: domain,
-	                label: label,
-	                migrationName: migrationName,
-	                status: 0, // error 
-	                errorMessage: err
+	                    return m.afterEach({
+	                        operation: operation,
+	                        kind: kind,
+	                        completedAt: new Date().toISOString(),
+	                        duration: duration,
+	                        domain: domain,
+	                        label: label,
+	                        migrationName: migrationName,
+	                        status: 1 // 'success'
+	                    });
+	                }) // put aggregator
+	                .catch(function (err) {
+	                    console.log(migrationName + ', ' + domain + ' has throw: ' + duration + ' seconds');
+	                    console.log('ERROR::::', err);
+	                    return migration.afterEach({
+	                        operation: operation,
+	                        completedAt: new Date().toISOString(),
+	                        duration: duration,
+	                        kind: kind,
+	                        domain: domain,
+	                        label: label,
+	                        migrationName: migrationName,
+	                        status: 0, // error 
+	                        errorMessage: err
+	                    }).then(function () {
+	                        throw new Error('A error has being occured, check migration logs for more information');
+	                    });
+	                });
 	            });
-	        });
+	        }, Promise.resolve([]));
+	    };
+	    var bindedFns = fnList.map(function (_ref7) {
+	        var fn = _ref7.fn,
+	            args = (0, _objectWithoutProperties3.default)(_ref7, ['fn']);
+	        return (0, _extends5.default)({ fn: fn.bind(migration) }, args);
 	    });
-	    return Promise.all(bindedFns);
+	    try {
+	        console.log(operation + ' about to start');
+	        var _start = Date.now();
+	        return lineupMigrations(bindedFns).then(function (lastFnCompleted) {
+	            return console.log(operation + ' has being completed, duration: ' + (Date.now() - _start) + ' seconds');
+	        });
+	    } catch (err) {
+	        console.log('Error has being catch and has interrupted ' + operation + ', duration: ' + (Date.now() - start) + ' seconds');
+	    }
 	};
 
 	function getMigrationsFiles(domain) {
@@ -691,8 +712,8 @@ module.exports =
 	        var domains = findDomainDeps(_package);
 	        if (domains.length) {
 	            // go to domain packages
-	            return domains.map(function (_ref8) {
-	                var domain = _ref8.domain;
+	            return domains.map(function (_ref9) {
+	                var domain = _ref9.domain;
 	                return getCustomOrDefaultList(domain);
 	            }).reduce(function (finalList, list, i) {
 	                return (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i], list));
