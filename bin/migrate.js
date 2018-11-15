@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-const lib = require('../migrate')
+require('../migrate')
