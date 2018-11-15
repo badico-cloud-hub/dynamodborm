@@ -59,15 +59,16 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 const reversedMigrations = migrations.slice().reverse();
                 if (reversedMigrations[index].migrationName === logsOrdered[logIndex].migrationName) {
                     if (logsOrdered[logIndex].operation === 'deploy') {
-                        return _migrations
+                        return _migrations.slice().reverse()
                     }
                     const nextIterator = index + 1
                     const nextLogIterator = logIndex + 1
-                    if (reversedMigrations.length - 1 >= index) {
+                    if (reversedMigrations.length - 1 >= index 
+                    ) {
                         return [
                             ..._migrations,
                             reversedMigrations[index]
-                        ]
+                        ].slice().reverse()
                     }
                     return getMigrationsToBeDeployed([
                         ..._migrations,
