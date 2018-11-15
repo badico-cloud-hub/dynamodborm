@@ -58,19 +58,20 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 console.log(`migrations ::: `, utils.inspect(migrations))
                 console.log(`${index} ::: `, utils.inspect(migrations[index]))
                 console.log('EQUAAAAAALS ::::: ', migrations[index].migrationName === lastMigrationDeployed)
-                if (migrations[index].migrationName === lastMigrationDeployed) {
+                const reversedMigrations = migrations.slice().reverse();
+                if (reversedMigrations[index].migrationName === lastMigrationDeployed) {
                     if (lastOperationDeployed === 'deploy') {
                         return _migrations
                     }
                     return [
                         ..._migrations,
-                        migrations[index]
+                        reversedMigrations[index]
                     ]
                 }
                 const nextIterator = index + 1
                 return getMigrationsToBeDeployed([
                     ..._migrations,
-                    migrations[index]
+                    reversedMigrations[index]
                 ], nextIterator)
             }
             const migrationsToBeDeployed = getMigrationsToBeDeployed()
