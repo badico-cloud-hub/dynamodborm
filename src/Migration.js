@@ -46,45 +46,63 @@ export class Migration extends Connection {
 }
 
 Migration.do = function(operation, fnList, migration, label) {
-    console.log('deploy about to start')
-    const bindedFns = fnList.map(({ fn, migrationName, DomainAggregator, kind, domain } ) => {
+    const lineupMigrations = funcs =>
+        funcs.reduce((
+            promise,   
+            { fn, migrationName, DomainAggregator, kind, domain },
+        ) => {
+            // log begin here
+            const start = Date.now()
+            return promise
+                .then((lastFnCompleted) => {
+                console.log(`${migrationName}, ${domain} is about to start`)
+                return fn(DomainAggregator)
+                        .then(m => {
+                            const duration = Date.now() - start
+                            console.log(`${migrationName}, ${domain} has completed: ${duration} seconds`)
+                        
+                            return m.afterEach({ 
+                                operation,
+                                kind,
+                                completedAt: (new Date()).toISOString(), 
+                                duration, 
+                                domain,
+                                label,
+                                migrationName,
+                                status: 1, // 'success'
+                            })
+                        }) // put aggregator
+                        .catch(err => {
+                            console.log(`${migrationName}, ${domain} has throw: ${duration} seconds`)
+                            console.log('ERROR::::', err)
+                            return migration.afterEach({
+                                operation,
+                                completedAt: (new Date()).toISOString(), 
+                                duration,
+                                kind,
+                                domain,
+                                label,
+                                migrationName,
+                                status: 0, // error 
+                                errorMessage: err
+                            }).then(() => {
+                                throw new Error('A error has being occured, check migration logs for more information')
+                            })
+                        })
+                })
+        },
+        Promise.resolve([]),
+    )
+    const bindedFns = fnList.map(({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }))
+    try {
+        console.log(`${operation} about to start`)
         const start = Date.now()
-        console.log(`${migrationName}, ${domain} is about to start`)
-        const bindedFn = fn.bind(migration)
-        return bindedFn(DomainAggregator)
-        .then( (data) => {
-            console.log('done data ::: ', data)
-            const duration = Date.now() - start
-            return console.log(`${migrationName}, ${domain} has ended: ${duration} seconds`)
-            return migration.afterEach({ 
-                operation,
-                kind,
-                completedAt: (new Date()).toISOString(), 
-                duration, 
-                domain,
-                label,
-                migrationName,
-                status: 1, // 'success'
-            })    
-        }).catch( (err) => {
-            const duration = Date.now() - start 
-
-            console.log(`${migrationName}, ${domain} has errored : ${duration} seconds`)
-            return console.log('ERROR:::', err)
-            return migration.afterEach({
-                operation,
-                completedAt: (new Date()).toISOString(), 
-                duration,
-                kind,
-                domain,
-                label,
-                migrationName,
-                status: 0, // error 
-                errorMessage: err
-            })    
-        } )
-    })
-    return Promise.all(bindedFns) 
+        return lineupMigrations(bindedFns).then(lastFnCompleted =>
+            console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
+        )
+    } catch (err) {
+        console.log(`Error has being catch and has interrupted ${operation}, duration: ${Date.now() - start} seconds`)
+    }
 }
 
 
