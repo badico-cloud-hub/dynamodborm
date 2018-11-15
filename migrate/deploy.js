@@ -47,27 +47,41 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 migrationName: lastMigrationDeployed,
                 operation: lastOperationDeployed,
             } = logs[logs.length - 1] || {}
+
+            const logsOrdered = logs.slice().reverse()
             const getMigrationsToBeDeployed = (
                 _migrations = [],
                 index = 0,
+                logIndex = 0,
             ) => {
                 if (!logs.length) return migrations
                 // TODO: find relation of deploy and rollback
                 const reversedMigrations = migrations.slice().reverse();
-                if (reversedMigrations[index].migrationName === lastMigrationDeployed) {
-                    if (lastOperationDeployed === 'deploy') {
+                if (reversedMigrations[index].migrationName === logsOrdered[logIndex].migrationName) {
+                    if (logsOrdered[logIndex].operation === 'deploy') {
                         return _migrations
                     }
-                    return [
+                    const nextIterator = index + 1
+                    const nextLogIterator = logIndex + 1
+                    if (reversedMigrations.length - 1 >= index) {
+                        return [
+                            ..._migrations,
+                            reversedMigrations[index]
+                        ]
+                    }
+                    return getMigrationsToBeDeployed([
                         ..._migrations,
                         reversedMigrations[index]
-                    ]
+                    ],
+                        nextIterator,
+                        nextLogIterator
+                    )
                 }
                 const nextIterator = index + 1
                 return getMigrationsToBeDeployed([
                     ..._migrations,
                     reversedMigrations[index]
-                ], nextIterator)
+                ], nextIterator, logIndex)
             }
             const migrationsToBeDeployed = getMigrationsToBeDeployed()
             const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
