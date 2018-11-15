@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 
 const fs = require('fs')
 const path = require('path')
@@ -86,3 +85,5 @@ cli
     .action(add)
 
 cli.parse(process.argv)
+
+module.exports.cli
