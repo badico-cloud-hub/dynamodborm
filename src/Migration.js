@@ -215,7 +215,10 @@ export function getMigrationsFiles(domain) {
             // go to domain packages
            return domains.map(
                 ({ domain }) => getCustomOrDefaultList(domain)
-            ).reduce((finalList, list, i) => (console.log('lists domains ::: ', util.inspect(domains)), {
+            ).reduce((finalList, list, i) => (
+                console.log('lists domains ::: ', util.inspect(domains)),
+                console.log(i, 'item domain ::: ', util.inspect(domains[i])),
+                {
                 ...finalList,
                 [domains[i]]: list,
             }), {})
