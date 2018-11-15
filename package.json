@@ -68,7 +68,7 @@
     "verbose": true
   },
   "bin": {
-    "dynamodborm": "./migrate/index.js"
+    "dynamodborm": "./bin/migrate.js"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.6.1",
