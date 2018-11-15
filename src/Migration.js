@@ -184,13 +184,14 @@ export function getMigrationsFiles(domain) {
                 return migrationsfile.map(filepath => `${path.join(fullpath, filepath)}`)
             }
         }
+
         const defaultPath = path.join(
-            // __dirname,
-            process.cwd(),
-            ...(domainName ? domainName.split('/') : []),
-            'node_modules',
-            '@spark',
-            'dynamodborm',
+            __dirname,
+            // process.cwd(),
+            // ...(domainName ? domainName.split('/') : []),
+            // 'node_modules',
+            // '@spark',
+            // 'dynamodborm',
             'migrate',
             'default-migrations'
         )

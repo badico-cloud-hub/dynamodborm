@@ -380,7 +380,7 @@ module.exports =
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(__dirname) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -704,9 +704,14 @@ module.exports =
 	                });
 	            }
 	        }
-	        var defaultPath = _path2.default.join.apply(_path2.default, [
-	        // __dirname,
-	        process.cwd()].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations']));
+
+	        var defaultPath = _path2.default.join(__dirname,
+	        // process.cwd(),
+	        // ...(domainName ? domainName.split('/') : []),
+	        // 'node_modules',
+	        // '@spark',
+	        // 'dynamodborm',
+	        'migrate', 'default-migrations');
 	        // default create-table
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
 	            return '' + _path2.default.join(defaultPath, filepath);
@@ -735,6 +740,7 @@ module.exports =
 	    }
 	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
+	/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
 /* 12 */
