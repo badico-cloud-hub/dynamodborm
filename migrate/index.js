@@ -23,7 +23,6 @@ const actionRollback = rollback.bind(
     getMigrationsFiles,
 )
 
-function rollback() {}
 
 function add(migrationName, { kind }) {
     console.log('migration name: ', migrationName, 'kind: ', kind)
