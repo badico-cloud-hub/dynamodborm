@@ -89,7 +89,7 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
         }, [])
         console.log(utils.inspect(listFns))
         // applied to Migration
-        Migration.do('down', listFns, migration, label)
+        Migration.do('rollback', listFns, migration, label)
     }) 
 }
 
