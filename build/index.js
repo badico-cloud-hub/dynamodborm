@@ -732,7 +732,7 @@ module.exports =
 	                var domain = _ref9.domain;
 	                return getCustomOrDefaultList(domain);
 	            }).reduce(function (finalList, list, i) {
-	                return console.log('lists domains ::: ', _util2.default.inspect(domains)), console.log(i, 'item domain ::: ', _util2.default.inspect(domains[i])), (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i], list));
+	                return console.log('lists domains ::: ', _util2.default.inspect(domains)), console.log(i, 'item domain ::: ', _util2.default.inspect(domains[i])), (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i].domain, list));
 	            }, {});
 	        }
 	        throw new Error('Not found a valid dynamodborm domain');

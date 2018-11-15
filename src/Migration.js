@@ -220,7 +220,7 @@ export function getMigrationsFiles(domain) {
                 console.log(i, 'item domain ::: ', util.inspect(domains[i])),
                 {
                 ...finalList,
-                [domains[i]]: list,
+                [domains[i].domain]: list,
             }), {})
 
         }
