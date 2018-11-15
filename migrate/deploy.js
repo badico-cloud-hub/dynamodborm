@@ -5,7 +5,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-        console.log('REQUIRE :::', filename)
+        console.log('REQUIRE :::', util.inspect(filename))
         const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
         
         const DomainAggregator = require(fileToRequire)
