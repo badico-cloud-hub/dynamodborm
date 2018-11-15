@@ -196,9 +196,10 @@ export function getMigrationsFiles(domain) {
             'default-migrations'
         )
         // default create-table
+        console.log('DEFAULT PATH ::::', defaultPath)
         return fs.readdirSync(
             defaultPath
-        ).map(filepath => `${path.join(defaultPath, filepath)}`)
+        ).map(filepath => (console.log('DEFAULT FILE PATH :::', filepath),`${path.join(defaultPath, filepath)}`))
     }
 
     if (!domain) {

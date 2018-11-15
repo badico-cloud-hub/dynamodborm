@@ -711,8 +711,9 @@ module.exports =
 	        // ...(domainName ? domainName.split('/') : []),
 	        'node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations');
 	        // default create-table
+	        console.log('DEFAULT PATH ::::', defaultPath);
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
-	            return '' + _path2.default.join(defaultPath, filepath);
+	            return console.log('DEFAULT FILE PATH :::', filepath), '' + _path2.default.join(defaultPath, filepath);
 	        });
 	    }
 
