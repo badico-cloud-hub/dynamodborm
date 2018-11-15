@@ -1,11 +1,14 @@
 const utils = require('util')
-function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
+    console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
+        console.log('REQUIRE :::', utils.inspect(filename))
         const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
+        
         const DomainAggregator = require(fileToRequire)
         return ChangeLogRepository.find({
             query: {
@@ -44,26 +47,28 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
                 migrationName: lastMigrationDeployed,
                 operation: lastOperationDeployed,
             } = logs[logs.length - 1] || {}
+
             const getMigrationsToBeDeployed = (
                 _migrations = [],
                 index = 0,
             ) => {
-                if (!logs.length) return migrations
-                // TODO: find relation of rollback and rollback
-                const reversedMigrations = migrations.slice().reverse();
-                if (reversedMigrations[index].migrationName === lastMigrationDeployed) {
-                    if (lastOperationDeployed === 'rollback') {
+                if (!logs.length) return []
+                // se nao tem nda no log, quer dizer que não há rollback a ser feito
+                
+                // TODO: find relation of deploy and rollback
+                if (migrations[index].migrationName === lastMigrationDeployed) {
+                    if (lastOperationDeployed === 'deploy') {
                         return _migrations
                     }
                     return [
                         ..._migrations,
-                        reversedMigrations[index]
+                        migrations[index]
                     ]
                 }
                 const nextIterator = index + 1
                 return getMigrationsToBeDeployed([
                     ..._migrations,
-                    reversedMigrations[index]
+                    migrations[index]
                 ], nextIterator)
             }
             const migrationsToBeDeployed = getMigrationsToBeDeployed()
@@ -84,10 +89,10 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
         }, [])
         console.log(utils.inspect(listFns))
         // applied to Migration
-        Migration.do('rollback', listFns, migration, label)
+        Migration.do('deploy', listFns, migration, label)
     }) 
 }
 
 module.exports = {
-    rollback
+    deploy
 }

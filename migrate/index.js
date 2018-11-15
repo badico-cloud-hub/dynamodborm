@@ -4,9 +4,18 @@ const mkdirp = require('mkdirp')
 const cli = require('commander')
 const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
+const { rollback } = require('./rollback')
 const { Migration, getMigrationsFiles } = require('../build/Migration')
 const packageName = JSON.parse(fs.readFileSync('package.json')).name
 const actionDeploy = deploy.bind(
+    null,
+    packageName,
+    Migration,
+    ChangeLogAggregator,
+    getMigrationsFiles,
+)
+
+const actionRollback = rollback.bind(
     null,
     packageName,
     Migration,
@@ -65,9 +74,10 @@ cli
 
 cli
     .command('rollback')
+    .option('-r, --region [value]', 'Choose a region different from us-east-1')
     .option('-f, --force', 'Ignore the existence of actual instance')
-    .option('-d, --domain', 'Name of domain for put down')
-    .action(rollback)
+    .option('-d, --domain [value]', 'Name of domain for put down')
+    .action(actionRollback)
 
 cli
     .command('add <migrationName>')
