@@ -11,9 +11,23 @@ export class Migration extends Connection {
         this.ChangeLogAggregator = ChangeLogAggregator
     }
 
-    async afterEach({ operation, completedAt, duration, tableName, migrationName }) {
+    async afterEach({
+        operation,
+        completedAt, 
+        domain,
+        migrationName,
+        kind,
+        status,
+        errorMessage,
+        label,
+        duration,
+    }) {
       const { ChangeLog } = this.ChangeLogAggregator
-      const log = new ChangeLog({ operation, completedAt, duration, tableName, migrationName })
+      const log = new ChangeLog({
+        status,
+        errorMessage,
+        label,
+        operation, completedAt, duration, domain, migrationName, kind })
       await log.save()
       return this
     }
@@ -57,11 +71,11 @@ Migration.do = function(operation, fnList, migration, label) {
                 .then((lastFnCompleted) => {
                 console.log(`${migrationName}, ${domain} is about to start`)
                 return fn(DomainAggregator)
-                        .then(m => {
+                        .then((migrationHasCompleted) => {
                             const duration = Date.now() - start
                             console.log(`${migrationName}, ${domain} has completed: ${duration} seconds`)
                         
-                            return m.afterEach({ 
+                            return migration.afterEach({ 
                                 operation,
                                 kind,
                                 completedAt: (new Date()).toISOString(), 
@@ -71,8 +85,9 @@ Migration.do = function(operation, fnList, migration, label) {
                                 migrationName,
                                 status: 1, // 'success'
                             })
-                        }) // put aggregator
+                        })
                         .catch(err => {
+                            const duration = Date.now() - start
                             console.log(`${migrationName}, ${domain} has throw: ${duration} seconds`)
                             console.log('ERROR::::', err)
                             return migration.afterEach({

@@ -470,16 +470,24 @@ module.exports =
 	            var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
 	                var operation = _ref3.operation,
 	                    completedAt = _ref3.completedAt,
-	                    duration = _ref3.duration,
-	                    tableName = _ref3.tableName,
-	                    migrationName = _ref3.migrationName;
+	                    domain = _ref3.domain,
+	                    migrationName = _ref3.migrationName,
+	                    kind = _ref3.kind,
+	                    status = _ref3.status,
+	                    errorMessage = _ref3.errorMessage,
+	                    label = _ref3.label,
+	                    duration = _ref3.duration;
 	                var ChangeLog, log;
 	                return _regenerator2.default.wrap(function _callee$(_context) {
 	                    while (1) {
 	                        switch (_context.prev = _context.next) {
 	                            case 0:
 	                                ChangeLog = this.ChangeLogAggregator.ChangeLog;
-	                                log = new ChangeLog({ operation: operation, completedAt: completedAt, duration: duration, tableName: tableName, migrationName: migrationName });
+	                                log = new ChangeLog({
+	                                    status: status,
+	                                    errorMessage: errorMessage,
+	                                    label: label,
+	                                    operation: operation, completedAt: completedAt, duration: duration, domain: domain, migrationName: migrationName, kind: kind });
 	                                _context.next = 4;
 	                                return log.save();
 
@@ -588,11 +596,11 @@ module.exports =
 	            var start = Date.now();
 	            return promise.then(function (lastFnCompleted) {
 	                console.log(migrationName + ', ' + domain + ' is about to start');
-	                return fn(DomainAggregator).then(function (m) {
+	                return fn(DomainAggregator).then(function (migrationHasCompleted) {
 	                    var duration = Date.now() - start;
 	                    console.log(migrationName + ', ' + domain + ' has completed: ' + duration + ' seconds');
 
-	                    return m.afterEach({
+	                    return migration.afterEach({
 	                        operation: operation,
 	                        kind: kind,
 	                        completedAt: new Date().toISOString(),
@@ -602,8 +610,8 @@ module.exports =
 	                        migrationName: migrationName,
 	                        status: 1 // 'success'
 	                    });
-	                }) // put aggregator
-	                .catch(function (err) {
+	                }).catch(function (err) {
+	                    var duration = Date.now() - start;
 	                    console.log(migrationName + ', ' + domain + ' has throw: ' + duration + ' seconds');
 	                    console.log('ERROR::::', err);
 	                    return migration.afterEach({

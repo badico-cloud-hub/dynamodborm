@@ -16,6 +16,22 @@ const ChangeLogSchema = hasToBe => ({
       type: 'String',
       validator: hasToBe.string().valid('deploy', 'rollback').required()
     },
+    duration: {
+      type: 'Number',
+      validator: hasToBe.number(),
+    },
+    errorMessage: {
+      type: 'Any',
+      validator: hasToBe.any(),
+    },
+    kind: {
+      type: 'String',
+      validator: hasToBe.string(),
+    },
+    status: {
+      type: 'Number',
+      validator: hasToBe.number().valid(1, 0),
+    },
     label: {
       type: 'String',
       indexKeyConfigurations: {
