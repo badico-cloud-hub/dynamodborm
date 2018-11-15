@@ -61,6 +61,7 @@ export class Migration extends Connection {
 }
 
 Migration.do = function(operation, fnList, migration, label) {
+    
     const lineupMigrations = funcs =>
         funcs.reduce((
             promise,   
@@ -107,21 +108,15 @@ Migration.do = function(operation, fnList, migration, label) {
                         })
                 })
         },
-        // self-migration-bit
         Promise.resolve([]),
     )
     const bindedFns = fnList.map(({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }))
     try {
         console.log(`${operation} about to start`)
         const start = Date.now()
-        const { ChangeLog } = migration.ChangeLogAggregator
-        console.log('migration table to be created', util.inspect(ChangeLog))
-        return migration.createTable(ChangeLog).then(() => {
-            console.log('migration table created :::')
-            return lineupMigrations(bindedFns).then(lastFnCompleted =>
-                console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
-            )
-        })
+        return lineupMigrations(bindedFns).then(lastFnCompleted =>
+            console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
+        )
     } catch (err) {
         console.log(`Error has being catch and has interrupted ${operation}, duration: ${Date.now() - start} seconds`)
     }

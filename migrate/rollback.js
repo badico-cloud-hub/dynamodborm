@@ -4,91 +4,94 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
-    return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-        const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
-        
-        const DomainAggregator = require(fileToRequire)
-        return ChangeLogRepository.find({
-            query: {
-                domain: filename
-            },
-            filter: {
-                type: 'Equals',
-                object: 1, // status.success
-                subject: 'status'
-            }
-        }).then((logs) => {
-            console.log(utils.inspect(logs))
-            return {
+    const { ChangeLog } = ChangeLogAggregator
+    return migration.createTable(ChangeLog).then(() => {
+        return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
+            const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
+            
+            const DomainAggregator = require(fileToRequire)
+            return ChangeLogRepository.find({
+                query: {
+                    domain: filename
+                },
+                filter: {
+                    type: 'Equals',
+                    object: 1, // status.success
+                    subject: 'status'
+                }
+            }).then((logs) => {
+                console.log(utils.inspect(logs))
+                return {
+                    DomainAggregator,
+                    domain: filename,
+                    logs,
+                    migrations: domainsMigrationListFiles[filename].map(filepath => {
+                        const filename = filepath.split('migrations/')[1]
+                        const migrationName = filename.slice(0, filename.length - 3)
+                        return ({
+                            filepath,
+                            migrationName,
+                        })
+                    }),
+                }
+            })
+            
+        })).then((resolveds) => {
+            const listFns = resolveds.reduce((_fns, {
                 DomainAggregator,
-                domain: filename,
+                domain,
                 logs,
-                migrations: domainsMigrationListFiles[filename].map(filepath => {
-                    const filename = filepath.split('migrations/')[1]
-                    const migrationName = filename.slice(0, filename.length - 3)
-                    return ({
-                        filepath,
-                        migrationName,
-                    })
-                }),
-            }
-        })
-        
-    })).then((resolveds) => {
-        const listFns = resolveds.reduce((_fns, {
-            DomainAggregator,
-            domain,
-            logs,
-            migrations,
-        }) => {
-            const {
-                migrationName: lastMigrationDeployed,
-                operation: lastOperationDeployed,
-            } = logs[logs.length - 1] || {}
+                migrations,
+            }) => {
+                const {
+                    migrationName: lastMigrationDeployed,
+                    operation: lastOperationDeployed,
+                } = logs[logs.length - 1] || {}
 
-            const getMigrationsToBeDeployed = (
-                _migrations = [],
-                index = 0,
-            ) => {
-                if (!logs.length) return []
-                // se nao tem nda no log, quer dizer que não há rollback a ser feito
-                
-                // TODO: find relation of deploy and rollback
-                if (migrations[index].migrationName === lastMigrationDeployed) {
-                    if (lastOperationDeployed !== 'deploy') {
-                        return _migrations.slice().reverse()
+                const getMigrationsToBeDeployed = (
+                    _migrations = [],
+                    index = 0,
+                ) => {
+                    if (!logs.length) return []
+                    // se nao tem nda no log, quer dizer que não há rollback a ser feito
+                    
+                    // TODO: find relation of deploy and rollback
+                    if (migrations[index].migrationName === lastMigrationDeployed) {
+                        if (lastOperationDeployed !== 'deploy') {
+                            return _migrations.slice().reverse()
+                        }
+                        return [
+                            ..._migrations,
+                            migrations[index]
+                        ].slice().reverse()
                     }
-                    return [
+                    const nextIterator = index + 1
+                    return getMigrationsToBeDeployed([
                         ..._migrations,
                         migrations[index]
-                    ].slice().reverse()
+                    ], nextIterator)
                 }
-                const nextIterator = index + 1
-                return getMigrationsToBeDeployed([
-                    ..._migrations,
-                    migrations[index]
-                ], nextIterator)
-            }
-            const migrationsToBeDeployed = getMigrationsToBeDeployed()
-            const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
-                
-                const fn = require(filepath)[functor]
-                return ({
-                    fn,
-                    migrationName,
-                    domain,
-                    DomainAggregator
+                const migrationsToBeDeployed = getMigrationsToBeDeployed()
+                const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
+                    
+                    const fn = require(filepath)[functor]
+                    return ({
+                        fn,
+                        migrationName,
+                        domain,
+                        DomainAggregator
+                })
             })
+                return [
+                    ..._fns,
+                    ...filteredFns,
+                ]
+            }, [])
+            console.log(utils.inspect(listFns))
+            // applied to Migration
+            Migration.do('rollback', listFns, migration, label)
         })
-            return [
-                ..._fns,
-                ...filteredFns,
-            ]
-        }, [])
-        console.log(utils.inspect(listFns))
-        // applied to Migration
-        Migration.do('rollback', listFns, migration, label)
-    }) 
+    })
 }
 
 module.exports = {

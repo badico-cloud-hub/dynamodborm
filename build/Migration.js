@@ -600,6 +600,7 @@ module.exports =
 	}(_Connection3.default);
 
 	Migration.do = function (operation, fnList, migration, label) {
+
 	    var lineupMigrations = function lineupMigrations(funcs) {
 	        return funcs.reduce(function (promise, _ref6) {
 	            var fn = _ref6.fn,
@@ -645,9 +646,7 @@ module.exports =
 	                    });
 	                });
 	            });
-	        },
-	        // self-migration-bit
-	        Promise.resolve([]));
+	        }, Promise.resolve([]));
 	    };
 	    var bindedFns = fnList.map(function (_ref7) {
 	        var fn = _ref7.fn,
@@ -657,14 +656,8 @@ module.exports =
 	    try {
 	        console.log(operation + ' about to start');
 	        var _start = Date.now();
-	        var ChangeLog = migration.ChangeLogAggregator.ChangeLog;
-
-	        console.log('migration table to be created', _util2.default.inspect(ChangeLog));
-	        return migration.createTable(ChangeLog).then(function () {
-	            console.log('migration table created :::');
-	            return lineupMigrations(bindedFns).then(function (lastFnCompleted) {
-	                return console.log(operation + ' has being completed, duration: ' + (Date.now() - _start) + ' seconds');
-	            });
+	        return lineupMigrations(bindedFns).then(function (lastFnCompleted) {
+	            return console.log(operation + ' has being completed, duration: ' + (Date.now() - _start) + ' seconds');
 	        });
 	    } catch (err) {
 	        console.log('Error has being catch and has interrupted ' + operation + ', duration: ' + (Date.now() - start) + ' seconds');
