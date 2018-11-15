@@ -1,6 +1,6 @@
 const utils = require('util')
 function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
-    const functor = 'up'
+    const functor = 'down'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
@@ -57,13 +57,13 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
                 
                 // TODO: find relation of deploy and rollback
                 if (migrations[index].migrationName === lastMigrationDeployed) {
-                    if (lastOperationDeployed === 'deploy') {
-                        return _migrations
+                    if (lastOperationDeployed !== 'deploy') {
+                        return _migrations.slice().reverse()
                     }
                     return [
                         ..._migrations,
                         migrations[index]
-                    ]
+                    ].slice().reverse()
                 }
                 const nextIterator = index + 1
                 return getMigrationsToBeDeployed([
@@ -89,7 +89,7 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
         }, [])
         console.log(utils.inspect(listFns))
         // applied to Migration
-        Migration.do('deploy', listFns, migration, label)
+        Migration.do('down', listFns, migration, label)
     }) 
 }
 
