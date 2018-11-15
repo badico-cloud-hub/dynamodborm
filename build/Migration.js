@@ -437,6 +437,10 @@ module.exports =
 
 	var _path2 = _interopRequireDefault(_path);
 
+	var _util = __webpack_require__(17);
+
+	var _util2 = _interopRequireDefault(_util);
+
 	var _Connection2 = __webpack_require__(1);
 
 	var _Connection3 = _interopRequireDefault(_Connection2);
@@ -658,6 +662,7 @@ module.exports =
 	        return isDomain && hasDynamodbORM;
 	    }
 	    function findDomainDeps(_package) {
+	        console.log('PACKAGE ::::', _util2.default.inspect(_package));
 	        var deps = _package.dependencies;
 	        var depsNames = Object.keys(deps);
 	        var depsVersions = Object.values(deps);
@@ -761,6 +766,12 @@ module.exports =
 /***/ (function(module, exports) {
 
 	module.exports = require("path");
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	module.exports = require("util");
 
 /***/ })
 /******/ ]);

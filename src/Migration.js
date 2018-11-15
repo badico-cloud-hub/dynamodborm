@@ -1,6 +1,7 @@
 
 import fs from 'fs'
 import path from 'path'
+import util from 'util'
 import Connection from './Connection'
 // import ChangeLogAggregator from './changelog-domain'
 
@@ -132,6 +133,7 @@ export function getMigrationsFiles(domain) {
         return isDomain && hasDynamodbORM
     }
     function findDomainDeps(_package) {
+        console.log('PACKAGE ::::',util.inspect(_package))
         const deps = _package.dependencies
         const depsNames = Object.keys(deps)
         const depsVersions = Object.values(deps)
