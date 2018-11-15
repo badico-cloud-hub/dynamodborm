@@ -140,8 +140,20 @@ module.exports =
 	    var region = _ref3.region;
 	    (0, _classCallCheck3.default)(this, Connection);
 
-	    this.options = options || { onMissing: 'skip' };
-	    this.client = new _dynamodb2.default({ region: region || 'us-east-1' });
+	    this.options = options || { onMissing: 'skip'
+
+	      /**
+	       * DBLOCALregion: 'localhost',
+	       * endpoint: 'http://localhost:8000'
+	      */
+	    };if (process.env['DBLOCAL']) {
+	      this.client = new _dynamodb2.default({
+	        region: 'localhost',
+	        endpoint: process.env['DBLOCAL']
+	      });
+	    } else {
+	      this.client = new _dynamodb2.default({ region: region || 'us-east-1' });
+	    }
 	    this.mapper = new _dynamodbDataMapper.DataMapper({ client: this.client });
 	  }
 
@@ -633,7 +645,9 @@ module.exports =
 	                    });
 	                });
 	            });
-	        }, Promise.resolve([]));
+	        },
+	        // self-migration-bit
+	        migration.createTable(migration.ChangeLogAggregator.Model));
 	    };
 	    var bindedFns = fnList.map(function (_ref7) {
 	        var fn = _ref7.fn,
@@ -662,11 +676,9 @@ module.exports =
 	        return isDomain && hasDynamodbORM;
 	    }
 	    function findDomainDeps(_package) {
-	        console.log('PACKAGE ::::', _util2.default.inspect(_package));
 	        var deps = _package.dependencies;
 	        var depsNames = Object.keys(deps);
 	        var depsVersions = Object.values(deps);
-	        console.log('PACKAGENAMES ::::', _util2.default.inspect(depsNames));
 	        var getDomains = function getDomains() {
 	            var domains = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	            var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -713,7 +725,7 @@ module.exports =
 	        // default create-table
 	        console.log('DEFAULT PATH ::::', defaultPath);
 	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
-	            return console.log('DEFAULT FILE PATH :::', filepath), '' + _path2.default.join(defaultPath, filepath);
+	            return '' + _path2.default.join(defaultPath, filepath);
 	        });
 	    }
 
@@ -732,7 +744,7 @@ module.exports =
 	                var domain = _ref9.domain;
 	                return getCustomOrDefaultList(domain);
 	            }).reduce(function (finalList, list, i) {
-	                return console.log('lists domains ::: ', _util2.default.inspect(domains)), console.log(i, 'item domain ::: ', _util2.default.inspect(domains[i])), (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i].domain, list));
+	                return (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i].domain, list));
 	            }, {});
 	        }
 	        throw new Error('Not found a valid dynamodborm domain');

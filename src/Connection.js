@@ -12,7 +12,19 @@ async function getMappedItems(iterator, data = []) {
 class Connection {
   constructor({ region }, options) {
     this.options = options || { onMissing: 'skip' }
-    this.client = new Client({ region: region || 'us-east-1' })
+
+    /**
+     * DBLOCALregion: 'localhost',
+     * endpoint: 'http://localhost:8000'
+    */
+    if (process.env['DBLOCAL']) {
+      this.client = new Client({
+        region: 'localhost',
+        endpoint: process.env['DBLOCAL']
+      })
+    } else {
+      this.client = new Client({ region: region || 'us-east-1' })
+    }
     this.mapper = new DataMapper({ client: this.client })
   }
   async query(DomainClass, keys, {index, filter, ...options }) {

@@ -107,7 +107,8 @@ Migration.do = function(operation, fnList, migration, label) {
                         })
                 })
         },
-        Promise.resolve([]),
+        // self-migration-bit
+        migration.createTable(migration.ChangeLogAggregator.Model),
     )
     const bindedFns = fnList.map(({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }))
     try {
@@ -133,11 +134,9 @@ export function getMigrationsFiles(domain) {
         return isDomain && hasDynamodbORM
     }
     function findDomainDeps(_package) {
-        console.log('PACKAGE ::::',util.inspect(_package))
         const deps = _package.dependencies
         const depsNames = Object.keys(deps)
         const depsVersions = Object.values(deps)
-        console.log('PACKAGENAMES ::::',util.inspect(depsNames))
         const getDomains = (domains = [], index = 0) => {
             let this_iteration_domain
             if (depsNames[index].match(/domain-/g)) {
@@ -199,7 +198,7 @@ export function getMigrationsFiles(domain) {
         console.log('DEFAULT PATH ::::', defaultPath)
         return fs.readdirSync(
             defaultPath
-        ).map(filepath => (console.log('DEFAULT FILE PATH :::', filepath),`${path.join(defaultPath, filepath)}`))
+        ).map(filepath => (`${path.join(defaultPath, filepath)}`))
     }
 
     if (!domain) {
@@ -216,8 +215,6 @@ export function getMigrationsFiles(domain) {
            return domains.map(
                 ({ domain }) => getCustomOrDefaultList(domain)
             ).reduce((finalList, list, i) => (
-                console.log('lists domains ::: ', util.inspect(domains)),
-                console.log(i, 'item domain ::: ', util.inspect(domains[i])),
                 {
                 ...finalList,
                 [domains[i].domain]: list,

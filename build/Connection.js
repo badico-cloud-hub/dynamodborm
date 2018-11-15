@@ -140,8 +140,20 @@ module.exports =
 	    var region = _ref3.region;
 	    (0, _classCallCheck3.default)(this, Connection);
 
-	    this.options = options || { onMissing: 'skip' };
-	    this.client = new _dynamodb2.default({ region: region || 'us-east-1' });
+	    this.options = options || { onMissing: 'skip'
+
+	      /**
+	       * DBLOCALregion: 'localhost',
+	       * endpoint: 'http://localhost:8000'
+	      */
+	    };if (process.env['DBLOCAL']) {
+	      this.client = new _dynamodb2.default({
+	        region: 'localhost',
+	        endpoint: process.env['DBLOCAL']
+	      });
+	    } else {
+	      this.client = new _dynamodb2.default({ region: region || 'us-east-1' });
+	    }
 	    this.mapper = new _dynamodbDataMapper.DataMapper({ client: this.client });
 	  }
 

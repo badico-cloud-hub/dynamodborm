@@ -4,9 +4,7 @@ function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFil
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles(domain)
-    console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-        console.log('REQUIRE :::', utils.inspect(filename))
         const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
         
         const DomainAggregator = require(fileToRequire)
