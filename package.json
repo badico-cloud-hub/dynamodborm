@@ -67,6 +67,9 @@
     "setupFiles": [],
     "verbose": true
   },
+  "bin": {
+    "dynamodborm": "./migrate/index.js"
+  },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.6.1",
     "@aws/dynamodb-data-mapper-annotations": "^0.6.1",
