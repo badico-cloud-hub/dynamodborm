@@ -108,15 +108,17 @@ Migration.do = function(operation, fnList, migration, label) {
                 })
         },
         // self-migration-bit
-        migration.createTable(migration.ChangeLogAggregator.Model),
+        Promise.resolve([]),
     )
     const bindedFns = fnList.map(({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }))
     try {
         console.log(`${operation} about to start`)
         const start = Date.now()
-        return lineupMigrations(bindedFns).then(lastFnCompleted =>
-            console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
-        )
+        return migration.createTable(migration.ChangeLogAggregator.Model).then(() => {
+            return lineupMigrations(bindedFns).then(lastFnCompleted =>
+                console.log(`${operation} has being completed, duration: ${Date.now() - start} seconds`)
+            )
+        })
     } catch (err) {
         console.log(`Error has being catch and has interrupted ${operation}, duration: ${Date.now() - start} seconds`)
     }
