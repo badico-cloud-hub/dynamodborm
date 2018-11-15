@@ -679,9 +679,8 @@ module.exports =
 	                }]);
 	                this_iteration_domain = atualized_domains;
 	            }
-
+	            var atualized_index = index + 1;
 	            if (index < depsNames.length) {
-	                var atualized_index = index + 1;
 	                return getDomains(this_iteration_domain || domains, atualized_index);
 	            }
 
