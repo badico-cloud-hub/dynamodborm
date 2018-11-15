@@ -1,5 +1,5 @@
 const utils = require('util')
-function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+function rollback (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
@@ -94,5 +94,5 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
 }
 
 module.exports = {
-    deploy
+    rollback
 }
