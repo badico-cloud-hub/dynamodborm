@@ -666,6 +666,7 @@ module.exports =
 	        var deps = _package.dependencies;
 	        var depsNames = Object.keys(deps);
 	        var depsVersions = Object.values(deps);
+	        console.log('PACKAGENAMES ::::', _util2.default.inspect(depsNames));
 	        var getDomains = function getDomains() {
 	            var domains = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	            var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;

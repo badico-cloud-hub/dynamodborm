@@ -137,6 +137,7 @@ export function getMigrationsFiles(domain) {
         const deps = _package.dependencies
         const depsNames = Object.keys(deps)
         const depsVersions = Object.values(deps)
+        console.log('PACKAGENAMES ::::',util.inspect(depsNames))
         const getDomains = (domains = [], index = 0) => {
             let this_iteration_domain
             if (depsNames[index].match(/domain-/g)) {
