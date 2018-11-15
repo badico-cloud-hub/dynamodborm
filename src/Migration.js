@@ -150,9 +150,8 @@ export function getMigrationsFiles(domain) {
                 ]
                 this_iteration_domain = atualized_domains
             }
-
+            const atualized_index = index + 1
             if (index < depsNames.length) {
-                const atualized_index = index + 1
                 return getDomains(
                     this_iteration_domain || domains,
                     atualized_index,
