@@ -56,6 +56,7 @@ function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles
                 console.log('last log', utils.inspect(logs[logs.length - 1]))
                 console.log(`migrations ::: `, utils.inspect(migrations))
                 console.log(`${index} ::: `, utils.inspect(migrations[index]))
+                console.log('EQUAAAAAALS ::::: ', migrations[index].migrationName === lastMigrationDeployed)
                 if (migrations[index].migrationName === lastMigrationDeployed) {
                     if (lastOperationDeployed === 'deploy') {
                         return _migrations
