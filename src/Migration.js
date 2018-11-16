@@ -81,7 +81,7 @@ Migration.do = function(operation, fnList, migration, label) {
             identifier: '1st argument, operation'
         })
     }
-    if (!(fnList instanceof Array) && !(fnList instanceof Function)){
+    if (!(fnList instanceof Array) && !(fnList.fn instanceof Function)){
         validationErrors.push({
             message: 'Not received a valid task to perform',
             identifier: '2nd argument, fnList'
@@ -95,14 +95,28 @@ Migration.do = function(operation, fnList, migration, label) {
         })
     }
 
-   fnList instanceof Array && fnList.forEach((fn, index) => {  
-        if (fn !== 'function')  {
-            validationErrors.push({
-                message: 'A Task inside the list was not a valid function',
-                identifier: `2nd argument, fnList item in position ${index} [zeroBasedIndex]`
-            })
-        }
-    })
+   if(fnList instanceof Array) {
+    fnList.forEach((i, index) => {  
+        // console.log(util.inspect(i), typeof fn)
+         if (typeof i.fn !== 'function')  {
+             validationErrors.push({
+                 message: 'A Task inside the list was not a valid function',
+                 identifier: `2nd argument, fnList item in position ${index} [zeroBasedIndex]`
+             })
+         }
+     })
+   } else {
+       const { fn } = fnList
+       if (typeof fn !== 'function')  {
+        validationErrors.push({
+            message: 'The Task sended is not a valid function',
+            identifier: `2nd argument, fnList as a unique item`
+        })
+    }
+   }
+   
+
+    fnList instanceof Object 
 
     if (validationErrors.length) {
         return Promise.reject(
@@ -177,7 +191,10 @@ Migration.do = function(operation, fnList, migration, label) {
         },
         Promise.resolve([]),
     )
-    const bindedFns = fnList.map(({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }))
+    const bindedFns = (fnList instanceof Array ? fnList : [fnList]).map(
+        ({ fn, ...args } ) => ({ fn: fn.bind(migration), ...args }),
+    )
+
     try {
         console.log(`${operation} about to start`)
         const start = Date.now()

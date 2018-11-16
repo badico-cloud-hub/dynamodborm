@@ -1,4 +1,5 @@
 import AggregationRoot from '../src'
+import util from 'util'
 import {
     Migration,
 } from '../src/Migration'
@@ -75,6 +76,53 @@ completedAt: {
 
 describe('Migration.do operator', () => {
   it('should exec one after other', async (done) => {
+    expect.assertions(3)
+
+    class ChangeLogModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+      class ChangeLogDomain extends AggregationRoot {
+      }
+  
+      const ChangeLogMockAggregator = new ChangeLogDomain({
+        ModelClass: ChangeLogModel,
+        schema,
+        className: 'ChangeLog',
+        ...config,
+      })
+
+      const migration = new Migration(ChangeLogMockAggregator, config)
+      const sequence = []
+      const first = async () => sequence.push('first')
+      const second = async () => sequence.push('second')
+      const mockFn = fn => ({
+          fn, 
+          migrationName: 'mocked_migration',
+          DomainAggregator: ChangeLogMockAggregator,
+          kind: 'stup',
+          domain: '@Spec/mock'
+      })
+      try {
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(first), mockFn(second)], migration).then(() => {
+           expect(sequence).toHaveLength(2)
+           expect(sequence[0]).toBe('first')
+           expect(sequence[1]).toBe('second')
+       })
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       return done()
+      } catch (err) {
+          console.log(util.inspect(err))
+          return done()
+      }
+      
+  },100000)
+
+  it('should promissify fnList item if the function is not async', async (done) => {
+    expect.assertions(3)
+    
     class ChangeLogModel {
         constructor(values) {
           Object.assign(this, values)
@@ -92,13 +140,76 @@ describe('Migration.do operator', () => {
 
       const migration = new Migration(ChangeLogMockAggregator, config)
 
+      const sequence = []
+      const first = async () => sequence.push('first')
+      const second = () => sequence.push('second')
+      const mockFn = fn => ({
+        fn, 
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
+    })
+      try {
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(first), mockFn(second)], migration).then(() => {
+           expect(sequence).toHaveLength(2)
+           expect(sequence[0]).toBe('first')
+           expect(sequence[1]).toBe('second')
+       })
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       return done()
+      } catch (err) {
+          return done()
+      }
+  },100000)
 
-      return Migration.do('deploy', [], migration).then(() => {
-        return done()
+  it('should exec if a fn as passed in place of fnList', async (done) => {
+      expect.assertions(3)
+      class ChangeLogModel {
+        constructor(values) {
+          Object.assign(this, values)
+        }
+      }
+      class ChangeLogDomain extends AggregationRoot {
+      }
+  
+      const ChangeLogMockAggregator = new ChangeLogDomain({
+        ModelClass: ChangeLogModel,
+        schema,
+        className: 'ChangeLog',
+        ...config,
       })
-  })
 
-  it('should promissify fnList item if the function is not async', () => {
+      const migration = new Migration(ChangeLogMockAggregator, config)
+
+      const sequence = []
+      const _async = async () => sequence.push('async')
+      const _sync = () => sequence.push('sync')
+      const mockFn = fn => ({
+        fn, 
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
+    })
+      try {
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', mockFn(_async), migration)
+       await Migration.do('deploy', mockFn(_sync), migration)
+
+       expect(sequence).toHaveLength(2)
+       expect(sequence[0]).toBe('async')
+       expect(sequence[1]).toBe('sync')
+
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       return done()
+      } catch (err) {
+          return done()
+      }
+  },100000)
+  it('should log the operation after success', async(done) => {
+      expect.assertions(1)
     class ChangeLogModel {
         constructor(values) {
           Object.assign(this, values)
@@ -116,10 +227,35 @@ describe('Migration.do operator', () => {
 
       const migration = new Migration(ChangeLogMockAggregator, config)
 
-      Migration.do('deploy', [], migration, 'Migration.do.1')
-  })
+      const sequence = []
+      const _async = async () => sequence.push('async')
+      const _sync = () => sequence.push('sync')
+      const mockFn = fn => ({
+        fn, 
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
+      })
+      try {
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(_async), mockFn(_sync)], migration)
+       await Migration.do('deploy', mockFn(_sync), migration)
+       const { Repository } = ChangeLogMockAggregator
+       const logs = await Repository.find()
+       console.log(logs)
+       expect(logs).toHaveLength(3)
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       return done()
+      } catch (err) {
+          console.log(util.inspect(err))
+          return done()
+      }
+  },100000)
 
-  it('should exec if a fn as passed in place of fnList', () => {
+  it('should log the operation after error', async(done) => {
+      expect.assertions(1)
     class ChangeLogModel {
         constructor(values) {
           Object.assign(this, values)
@@ -137,9 +273,34 @@ describe('Migration.do operator', () => {
 
       const migration = new Migration(ChangeLogMockAggregator, config)
 
-      Migration.do('deploy', [], migration, 'Migration.do.1')
-  })
-  it('should log the operation after success', () => {
+     
+      const sequence = []
+      const _async = async () => sequence.push('async')
+      const _sync = () => sequence.push('sync')
+      const _error = () => Promise.reject(new Error('mock error'))
+      const mockFn = fn => ({
+        fn,
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
+      })
+      try {
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(_error)], migration)
+       return done()
+      } catch (err) {
+            const { Repository } = ChangeLogMockAggregator
+            const logs = await Repository.find()
+            expect(logs).toHaveLength(1)
+            await migration.dropTable(ChangeLogMockAggregator.Model)
+          return done()
+      }
+  },100000)
+
+  it('should stop the operation after error', async(done) => {
+      expect.assertions(2)
     class ChangeLogModel {
         constructor(values) {
           Object.assign(this, values)
@@ -156,11 +317,34 @@ describe('Migration.do operator', () => {
       })
 
       const migration = new Migration(ChangeLogMockAggregator, config)
+      const sequence = []
+      const _async = async () => sequence.push('async')
+      const _sync = () => sequence.push('sync')
+      const _error = () => Promise.reject(new Error('mock error'))
+      const mockFn = fn => ({
+        fn,
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
+      })
+      try {
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(_async), mockFn(_error), mockFn(_sync)], migration)
+       return done()
+      } catch (err) {
+            const { Repository } = ChangeLogMockAggregator
+            const logs = await Repository.find()
+            expect(logs).toHaveLength(2)
+            expect(sequence).toHaveLength(1)
+            await migration.dropTable(ChangeLogMockAggregator.Model)
+          return done()
+      }
+  },100000)
 
-      Migration.do('deploy', [], migration, 'Migration.do.1')
-  })
-
-  it('should log the operation after error', () => {
+  it('should create a unique label for the operation if it was not provided', async(done) => {
+    expect.assertions(5)
     class ChangeLogModel {
         constructor(values) {
           Object.assign(this, values)
@@ -177,33 +361,38 @@ describe('Migration.do operator', () => {
       })
 
       const migration = new Migration(ChangeLogMockAggregator, config)
-
-      Migration.do('deploy', [], migration, 'Migration.do.1')
-  })
-
-  it('should stop the operation after error', () => {
-    class ChangeLogModel {
-        constructor(values) {
-          Object.assign(this, values)
-        }
-      }
-      class ChangeLogDomain extends AggregationRoot {
-      }
-  
-      const ChangeLogMockAggregator = new ChangeLogDomain({
-        ModelClass: ChangeLogModel,
-        schema,
-        className: 'ChangeLog',
-        ...config,
+      const sequence = []
+      const _async = async () => sequence.push('async')
+      const mockFn = fn => ({
+        fn,
+        migrationName: 'mocked_migration',
+        DomainAggregator: ChangeLogMockAggregator,
+        kind: 'stup',
+        domain: '@Spec/mock'
       })
+      try {
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       await migration.createTable(ChangeLogMockAggregator.Model)
+       await Migration.do('deploy', [mockFn(_async)], migration)
+       await Migration.do('rollback', [mockFn(_async)], migration)
+       const { Repository } = ChangeLogMockAggregator
+       const logs = await Repository.find()
+       expect(logs).toHaveLength(2)
+       expect(logs[0]).toHaveProperty('label')
+       expect(logs[0].label).toMatch('deploy.')
+       expect(logs[1].label).toMatch('rollback.')
 
-      const migration = new Migration(ChangeLogMockAggregator, config)
+       const uniquenumberDeploy = logs[0].label.split('.')[1]
+       const uniquenumberRollback = logs[1].label.split('.')[1]
 
-      Migration.do('deploy', [], migration, 'Migration.do.1')
-  })
+       expect(uniquenumberDeploy).not.toBe(uniquenumberRollback)
 
-  it('should create a unique label for the operation if it was not provided', () => {
-  })
+       await migration.dropTable(ChangeLogMockAggregator.Model)
+       return done()
+      } catch (err) {
+          return done()
+      }
+  },100000)
 })
 
 describe('Migration.do validations', () => {
@@ -297,6 +486,7 @@ describe('Migration.do validations', () => {
     })
 
     it('fnList item as not function', async (done) => {
+        expect.assertions(3)
         class ChangeLogModel {
             constructor(values) {
               Object.assign(this, values)
