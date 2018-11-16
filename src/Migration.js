@@ -128,7 +128,10 @@ Migration.do = function(operation, fnList, migration, label) {
 
 
 export function getMigrationsFiles(domain) {
-    const { comandDirPath } = this
+    const {
+        comandDirPath,
+        _package,
+    } = this
     function validateDomainName(name) {
         const isDomain = !!name.match(/domain-/g)
         return isDomain
@@ -176,10 +179,12 @@ export function getMigrationsFiles(domain) {
         }
         const fullpath = path.join(...[
             comandDirPath,
-            'src',
-            ...(domainName ? domainName.split('/') : []),
+            // ('src'),
+            ...(domainName && domainName !== _package.name ? [ 'node_modules', ...domainName.split('/'), 'src' ] : ['src']),
             'migrations'
         ])
+
+        console.log(fullpath)
 
 
         if (fs.existsSync(fullpath)) {
@@ -200,14 +205,12 @@ export function getMigrationsFiles(domain) {
             'default-migrations'
         )
         // default create-table
-        console.log('DEFAULT PATH ::::', defaultPath)
         return fs.readdirSync(
             defaultPath
         ).map(filepath => (`${path.join(defaultPath, filepath)}`))
     }
 
     if (!domain) {
-        const _package = JSON.parse(fs.readFileSync('package.json'))
         if (checkValidDynamodbORMDomain(_package)) {
             // procceed with reading on the actual package
             return { [_package.name]: getCustomOrDefaultList() }

@@ -459,9 +459,6 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import ChangeLogAggregator from './changelog-domain'
-
-
 	var Migration = exports.Migration = function (_Connection) {
 	    (0, _inherits3.default)(Migration, _Connection);
 
@@ -481,7 +478,7 @@ module.exports =
 	    }
 
 	    (0, _createClass3.default)(Migration, [{
-	        key: 'afterEach',
+	        key: 'log',
 	        value: function () {
 	            var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
 	                var operation = _ref3.operation,
@@ -503,7 +500,13 @@ module.exports =
 	                                    status: status,
 	                                    errorMessage: errorMessage,
 	                                    label: label,
-	                                    operation: operation, completedAt: completedAt, duration: duration, domain: domain, migrationName: migrationName, kind: kind });
+	                                    operation: operation,
+	                                    completedAt: completedAt,
+	                                    duration: duration,
+	                                    domain: domain,
+	                                    migrationName: migrationName,
+	                                    kind: kind
+	                                });
 	                                _context.next = 4;
 	                                return log.save();
 
@@ -518,11 +521,11 @@ module.exports =
 	                }, _callee, this);
 	            }));
 
-	            function afterEach(_x) {
+	            function log(_x) {
 	                return _ref2.apply(this, arguments);
 	            }
 
-	            return afterEach;
+	            return log;
 	        }()
 	    }, {
 	        key: 'createTable',
@@ -665,6 +668,9 @@ module.exports =
 	};
 
 	function getMigrationsFiles(domain) {
+	    var comandDirPath = this.comandDirPath;
+
+	    console.log('COMMAAND DIR :::', comandDirPath);
 	    function validateDomainName(name) {
 	        var isDomain = !!name.match(/domain-/g);
 	        return isDomain;
@@ -705,7 +711,7 @@ module.exports =
 	                throw new Error('Not a valid domain name');
 	            }
 	        }
-	        var fullpath = _path2.default.join.apply(_path2.default, [process.cwd(), 'src'].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
+	        var fullpath = _path2.default.join.apply(_path2.default, [comandDirPath, 'src'].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
 
 	        if (_fs2.default.existsSync(fullpath)) {
 	            var migrationsfile = _fs2.default.readdirSync(fullpath);
@@ -718,7 +724,7 @@ module.exports =
 
 	        var defaultPath = _path2.default.join(
 	        // __dirname,
-	        process.cwd(),
+	        comandDirPath,
 	        // ...(domainName ? domainName.split('/') : []),
 	        'node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations');
 	        // default create-table

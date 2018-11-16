@@ -1,5 +1,5 @@
 {
-  "name": "@spark/dynamodborm",
+  "name": "@spark/apis-with-domains",
   "version": "1.0.1",
   "description": "",
   "main": "build/index.js",
@@ -71,11 +71,10 @@
     "dynamodborm": "./bin/migrate.js"
   },
   "dependencies": {
-    "domain-with-migrations": "^0.6.1",
-    "domain-without-migrations": "^0.6.1",
-    
     "@aws/dynamodb-data-mapper": "^0.6.1",
     "@aws/dynamodb-data-mapper-annotations": "^0.6.1",
+    "domain-with-migrations": "^0.6.1",
+    "domain-without-migrations": "^0.6.1",
     "aws-sdk": "^2.266.1",
     "commander": "^2.19.0",
     "joi": "^13.4.0"
