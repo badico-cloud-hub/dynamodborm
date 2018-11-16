@@ -3,8 +3,6 @@ import fs from 'fs'
 import path from 'path'
 import util from 'util'
 import Connection from './Connection'
-// import ChangeLogAggregator from './changelog-domain'
-
 
 export class Migration extends Connection {
     constructor (ChangeLogAggregator, ...args) {
@@ -12,7 +10,7 @@ export class Migration extends Connection {
         this.ChangeLogAggregator = ChangeLogAggregator
     }
 
-    async afterEach({
+    async log({
         operation,
         completedAt, 
         domain,
@@ -28,7 +26,13 @@ export class Migration extends Connection {
         status,
         errorMessage,
         label,
-        operation, completedAt, duration, domain, migrationName, kind })
+        operation,
+        completedAt,
+        duration,
+        domain,
+        migrationName,
+        kind,
+     })
       await log.save()
       return this
     }

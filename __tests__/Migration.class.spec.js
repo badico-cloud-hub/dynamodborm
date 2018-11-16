@@ -1,110 +1,85 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper'
-import { equals } from '@aws/dynamodb-expressions';
+import util from 'util'
 import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
 import AggregationRoot from '../src'
+import { Migration } from '../src/Migration'
+import Connection from '../src/Connection';
 
-const region = 'us-east-1'
-const client = new Client({ region })
-const mapper = new DataMapper({ client })
+process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['STAGE'] = 'test'
 
-const schema = Joi => ({
-  id: {
-    type: 'String',
-    keyType: 'RANGE',
-    validator: Joi.string(),
-    defaultProvider: v4
-  },
-  merchantId: {
+
+const config = {
+  region: 'us-east-1',
+  tableName: 'migrations',
+  readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+  writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+  indexes: [
+      {
+          name: 'label-completedAt-index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+  ]
+}
+const schema = hasToBe => ({
+  domain: {
     type: 'String',
     keyType: 'HASH',
-    validator: Joi.string(),
+    validator: hasToBe.string().required(),
   },
-  parent: {
+  appliedBy: {
     type: 'String',
-    validator: Joi.string()
+    validator: hasToBe.string(),
   },
-  name: {
+  migrationName: {
     type: 'String',
-    validator: Joi.string()
+    validator: hasToBe.string().required()
   },
-  email: {
+  operation: {
     type: 'String',
-    validator: Joi.string()
+    validator: hasToBe.string().valid('deploy', 'rollback').required()
   },
-  documents: (embed, embedClass, itemSchema) => ({
-    type: 'List',
-    memberType: embed(embedClass),
-    validator: Joi.any().when('kind', {
-      is: 'customer',
-      then: Joi.array().items(
-        Joi.object().keys(itemSchema)
-      ).min(1),
-      otherwise:  Joi.array().items(
-        Joi.object().keys(itemSchema)
-      ).min(0)
-    })
-  }),
-
+  duration: {
+    type: 'Number',
+    validator: hasToBe.number(),
+  },
+  errorMessage: {
+    type: 'Any',
+    validator: hasToBe.any(),
+  },
+  kind: {
+    type: 'String',
+    validator: hasToBe.string(),
+  },
+  status: {
+    type: 'Number',
+    validator: hasToBe.number().valid(1, 0),
+  },
+  label: {
+    type: 'String',
+    indexKeyConfigurations: {
+      'label-completedAt-index': 'HASH'
+    },
+    validator: hasToBe.string()
+  },
+  completedAt: {
+    type: 'String',
+    keyType: 'RANGE',
+    indexKeyConfigurations: {
+      'label-completedAt-index': 'RANGE'
+    },
+    validator: hasToBe.string().required()
+  },
 })
 
-export const DocumentSchema = hasToBe => {
-  
-    const newHasToBe = hasToBe.extend((joi) => ({
-      base: joi.string(),
-      name: 'string',
-      language: {
-        validCpf: 'needs to be a valid cpf',
-      },
-      rules: [{
-        name: 'validCpf',
-        validate(params, value, state, options) {
-          if (false) {
-            // Generate an error, state and options need to be passed
-            return this.createError('string.validCpf', {}, state, options);
-          }
-  
-          return value; // Everything is OK
-        }
-      }]
-    }))
-  
-    return ({
-  
-      id: {
-        type: 'String',
-        keyType: 'HASH',
-        defaultProvider: v4,
-        validator: newHasToBe.string().guid()
-      },
-      kind: {
-        type: 'String',
-        validator: newHasToBe.string().required().valid('cpf', 'cnpj')
-      },
-      documentNumber: {
-        type: 'String',
-        validator: newHasToBe.any()
-          .when('kind',{ is: 'cpf', then: newHasToBe.string().validCpf().required(), otherwise: newHasToBe.string() })
-          .required()
-      },
-      verified: {
-        type: 'Boolean',
-        validator: newHasToBe.boolean()
-      },
-      verifiedAt: {
-        type: 'Number',
-        validator: newHasToBe.string()
-        //.timestamp()
-      }
-  
-    })
-  }
-  
-const tableName = 'accounts'
 
 
 describe('Migration instantiation class', () => {
-  it('should be able to give me a repository, a model and a connection', () => {
+  it('Shoud me give a migration instance, that is instance of Connection and Migration', () => {
     class AccountModel {
       constructor(values) {
         Object.assign(this, values)
@@ -113,124 +88,144 @@ describe('Migration instantiation class', () => {
     class AccountDomain extends AggregationRoot {
     }
 
-    const {
-      Repository,
-      Model,
-      connection
-    } = new AccountDomain({
+    const ChangeLogMockAggregator = new AccountDomain({
       ModelClass: AccountModel,
-      tableName,
-      region,
-      schema
+      schema,
+      ...config,
     })
+    // aggregator definition
+    expect(ChangeLogMockAggregator).toBeDefined()
+    
+    const migration = new Migration(ChangeLogMockAggregator, config)
 
-    expect(Repository).toBeDefined()
-    expect(Model).toBeDefined()
-    expect(connection).toBeDefined()
+    expect(migration).toBeInstanceOf(Migration)
+    expect(migration).toBeInstanceOf(Connection)
   })
 
-  it('should be able to give me a working Model connection', async (done) => {
-    expect.assertions(2)
+  it('migration instance, should be able to deploy it self', async (done) => {
+    expect.assertions(4)
     class AccountModel {
       constructor(values) {
         Object.assign(this, values)
       }
     }
-
-    class Domain extends AggregationRoot {
+    class AccountDomain extends AggregationRoot {
     }
 
-    const {
-      Model
-    } = new Domain({
+    const ChangeLogMockAggregator = new AccountDomain({
       ModelClass: AccountModel,
-      tableName,
-      region,
-      schema
+      schema,
+      ...config,
     })
-    expect(Model).toBeDefined()
-    const account = new Model({ name: 'Connection on Aggregation' })
-    const result = await mapper.update({ item: account }, { onMissing: 'skip' })
-    expect(result).toHaveProperty('id')
-    return done()
-  })
+    // aggregator definition
+    expect(ChangeLogMockAggregator).toBeDefined()
+    
+    const migration = new Migration(ChangeLogMockAggregator, config)
 
-  it('should be able to give a connection instance inside my domain', async (done) => {
-    expect.assertions(2)
+    expect(migration).toBeInstanceOf(Migration)
+    expect(migration).toBeInstanceOf(Connection)
+    console.log(util.inspect(process.env))
+    try {
+      const m = await migration.createTable(ChangeLogMockAggregator.Model)
+      expect(m).toBeInstanceOf(Migration)
+      return done()
+    } catch(err) {
+      console.log(util.inspect(err))
+      expect(err).toBeUndefined()
+      return done()
+    }
+  }, 1000000)
+
+  it('migration instance, should be able to rollback it self', async (done) => {
+    expect.assertions(4)
     class AccountModel {
       constructor(values) {
         Object.assign(this, values)
       }
     }
-
-    class Domain extends AggregationRoot {
+    class AccountDomain extends AggregationRoot {
     }
 
-    const { Model, connection } = new Domain({
+    const ChangeLogMockAggregator = new AccountDomain({
       ModelClass: AccountModel,
-      tableName,
-      region,
-      schema
+      schema,
+      ...config,
     })
-    expect(Model).toBeDefined()
-    const account = new Model({ name: 'connection instantiated' })
-    const result = await connection.update(account)
-    expect(result).toHaveProperty('id')
-    return done()
-  })
-  it.only('should be able to query with the mapper instance', async (done) => {
-    expect.assertions(2)
+    // aggregator definition
+    expect(ChangeLogMockAggregator).toBeDefined()
+    
+    const migration = new Migration(ChangeLogMockAggregator, config)
+
+    expect(migration).toBeInstanceOf(Migration)
+    expect(migration).toBeInstanceOf(Connection)
+    console.log(util.inspect(process.env))
+    try {
+      const m = await migration.dropTable(ChangeLogMockAggregator.Model)
+      expect(m).toBeInstanceOf(Migration)
+      return done()
+    } catch(err) {
+      console.log(util.inspect(err))
+      expect(err).toBeUndefined()
+      return done()
+    }
+  }, 1000000)
+
+  it('migration instance, should be able to log a operation', async (done) => {
+    expect.assertions(6)
     class AccountModel {
       constructor(values) {
         Object.assign(this, values)
       }
     }
-    class DocumentModel {
-        constructor(values) {
-            Object.assign(this, values)
+    class AccountDomain extends AggregationRoot {
+    }
+
+    const ChangeLogMockAggregator = new AccountDomain({
+      ModelClass: AccountModel,
+      schema,
+      className: 'ChangeLog',
+      ...config,
+    })
+    // aggregator definition
+    expect(ChangeLogMockAggregator).toBeDefined()
+    
+    const migration = new Migration(ChangeLogMockAggregator, config)
+    const { Repository } = ChangeLogMockAggregator
+    expect(migration).toBeInstanceOf(Migration)
+    expect(migration).toBeInstanceOf(Connection)
+    console.log(util.inspect(process.env))
+    try {
+      const m = await migration.createTable(ChangeLogMockAggregator.Model)
+      expect(m).toBeInstanceOf(Migration)
+
+      await migration.log({
+        operation: 'mock',
+        completedAt: (new Date()).toISOString(), 
+        domain: '@spark/Test',
+        migrationName: 'stub',
+        kind: 'stub',
+        status: '1',
+        // errorMessage,
+        label: 't0.1.0',
+        duration: 1234,
+      })
+
+      const logs = await Repository.find({
+        query: {
+          domain: '@spark/Test'
         }
-    }
+      })
 
-    class Domain extends AggregationRoot {
-    }
+      expect(logs).toBeInstanceOf(Array)
+      expect(logs[0]).toHaveProperty('migrationName', 'stub')
+      await migration.dropTable(ChangeLogMockAggregator.Model)
+      return done()
 
-    const { Model, connection } = new Domain({
-      ModelClass: AccountModel,
-      tableName: 'accounts',
-      region,
-      schema
-    },{
-        ModelClass: DocumentModel,
-        schema: DocumentSchema,
-        className: 'Document',
-        key: 'documents'
-      },
-    )
-    expect(Model).toBeDefined()
-    const cpf = '87771502016'
-    const predicate = equals(cpf);
-    const filterCondition = {
-        ...predicate,
-        subject: 'documents[0].documentNumber'
+    } catch(err) {
+      console.log(util.inspect(err))
+      expect(err).toBeUndefined()
+      return done()
     }
-    const queryOptions = {
-        filter: filterCondition
-    }
-    const account = new Model({ name: 'connection instantiated' })
-    async function getMappedItems(iterator, data = []) {
-        const { done, value } = await iterator.next()
-        if (!done) {
-          return getMappedItems(iterator, [...data, value])
-        }
-        return data
-    }
-    const result = await getMappedItems(connection.mapper.query(Model, {
-        merchantId: '054bb857-7e57-4f32-972e-d70a30f8e793'
-    }, queryOptions), [])
-
-    expect(result[0].documents[0]).toHaveProperty('documentNumber', cpf)
-    return done()
-  })
-
+  }, 1000000)
 
 })
