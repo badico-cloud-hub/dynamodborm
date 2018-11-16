@@ -201,6 +201,9 @@ describe('Migration.do operator', () => {
 
       Migration.do('deploy', [], migration, 'Migration.do.1')
   })
+
+  it('should create a unique label for the operation if it was not provided', () => {
+  })
 })
 
 describe('Migration.do validations', () => {

@@ -95,8 +95,8 @@ Migration.do = function(operation, fnList, migration, label) {
         })
     }
 
-    fnList.forEach((fn, index) => {  
-        if (!isPromise(fn) && typeof fn !== 'function')  {
+   fnList instanceof Array && fnList.forEach((fn, index) => {  
+        if (fn !== 'function')  {
             validationErrors.push({
                 message: 'A Task inside the list was not a valid function',
                 identifier: `2nd argument, fnList item in position ${index} [zeroBasedIndex]`
