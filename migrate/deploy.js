@@ -1,10 +1,10 @@
 const utils = require('util')
-function deploy (packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
-    const domainsMigrationListFiles = getMigrationsFiles(domain)
+    const domainsMigrationListFiles = getMigrationsFiles.bind({ comandDirPath }, domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
     return migration.createTable(ChangeLog).then(() => {

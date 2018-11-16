@@ -124,6 +124,7 @@ Migration.do = function(operation, fnList, migration, label) {
 
 
 export function getMigrationsFiles(domain) {
+    const { comandDirPath } = this
     function validateDomainName(name) {
         const isDomain = !!name.match(/domain-/g)
         return isDomain
@@ -170,7 +171,7 @@ export function getMigrationsFiles(domain) {
             }
         }
         const fullpath = path.join(...[
-            process.cwd(),
+            comandDirPath,
             'src',
             ...(domainName ? domainName.split('/') : []),
             'migrations'
@@ -186,7 +187,7 @@ export function getMigrationsFiles(domain) {
 
         const defaultPath = path.join(
             // __dirname,
-            process.cwd(),
+            comandDirPath,
             // ...(domainName ? domainName.split('/') : []),
             'node_modules',
             '@spark',

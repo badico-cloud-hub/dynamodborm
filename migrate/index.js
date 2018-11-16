@@ -13,6 +13,7 @@ const packageName = JSON.parse(fs.readFileSync('package.json')).name
 
 const actionDeploy = deploy.bind(
     null,
+    process.cwd(),
     packageName,
     Migration,
     ChangeLogAggregator,
@@ -21,6 +22,7 @@ const actionDeploy = deploy.bind(
 
 const actionRollback = rollback.bind(
     null,
+    process.cwd(),
     packageName,
     Migration,
     ChangeLogAggregator,

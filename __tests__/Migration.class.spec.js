@@ -1,8 +1,3 @@
-// Migration class
-
-// readMigrations function
-
-
 import { DataMapper } from '@aws/dynamodb-data-mapper'
 import { equals } from '@aws/dynamodb-expressions';
 import Client from 'aws-sdk/clients/dynamodb'
@@ -108,7 +103,7 @@ export const DocumentSchema = hasToBe => {
 const tableName = 'accounts'
 
 
-describe('AggregationRoot class', () => {
+describe('Migration instantiation class', () => {
   it('should be able to give me a repository, a model and a connection', () => {
     class AccountModel {
       constructor(values) {
