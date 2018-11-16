@@ -66,6 +66,20 @@ export class Migration extends Connection {
 
 Migration.do = function(operation, fnList, migration, label) {
     
+    if (operation !== 'deploy' || 'rollback') {
+        throw new Error('Operation not registered on do')
+    }
+
+    if (!(fnList instanceof Array)){
+        throw new Error('Not received a list of functions')
+    }
+
+    if (!(migration instanceof Migration)) {
+        throw new Error('Not received a instance of Migration')
+    }
+
+    const labelToBeloged = label || `${operation}.${(Date.now())}`
+
     const lineupMigrations = funcs =>
         funcs.reduce((
             promise,   
@@ -81,13 +95,13 @@ Migration.do = function(operation, fnList, migration, label) {
                             const duration = Date.now() - start
                             console.log(`${migrationName}, ${domain} has completed: ${duration} seconds`)
                         
-                            return migration.afterEach({ 
+                            return migration.log({ 
                                 operation,
                                 kind,
                                 completedAt: (new Date()).toISOString(), 
                                 duration, 
                                 domain,
-                                label,
+                                label: labelToBeloged,
                                 migrationName,
                                 status: 1, // 'success'
                             })
@@ -96,13 +110,13 @@ Migration.do = function(operation, fnList, migration, label) {
                             const duration = Date.now() - start
                             console.log(`${migrationName}, ${domain} has throw: ${duration} seconds`)
                             console.log('ERROR::::', err)
-                            return migration.afterEach({
+                            return migration.log({
                                 operation,
                                 completedAt: (new Date()).toISOString(), 
                                 duration,
                                 kind,
                                 domain,
-                                label,
+                                label: labelToBeloged,
                                 migrationName,
                                 status: 0, // error 
                                 errorMessage: err
