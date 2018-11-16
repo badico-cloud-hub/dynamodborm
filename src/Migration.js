@@ -4,6 +4,12 @@ import path from 'path'
 import util from 'util'
 import Connection from './Connection'
 
+class MigrationError extends Error {
+    constructor(genericMessage, errorsList,...args) {
+        super(genericMessage, errorsList, ...args)
+        this.errors = errorsList
+    }
+}
 export class Migration extends Connection {
     constructor (ChangeLogAggregator, ...args) {
         super(...args)
@@ -65,17 +71,46 @@ export class Migration extends Connection {
 }
 
 Migration.do = function(operation, fnList, migration, label) {
-    
-    if (operation !== 'deploy' || 'rollback') {
-        throw new Error('Operation not registered on do')
+    function isPromise(obj) {
+        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
-
-    if (!(fnList instanceof Array)){
-        throw new Error('Not received a list of functions')
+    const validationErrors = []
+    if (operation !== 'deploy' && operation !== 'rollback') {
+        validationErrors.push({
+            message: 'Not received a valid operation to perform',
+            identifier: '1st argument, operation'
+        })
+    }
+    if (!(fnList instanceof Array) && !(fnList instanceof Function)){
+        validationErrors.push({
+            message: 'Not received a valid task to perform',
+            identifier: '2nd argument, fnList'
+        })
     }
 
     if (!(migration instanceof Migration)) {
-        throw new Error('Not received a instance of Migration')
+        validationErrors.push({
+            message: 'Not received a valid migration instance',
+            identifier: '3rd argument, migration'
+        })
+    }
+
+    fnList.forEach((fn, index) => {  
+        if (!isPromise(fn) && typeof fn !== 'function')  {
+            validationErrors.push({
+                message: 'A Task inside the list was not a valid function',
+                identifier: `2nd argument, fnList item in position ${index} [zeroBasedIndex]`
+            })
+        }
+    })
+
+    if (validationErrors.length) {
+        return Promise.reject(
+            new MigrationError(
+                'A validation error has being catch... operation not performed',
+                validationErrors,
+            )
+        )
     }
 
     const labelToBeloged = label || `${operation}.${(Date.now())}`
@@ -84,13 +119,27 @@ Migration.do = function(operation, fnList, migration, label) {
         funcs.reduce((
             promise,   
             { fn, migrationName, DomainAggregator, kind, domain },
+            index,
         ) => {
             // log begin here
             const start = Date.now()
             return promise
                 .then((lastFnCompleted) => {
-                console.log(`${migrationName}, ${domain} is about to start`)
-                return fn(DomainAggregator)
+                    console.log(`${migrationName}, ${domain} is about to start`)
+                    if (isPromise(fn)) {
+                        return fn
+                    }
+
+                    return (...args) => new Promise((resolve, reject) => {
+                        try {
+                            return resolve(fn(...args))
+                        } catch (err) {
+                            return reject(err)
+                        }
+                    })
+                })
+                .then(fnPromissed => {
+                    return fnPromissed(DomainAggregator)
                         .then((migrationHasCompleted) => {
                             const duration = Date.now() - start
                             console.log(`${migrationName}, ${domain} has completed: ${duration} seconds`)
