@@ -71,9 +71,6 @@
     "dynamodborm": "./bin/migrate.js"
   },
   "dependencies": {
-    "domain-with-migrations": "^0.6.1",
-    "domain-without-migrations": "^0.6.1",
-    
     "@aws/dynamodb-data-mapper": "^0.6.1",
     "@aws/dynamodb-data-mapper-annotations": "^0.6.1",
     "aws-sdk": "^2.266.1",

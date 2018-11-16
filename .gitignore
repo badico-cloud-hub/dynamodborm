@@ -1,4 +1,6 @@
 node_modules/
+!/node_modules/domain-with-migrations
+!/node_modules/domain-without-migrations
 coverage/
 # Logs
 logs
