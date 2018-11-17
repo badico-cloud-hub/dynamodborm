@@ -1,16 +1,16 @@
 const utils = require('util')
-const fs = require('fs')
-const path = require('path')
 
-function deploy(comandDirPath, packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+
+function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+    const packageName = _package.name
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
 
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles.bind({
         comandDirPath,
-        _package: JSON.parse(fs.readFileSync(path.join(comandDirPath, 'package.json'))),
-     }, domain)
+        _package,
+     })(domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
     // self-migration

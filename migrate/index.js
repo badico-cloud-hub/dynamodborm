@@ -11,12 +11,13 @@ const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
 const { rollback } = require('./rollback')
 const { add } = require('./add')
-const packageName = JSON.parse(fs.readFileSync('package.json')).name
-
+const _package = JSON.parse(fs.readFileSync('package.json'))
+const packageName = _package.name
+const commandDirPath = process.cwd()
 const actionDeploy = deploy.bind(
     null,
-    process.cwd(),
-    packageName,
+    commandDirPath,
+    _package,
     Migration,
     ChangeLogAggregator,
     getMigrationsFiles,
@@ -24,14 +25,14 @@ const actionDeploy = deploy.bind(
 
 const actionRollback = rollback.bind(
     null,
-    process.cwd(),
-    packageName,
+    commandDirPath,
+    _package,
     Migration,
     ChangeLogAggregator,
     getMigrationsFiles,
 )
 
-const actionAdd = add.bind({commandDirPath: process.cwd()}, fs, path, mkdirp)
+const actionAdd = add.bind({ commandDirPath }, fs, path, mkdirp)
 cli
     .version('v0.1.0-beta.0', '-v, --version')
     .description('DynamodbORM command line interface')

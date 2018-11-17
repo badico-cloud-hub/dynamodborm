@@ -1,9 +1,12 @@
 const utils = require('util')
-function rollback (comandDirPath, packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'down'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
-    const domainsMigrationListFiles = getMigrationsFiles.bind({ comandDirPath }, domain)
+    const domainsMigrationListFiles = getMigrationsFiles.bind({
+        comandDirPath,
+        _package,
+    })(domain)
     
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
         const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
