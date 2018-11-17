@@ -7,6 +7,10 @@ import {
 
 import Repository from '../src/Repository'
 import Connection from '../src/Connection'
+import { Migration } from '../src/Migration'
+import ChangeLogAggregator from '../migrate/changelog-domain'
+import config from '../migrate/changelog-domain/config'
+
 import aggregationRootModel, { Model } from '../src/Model'
 import v4 from 'uuid/v4'
 
@@ -22,33 +26,104 @@ const schema = Joi => ({
     validator: Joi.any,
     defaultProvider: v4
   },
-  parent: {
+  cpf: {
     validator: Joi.any,
-    type: 'String'
+    type: 'Number',
+    indexKeyConfigurations: {
+      'cpf-name-Index': 'HASH'
+    }
   },
   name: {
     validator: Joi.any,
     type: 'String',
     indexKeyConfigurations: {
-      'user-Index': 'RANGE'
+      'cpf-name-Index': 'RANGE'
     }
+  },
+  parent: {
+    validator: Joi.any,
+    type: 'String'
   },
   email: {
     validator: Joi.any,
     type: 'String',
   },
-  cpf: {
-    validator: Joi.any,
-    type: 'Number',
-    indexKeyConfigurations: {
-      'user-Index': 'HASH'
-    }
-  }
+  
 })
 
 const tableName = 'accounts'
+const migration = new Migration(ChangeLogAggregator, { region }) 
 
 describe('Repository', () => {
+  beforeAll( async() => {
+    const root = {}
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    aggregationRootModel(connection, root, {
+      ModelClass: Account,
+      className: 'Account',
+      schema,
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
+    })
+
+    await migration.createTable(Account)
+    const acc1 = new Account({
+      name: 'm1',
+      cpf: '0112'
+    })
+    const acc2 = new Account({
+      cpf: '0111',
+      name: 'm2',
+    })
+    const acc3 = new Account({
+      cpf: '0111',
+      name: 'm3',
+    })
+
+    await acc1.save()
+    await acc2.save()
+    await acc3.save()
+    await migration.createTable(ChangeLogAggregator.Model)
+  })
+  afterAll( async() => {
+    const root = {}
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    aggregationRootModel(connection, root, {
+      ModelClass: Account,
+      className: 'Account',
+      schema,
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
+    })
+    await migration.dropTable(Account)
+    await migration.dropTable(ChangeLogAggregator.Model)
+  })
   it('Repository instantiantion', (done) => {
     expect.assertions(1)
     class AccountModel {
@@ -61,8 +136,18 @@ describe('Repository', () => {
     aggregationRootModel(connection, root, {
       ModelClass: AccountModel,
       tableName,
-      schema,
-      className: 'Account'
+      schema, ...config,
+      tableName,
+      className: 'Account',
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
 
     const repository = new Repository(root.Model, connection)
@@ -82,7 +167,18 @@ describe('Repository', () => {
       ModelClass: AccountModel,
       tableName,
       schema,
-      className: 'Account'
+      className: 'Account',
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
 
     const repository = new Repository(root.Model, connection)
@@ -104,12 +200,24 @@ describe('Repository', () => {
       ModelClass: AccountModel,
       tableName,
       schema,
-      className: 'Account'
+      className: 'Account',
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
     const account = new root.Model({ name: 'mock' })
     const { id } = await connection.update(account)
+
     const repository = new Repository(root.Model, connection)
-    const result = await repository.get(id)
+    const result = await repository.get({ id })
     expect(result).toBeInstanceOf(AccountModel)
     expect(result.get('id')).toBe(id)
     return done()
@@ -175,7 +283,18 @@ describe('Repository', () => {
       ModelClass: AccountModel,
       tableName,
       schema,
-      className: 'Account'
+      className: 'Account',
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
 
     const repository = new Repository(root.Model, connection)
@@ -198,9 +317,24 @@ describe('Repository', () => {
       ModelClass: AccountModel,
       tableName,
       schema,
-      className: 'Account'
+      className: 'Account',
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
-
+    const addAcc = async number => (new root.Model({
+      name: `mm=${number}`,
+      cpf: `${number}`,
+    }).save()) 
+    await Promise.all([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21].map(addAcc))
     const repository = new Repository(root.Model, connection)
     const params = { pageSize: 10 }
     let result = await repository.find(params)
@@ -213,7 +347,7 @@ describe('Repository', () => {
     return done()
   })
 
-  it('should find build a expression - index', async (done) => {
+  it.skip('should find build a expression - index', async (done) => {
     expect.assertions(2)
     const root = {}
     class AccountModel {
@@ -225,14 +359,25 @@ describe('Repository', () => {
       ModelClass: AccountModel,
       tableName,
       schema,
-      className: 'Account'
+      className: 'Account',
+      ...config,
+      tableName,
+      indexes: [
+        {
+          name: 'cpf-name-Index',
+          readCapacity: process.env['MIGRATIONS_READ_CAPACITY'] || 5,
+          writeCapacity: process.env['MIGRATIONS_WRITE_CAPACITY'] || 5,
+          type: 'global',
+          projection: 'all'
+      }
+      ]
     })
 
     const repository = new Repository(root.Model, connection)
     const params = { pageSize: 10 }
     let result = await repository.find({
       query: {
-        yourKey: 'some-value',
+        user: 'Foo',
         index: 'your-index-name'
       }
     })
@@ -306,4 +451,6 @@ describe('Repository', () => {
     expect(1).toBe(2)
     return done()
   }, 15000)
+
+  // filters
 })
