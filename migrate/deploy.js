@@ -113,7 +113,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
             console.log(utils.inspect(listFns))
             // applied to Migration
             if (listFns.length) {
-                Migration.do('deploy', listFns, migration, label)
+               return Migration.do('deploy', listFns, migration, label)
             }
 
             console.log('there are no migrations to run')

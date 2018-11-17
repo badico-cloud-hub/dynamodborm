@@ -1,5 +1,6 @@
 const utils = require('util')
 function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+    const packageName = _package.name
     const functor = 'down'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
@@ -91,7 +92,11 @@ function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, get
         }, [])
         console.log(utils.inspect(listFns))
         // applied to Migration
-        Migration.do('rollback', listFns, migration, label)
+        if (listFns.length) {
+           return Migration.do('rollback', listFns, migration, label)
+        }
+        console.log('there are no migrations to run')
+
     })
 }
 
