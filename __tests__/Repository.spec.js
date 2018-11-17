@@ -10,7 +10,11 @@ import Connection from '../src/Connection'
 import aggregationRootModel, { Model } from '../src/Model'
 import v4 from 'uuid/v4'
 
-const connection = new Connection({ region: 'us-east-1' })
+process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['STAGE'] = 'test'
+
+const region = 'us-east-1'
+const connection = new Connection({ region })
 const schema = Joi => ({
   id: {
     type: 'String',

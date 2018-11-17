@@ -124,7 +124,6 @@ describe('Migration instantiation class', () => {
 
     expect(migration).toBeInstanceOf(Migration)
     expect(migration).toBeInstanceOf(Connection)
-    console.log(util.inspect(process.env))
     try {
       const m = await migration.createTable(ChangeLogMockAggregator.Model)
       expect(m).toBeInstanceOf(Migration)
@@ -158,7 +157,6 @@ describe('Migration instantiation class', () => {
 
     expect(migration).toBeInstanceOf(Migration)
     expect(migration).toBeInstanceOf(Connection)
-    console.log(util.inspect(process.env))
     try {
       const m = await migration.dropTable(ChangeLogMockAggregator.Model)
       expect(m).toBeInstanceOf(Migration)
@@ -193,7 +191,6 @@ describe('Migration instantiation class', () => {
     const { Repository } = ChangeLogMockAggregator
     expect(migration).toBeInstanceOf(Migration)
     expect(migration).toBeInstanceOf(Connection)
-    console.log(util.inspect(process.env))
     try {
       const m = await migration.createTable(ChangeLogMockAggregator.Model)
       expect(m).toBeInstanceOf(Migration)

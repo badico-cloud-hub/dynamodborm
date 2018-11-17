@@ -3,9 +3,14 @@ import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
 import buildAggregatorModel from '../src/Model'
 import Connection from '../src/Connection'
+import { Migration } from '../src/Migration'
+import ChangeLogAggregator from '../migrate/changelog-domain'
+import config from '../migrate/changelog-domain/config'
+process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['STAGE'] = 'test'
 
 const region = 'us-east-1'
-const client = new Client({ region })
+const client = new Client({ region: 'localhost', endpoint: 'http://localhost:8000' })
 const mapper = new DataMapper({ client })
 const connection = new Connection({ region })
 const schema = Joi => ({
@@ -34,9 +39,48 @@ const schema = Joi => ({
 })
 
 const tableName = 'accounts'
-
+const migration = new Migration(ChangeLogAggregator, { region }) 
 describe('Model', () => {
-  it('Model should not be able to use a mapper method', async (done) => {
+  beforeAll( async() => {
+    const root = {}
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    buildAggregatorModel(connection, root, {
+      ModelClass: Account,
+      className: 'Account',
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+
+    await migration.createTable(Account)
+    await migration.createTable(ChangeLogAggregator.Model)
+  })
+  afterAll( async() => {
+    const root = {}
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    buildAggregatorModel(connection, root, {
+      ModelClass: Account,
+      className: 'Account',
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+
+    await migration.dropTable(Account)
+    await migration.dropTable(ChangeLogAggregator.Model)
+  })
+
+  it('Model without proper assignment should not be able to use a mapper method - buildAggregatorModel', async (done) => {
     expect.assertions(1)
     class Account {
       constructor(values = {}) {
@@ -53,7 +97,7 @@ describe('Model', () => {
     return done()
   })
 
-  it('Model should be able to use a mapper method', async (done) => {
+  it('Model with proprer assignment should be able to use a mapper method - buildAggregatorModel', async (done) => {
     expect.assertions(1)
     const root = {}
     class Account {

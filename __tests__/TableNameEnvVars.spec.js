@@ -2,8 +2,11 @@ import { DataMapper } from '@aws/dynamodb-data-mapper'
 import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
 import AggregationRoot from '../src'
+process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['STAGE'] = 'test'
+
 const region = 'us-east-1'
-const client = new Client({ region })
+const client = new Client({ region: 'localhost', endpoint: 'http://localhost:8000' })
 const mapper = new DataMapper({ client })
 
 const tableName = 'stubs'
