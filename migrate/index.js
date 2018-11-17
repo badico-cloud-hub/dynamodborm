@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
+const path = require('path')
+const mkdirp = require('mkdirp')
 const cli = require('commander')
 
 const { Migration, getMigrationsFiles } = require('../build/Migration')
@@ -29,7 +31,7 @@ const actionRollback = rollback.bind(
     getMigrationsFiles,
 )
 
-const actionAdd = add.bind({commandDirPath: process.cwd()})
+const actionAdd = add.bind({commandDirPath: process.cwd()}, fs, path, mkdirp)
 cli
     .version('v0.1.0-beta.0', '-v, --version')
     .description('DynamodbORM command line interface')
