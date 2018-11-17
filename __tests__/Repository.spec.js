@@ -78,7 +78,7 @@ describe('Repository', () => {
       }
       ]
     })
-
+    await migration.dropTable(Account)
     await migration.createTable(Account)
     const acc1 = new Account({
       name: 'm1',

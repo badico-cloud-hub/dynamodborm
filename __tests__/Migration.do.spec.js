@@ -244,7 +244,6 @@ describe('Migration.do operator', () => {
        await Migration.do('deploy', mockFn(_sync), migration)
        const { Repository } = ChangeLogMockAggregator
        const logs = await Repository.find()
-       console.log(logs)
        expect(logs).toHaveLength(3)
        await migration.dropTable(ChangeLogMockAggregator.Model)
        return done()

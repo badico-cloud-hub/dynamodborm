@@ -2,6 +2,10 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper'
 import Client from 'aws-sdk/clients/dynamodb'
 import v4 from 'uuid/v4'
+
+import { Migration } from '../src/Migration'
+import ChangeLogAggregator from '../migrate/changelog-domain'
+import config from '../migrate/changelog-domain/config'
 import AggregationRoot from '../src'
 
 process.env['DBLOCAL'] = 'http://localhost:8000'
@@ -37,9 +41,70 @@ const schema = Joi => ({
 })
 
 const tableName = 'accounts'
+const migration = new Migration(ChangeLogAggregator, { region }) 
 
 
 describe('AggregationRoot class', () => {
+  beforeAll( async() => {
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    class Domain extends AggregationRoot {
+    }
+
+    const { Model } = new Domain({
+      ModelClass: Account,
+      tableName,
+      region,
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+    await migration.dropTable(Model)
+    await migration.createTable(Model)
+    const acc1 = new Model({
+      merchantId: 'm1',
+      cpf: '0112'
+    })
+    const acc2 = new Model({
+      cpf: '0111',
+      merchantId: 'm2',
+    })
+    const acc3 = new Model({
+      merchantId: '0111',
+      name: 'm3',
+    })
+
+    await acc1.save()
+    await acc2.save()
+    await acc3.save()
+    await migration.createTable(ChangeLogAggregator.Model)
+  })
+  afterAll( async() => {
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    class Domain extends AggregationRoot {
+    }
+
+    const { Model } = new Domain({
+      ModelClass: Account,
+      tableName,
+      region,
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+    await migration.dropTable(Model)
+    await migration.dropTable(ChangeLogAggregator.Model)
+  })
+const migration = new Migration(ChangeLogAggregator, { region }) 
   it('should be able to give me a repository, a model and a connection', () => {
     class AccountModel {
       constructor(values) {
@@ -57,7 +122,10 @@ describe('AggregationRoot class', () => {
       ModelClass: AccountModel,
       tableName,
       region,
-      schema
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
     })
 
     expect(Repository).toBeDefined()
@@ -82,7 +150,10 @@ describe('AggregationRoot class', () => {
       ModelClass: AccountModel,
       tableName,
       region,
-      schema
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
     })
     expect(Model).toBeDefined()
     const account = new Model({ name: 'Connection on Aggregation' })
@@ -106,7 +177,10 @@ describe('AggregationRoot class', () => {
       ModelClass: AccountModel,
       tableName,
       region,
-      schema
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
     })
     expect(Model).toBeDefined()
     const account = new Model({ name: 'connection instantiated' })
@@ -114,9 +188,9 @@ describe('AggregationRoot class', () => {
     expect(result).toHaveProperty('id')
     return done()
   })
-  // moved to repository spec
-  it.skip('Repository instantiantion', async (done) => {
-    expect.assertions(2)
+  
+  it('get should no have the merchantId', async (done) => {
+    expect.assertions(4)
     class AccountModel {
       constructor(values) {
         Object.assign(this, values)
@@ -129,30 +203,10 @@ describe('AggregationRoot class', () => {
     const { Repository } = new Domain({
       ModelClass: AccountModel,
       tableName,
-      region: 'us-east-1',
-      schema
-    })
-
-    const result = await Repository.find()
-    expect(result).toBeInstanceOf(Array)
-    expect(result[0]).toBeInstanceOf(AccountModel)
-    return done()
-  })
-  it.only('get should no have the merchantId', async (done) => {
-    expect.assertions(5)
-    class AccountModel {
-      constructor(values) {
-        Object.assign(this, values)
-      }
-    }
-
-    class Domain extends AggregationRoot {
-    }
-
-    const { Repository } = new Domain({
-      ModelClass: AccountModel,
+      schema,
+      ...config,
       tableName,
-      schema
+      indexes: undefined
     })
     const result = await Repository.find()
     expect(result).toBeInstanceOf(Array)
@@ -160,7 +214,6 @@ describe('AggregationRoot class', () => {
     expect(result[0].get()).toHaveProperty('id')
     console.log(result[0])
     const d = result[0].get()
-    console.log(d)
     expect(result[0].get()).not.toHaveProperty('merchantId')
     return done()
   })
@@ -178,7 +231,10 @@ describe('AggregationRoot class', () => {
     const { Repository } = new Domain({
       ModelClass: AccountModel,
       tableName,
-      schema
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
     })
     const result = await Repository.find()
     expect(result).toBeInstanceOf(Array)
@@ -210,7 +266,10 @@ describe('AggregationRoot class', () => {
       ModelClass: AccountModel,
       tableName,
       region: 'us-east-1',
-      schema
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
     })
     const result = await Repository.find()
     expect(result).toBeInstanceOf(Array)
@@ -248,7 +307,10 @@ describe('AggregationRoot class', () => {
       tableName,
       region: 'us-east-1',
       className: 'Account',
-      schema: embedSchema
+      schema: embedSchema,
+      ...config,
+      tableName,
+      indexes: undefined
     }, {
       key: 'address',
       className: 'Address',
@@ -291,7 +353,10 @@ describe('AggregationRoot class', () => {
     const { Address } = new Domain({
       ModelClass: AccountModel,
       tableName,
-      schema: embedSchema
+      schema: embedSchema,
+      ...config,
+      tableName,
+      indexes: undefined
     }, {
       key: 'address',
       className: 'Address',
