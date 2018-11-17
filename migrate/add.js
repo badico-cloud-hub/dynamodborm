@@ -1,12 +1,10 @@
-
-const path = require('path')
-const mkdirp = require('mkdirp')
-const fs = require('fs')
-
-function add(migrationName, { kind }) {    
-    // se pasta nao existir criar pasta
-    if(!fs.existsSync(path.join('src', 'migrations'))) {
-        mkdirp.sync(path.join('src', 'migrations'))
+function add(fs, path, mkdirp, migrationName, { kind }) {
+    if (!migrationName || typeof migrationName !== 'string') {
+        throw new Error('migration name not given')
+    }
+    const { commandDirPath } = this
+    if(!fs.existsSync(path.join(commandDirPath, 'src', 'migrations'))) {
+        mkdirp.sync(path.join(commandDirPath, 'src', 'migrations'))
     }
 
     // carregar template
@@ -25,7 +23,7 @@ module.exports.down = function(Aggregator) {
     // criar arquivo na pasta
     fs.writeFileSync(
         path.join(
-            // __dirname,
+            commandDirPath,
             'src',
             'migrations',
             `${(new Date()).toISOString()}_${migrationName}.js`

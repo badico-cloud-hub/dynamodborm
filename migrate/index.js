@@ -29,6 +29,7 @@ const actionRollback = rollback.bind(
     getMigrationsFiles,
 )
 
+const actionAdd = add.bind({commandDirPath: process.cwd()})
 cli
     .version('v0.1.0-beta.0', '-v, --version')
     .description('DynamodbORM command line interface')
@@ -51,7 +52,7 @@ cli
 cli
     .command('add <migrationName>')
     .option('-k, --kind [value]', 'The Kind of the migration') // table, seed, schema
-    .action(add)
+    .action(actionAdd)
 
 cli.parse(process.argv)
 
