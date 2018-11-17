@@ -107,7 +107,7 @@ export const DocumentSchema = hasToBe => {
 const tableName = 'accounts'
 
 
-describe('AggregationRoot class', () => {
+describe('Connection Query', () => {
   it('should be able to give me a repository, a model and a connection', () => {
     class AccountModel {
       constructor(values) {
@@ -182,7 +182,7 @@ describe('AggregationRoot class', () => {
     expect(result).toHaveProperty('id')
     return done()
   })
-  it.only('should be able to query with the mapper instance', async (done) => {
+  it('should be able to query with the mapper instance', async (done) => {
     expect.assertions(2)
     class AccountModel {
       constructor(values) {
@@ -236,7 +236,7 @@ describe('AggregationRoot class', () => {
     return done()
   })
 
-  it.only('should be able to query with the connection instance', async (done) => {
+  it('should be able to query with the connection instance', async (done) => {
     expect.assertions(2)
     class AccountModel {
       constructor(values) {
@@ -283,7 +283,7 @@ describe('AggregationRoot class', () => {
     return done()
   })
 
-  it.only('should be able to query with the connection instance', async (done) => {
+  it('should be able to query with the connection instance', async (done) => {
     expect.assertions(2)
     class AccountModel {
       constructor(values) {
@@ -326,87 +326,6 @@ describe('AggregationRoot class', () => {
         merchantId: '054bb857-7e57-4f32-972e-d70a30f8e793'
     }, queryOptions)
     expect(result[0].documents[0]).toHaveProperty('documentNumber', cpf)
-    return done()
-  })
-
-  // moved to repository spec
-  it.skip('Repository instantiantion', async (done) => {
-    expect.assertions(2)
-    class AccountModel {
-      constructor(values) {
-        Object.assign(this, values)
-      }
-    }
-
-    class Domain extends AggregationRoot {
-    }
-
-    const { Repository } = new Domain({
-      ModelClass: AccountModel,
-      tableName,
-      region: 'us-east-1',
-      schema
-    })
-
-    const result = await Repository.find()
-    expect(result).toBeInstanceOf(Array)
-    expect(result[0]).toBeInstanceOf(AccountModel)
-    return done()
-  })
-
-  it.skip('Return of repository should have the common applied methods', async (done) => {
-    expect.assertions(5)
-    class AccountModel {
-      constructor(values) {
-        Object.assign(this, values)
-      }
-    }
-
-    class Domain extends AggregationRoot {
-    }
-
-    const { Repository } = new Domain({
-      ModelClass: AccountModel,
-      tableName,
-      schema
-    })
-    const result = await Repository.find()
-    expect(result).toBeInstanceOf(Array)
-    expect(result[0]).toBeInstanceOf(AccountModel)
-    expect(result[0].get()).toHaveProperty('id')
-    expect(result[0].get()).toHaveProperty('name')
-    expect(result[0].get('name')).toBeTruthy()
-    return done()
-  })
-
-  it.skip('Return of repository should have the specifc applied methods', async (done) => {
-    expect.assertions(4)
-  
-    class AccountModel {
-      constructor(values) {
-        Object.assign(this, values)
-        this.random = Math.random()
-      }
-
-      getSomeEspecficThing() {
-        return this.random
-      }
-    }
-
-    class Domain extends AggregationRoot {
-    }
-
-    const { Repository } = new Domain({
-      ModelClass: AccountModel,
-      tableName,
-      region: 'us-east-1',
-      schema
-    })
-    const result = await Repository.find()
-    expect(result).toBeInstanceOf(Array)
-    expect(result[0]).toBeInstanceOf(AccountModel)
-    expect(result[0].get()).toHaveProperty('id')
-    expect(result[0].getSomeEspecficThing()).toBeTruthy()
     return done()
   })
 

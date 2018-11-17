@@ -43,7 +43,6 @@ const schema = Joi => ({
 const tableName = 'accounts'
 const migration = new Migration(ChangeLogAggregator, { region }) 
 
-
 describe('AggregationRoot class', () => {
   beforeAll( async() => {
     class Account {
@@ -104,7 +103,6 @@ describe('AggregationRoot class', () => {
     await migration.dropTable(Model)
     await migration.dropTable(ChangeLogAggregator.Model)
   })
-const migration = new Migration(ChangeLogAggregator, { region }) 
   it('should be able to give me a repository, a model and a connection', () => {
     class AccountModel {
       constructor(values) {
