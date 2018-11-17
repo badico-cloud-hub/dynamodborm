@@ -5,7 +5,10 @@ function deploy(comandDirPath, packageName, Migration, ChangeLogAggregator, getM
     const migration = new Migration(ChangeLogAggregator, { region }, {})
 
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
-    const domainsMigrationListFiles = getMigrationsFiles.bind({ comandDirPath }, domain)
+    const domainsMigrationListFiles = getMigrationsFiles.bind({
+        comandDirPath,
+        _package: JSON.parse(fs.readFileSync(path.join(comandDirPath, 'package.json'))),
+     }, domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
     // self-migration
