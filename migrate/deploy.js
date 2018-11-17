@@ -1,17 +1,19 @@
 const utils = require('util')
-function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
+
+function deploy(comandDirPath, packageName, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const functor = 'up'
     const migration = new Migration(ChangeLogAggregator, { region }, {})
-    
+
     const { Repository: ChangeLogRepository } = migration.ChangeLogAggregator
     const domainsMigrationListFiles = getMigrationsFiles.bind({ comandDirPath }, domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
+    // self-migration
     return migration.createTable(ChangeLog).then(() => {
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
             console.log('REQUIRE :::', utils.inspect(filename))
-            const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
-            
+            const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename
+
             const DomainAggregator = require(fileToRequire)
             return ChangeLogRepository.find({
                 query: {
@@ -38,7 +40,7 @@ function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, get
                     }),
                 }
             })
-            
+
         })).then((resolveds) => {
             const listFns = resolveds.reduce((_fns, {
                 DomainAggregator,
@@ -66,7 +68,7 @@ function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, get
                         }
                         const nextIterator = index + 1
                         const nextLogIterator = logIndex + 1
-                        if (reversedMigrations.length - 1 >= index 
+                        if (reversedMigrations.length - 1 >= index
                         ) {
                             return [
                                 ..._migrations,
@@ -89,15 +91,15 @@ function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, get
                 }
                 const migrationsToBeDeployed = getMigrationsToBeDeployed()
                 const filteredFns = migrationsToBeDeployed.map(({ migrationName, filepath }) => {
-                    
+
                     const fn = require(filepath)[functor]
                     return ({
                         fn,
                         migrationName,
                         domain,
                         DomainAggregator
+                    })
                 })
-            })
                 return [
                     ..._fns,
                     ...filteredFns,
@@ -105,9 +107,12 @@ function deploy (comandDirPath, packageName, Migration, ChangeLogAggregator, get
             }, [])
             console.log(utils.inspect(listFns))
             // applied to Migration
-            Migration.do('deploy', listFns, migration, label)
+            if (listFns.length) {
+                Migration.do('deploy', listFns, migration, label)
+            }
+
+            console.log('there are no migrations to run')
         })
-            
     })
 }
 

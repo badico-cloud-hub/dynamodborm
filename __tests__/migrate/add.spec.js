@@ -3,7 +3,6 @@ import fs from 'fs'
 import mkdirp from 'mkdirp'
 import rmdir from 'rimraf'
 import { add } from '../../migrate/add'
-import { resolve } from 'url';
 
 const getMockCommandPath = (mockFolder) => {
     const realcommandpath = process.cwd()  
