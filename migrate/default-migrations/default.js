@@ -6,5 +6,7 @@ module.exports.up = function(aggregator) {
 }
 
 module.exports.down = function(aggregator) {
-    
+    const { Model } = aggregator
+
+    return this.dropTable(Model)
 }
