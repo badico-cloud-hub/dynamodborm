@@ -153,7 +153,7 @@ describe('Repository', () => {
     const repository = new Repository(root.Model, connection)
     expect(repository).toBeInstanceOf(Repository)
     return done()
-  })
+  }, 10000)
 
   it('should return a list of aggregation root class', async (done) => {
     expect.assertions(2)
@@ -303,7 +303,7 @@ describe('Repository', () => {
     expect(result).toBeInstanceOf(Array)
     expect(result).toHaveLength(3)
     return done()
-  })
+  }, 10000)
 
   it('should find build a expression - limit, pageSize & lastId', async (done) => {
     expect.assertions(2)
@@ -345,7 +345,7 @@ describe('Repository', () => {
     const lastId2 = result[9].id
     expect(lastId1).not.toBe(lastId2)
     return done()
-  })
+  }, 15000)
 
   it.skip('should find build a expression - index', async (done) => {
     expect.assertions(2)
@@ -388,7 +388,7 @@ describe('Repository', () => {
     const lastId2 = result[9].id
     expect(lastId1).not.toBe(lastId2)
     return done()
-  })
+  }, 10000)
 
   // for now not working with this cases
   it.skip('query shold work properly', async (done) => {
