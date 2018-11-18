@@ -1,12 +1,12 @@
 export const commonSchema = hasToBe => ({
   createdAt: {
-    type: 'Number',
-    validator: hasToBe.date().timestamp(),
-    defaultProvider: () => new Date()
+    type: 'String',
+    validator: hasToBe.string(),
+    defaultProvider: () => (new Date()).toISOString()
   },
   updatedAt: {
-    type: 'Number',
-    validator: hasToBe.date().timestamp(),
-    defaultProvider: () => new Date()
+    type: 'String',
+    validator: hasToBe.string(),
+    defaultProvider: (() => new Date()).toISOString()
   }
 })

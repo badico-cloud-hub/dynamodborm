@@ -9,7 +9,7 @@ import applySchemaFactory from './helpers/applyAggregationRootSchema'
 import applyCommonMethods from './helpers/applyCommonMethods'
 import buildAggregationRootModelsFactory from './helpers/buildAggregationRootModels'
 import { parseFieldsFactory } from './helpers/parseFields'
-
+import { commonSchema } from './helpers/commonSchema'
 const applyRootSchema = applySchemaFactory({ DynamoDbSchema, DynamoDbTable })
 const applyValueObjectSchema = applyValueObjectSchemaFactory({ DynamoDbSchema })
 
@@ -18,7 +18,8 @@ const buildAgregationRootModel = buildAggregationRootModelsFactory({
   applyRootSchema,
   applyValueObjectSchema,
   applyCommonMethods,
-  Joi
+  Joi,
+  commonSchema
 })
 const parseFields = parseFieldsFactory(Joi)
 

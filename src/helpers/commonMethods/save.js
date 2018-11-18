@@ -1,4 +1,10 @@
-export async function save(options={}) {
+ export async function save(options={}) {
+  const now = (new Date()).toISOString()
+  if (this.id === undefined) {
+    this.createdAt = now
+  }
+  this.updatedAt = now
   const updated = await this.connection.update(this, options)
-  return Object.assign(this, updated.get())
+  Object.assign(this, updated.get())
+  return this
 }

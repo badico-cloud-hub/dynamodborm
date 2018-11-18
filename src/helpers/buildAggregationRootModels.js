@@ -4,6 +4,7 @@ function buildAggregationRootModels(
   applyValueObjectSchema,
   applyCommonMethods,
   Joi,
+  commonSchema,
   connection,
   {
     ModelClass,
@@ -36,7 +37,7 @@ function buildAggregationRootModels(
     {}
   )
   const valueObjectsClasses = objectValuesMaps.reduce((batch, map) => {
-    const mixedSchema = map.schema(Joi)
+    const mixedSchema = { ...commonSchema(Joi), ...map.schema(Joi)}
     const mapSchema = getMapperSchema(mixedSchema)
     const joiSchema = getJoischema(mixedSchema, batch)
 
@@ -61,7 +62,7 @@ function buildAggregationRootModels(
     }
     return name
   } 
-  const mixedRootSchema = schema(Joi)
+  const mixedRootSchema = {  ...commonSchema(Joi), ...schema(Joi)}
   const mapRootSchema = getMapperSchema(mixedRootSchema)
   const rootJoischema = getJoischema(mixedRootSchema, valueObjectsClasses)
   const parsedSchema = (
