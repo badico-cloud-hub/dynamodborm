@@ -1,3 +1,5 @@
+import { DynamoDBORMError } from "./DynamoDBORMError";
+
 class Repository {
   constructor(Model, connection) {
     this.Model = Model
@@ -5,7 +7,14 @@ class Repository {
     this.bucket = []
   }
   async get(filter) {
-    return this.connection.get(this.Model, filter)
+    const bucket = this.connection.get(this.Model, filter)
+    if (!bucket.length) throw new DynamoDBORMError({
+        error: new Error('The item searched was not found'),
+        args: [filter],
+        className: 'Repository',
+        method: 'get'
+    }, 'NotFoundItem')
+    return bucket
   }
 
   async query(key, params) {

@@ -6,7 +6,7 @@ export class DynamoDBORMError extends Error {
         details,
         method
     }, kind) {
-        super(`${kind} has being cath in ${className} on method ${method}`)
+        super(`${kind} has being catch in ${className} on method ${method}`)
         this.name = 'DynamoDBORMError'
         this.kind = kind
         this.error = error
