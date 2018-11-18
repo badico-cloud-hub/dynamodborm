@@ -1,10 +1,21 @@
+import { DomainError } from "../../DomainError";
+
 export function getItem(itemKey, itemId) {
-    const searchById = (items, index=0) =>(
-        (
-            items[index].id === itemId
-            &&  items[index]
-        )
-     || searchById(items, index+1)
-    )
-    return searchById(this[itemKey])
+    if (this[itemKey] !== undefined && !(this[itemKey] instanceof Array)) {
+        throw new DomainError({
+          error: new Error('The item is not a list'),
+          args: [itemKey, Item],
+          method: 'updateItem'
+        }, 'NotValidOperation')
+    }
+
+    const founded = this[itemKey].find(({id}) => id === itemId)
+
+    if(!founded) throw new DomainError({
+        error: new Error('The item searched was not found'),
+        args: [itemKey, Item],
+        method: 'getItem'
+    }, 'NotFoundItem')
+    
+    return founded
   }

@@ -1,5 +1,6 @@
 import { DataMapper } from '@aws/dynamodb-data-mapper'
 import Client from 'aws-sdk/clients/dynamodb'
+import { DynamoDBORMError } from './DynamoDBORMError'
 
 async function getMappedItems(iterator, data = []) {
   const { done, value } = await iterator.next()
@@ -28,60 +29,115 @@ class Connection {
     this.mapper = new DataMapper({ client: this.client })
   }
   async query(DomainClass, keys, {index, filter, ...options }) {
-    if (filter) {
+    try {
+      if (filter) {
+        return getMappedItems(
+          this.mapper.query(
+            DomainClass, keys, {
+              ...( index ? {indexName: index } : {}),
+              filter,
+              ...options }
+          ),
+        )
+      }
+  
+      if (index) {
+        return getMappedItems(
+          this.mapper.query(
+            DomainClass, keys, { indexName: index, ...options }
+          ),
+        )
+      }
       return getMappedItems(
         this.mapper.query(
-          DomainClass, keys, {
-            ...( index ? {indexName: index } : {}),
-            filter,
-            ...options }
+          DomainClass, keys,
         ),
       )
-    }
-
-    if (index) {
-      return getMappedItems(
-        this.mapper.query(
-          DomainClass, keys, { indexName: index, ...options }
-        ),
+    } catch (error) {
+      throw new DynamoDBORMError({
+        error,
+        method: 'query',
+        className: 'Connection',
+        args: [ DomainClass, keys, {index, filter, ...options }]
+      },
+      'ConnectionError',
       )
     }
-    return getMappedItems(
-      this.mapper.query(
-        DomainClass, keys,
-      ),
-    )
   }
 
   async delete(item) {
+    try {
     return this.mapper.delete({ item })
+    } catch (error) {
+      throw new DynamoDBORMError({
+        error,
+        method: 'delete',
+        className: 'Connection',
+        args: [ item ]
+      },
+      'ConnectionError',
+      )
+    }
   }
 
   async get(DomainClass, { index, ...keys}) {
-    if (index) {
-      const list = await getMappedItems(
-        this.mapper.query(
-          DomainClass, keys, { indexName: index }
-        ),
-      )
+    try {
+      if (index) {
+        const list = await getMappedItems(
+          this.mapper.query(
+            DomainClass, keys, { indexName: index }
+          ),
+        )
 
-      if (list.length > 1) {
-        throw new Error('Not unique item')
+        if (list.length > 1) {
+          throw new Error('Not unique item')
+        }
+        return list[0]
       }
-      return list[0]
+      return (await getMappedItems(this.mapper.query(DomainClass, keys)))[0]
+    } catch (error) {
+      throw new DynamoDBORMError({
+        error,
+        method: 'get',
+        className: 'Connection',
+        args: [ DomainClass, { index, ...keys} ]
+      },
+      'ConnectionError',
+      )
     }
-    return (await getMappedItems(this.mapper.query(DomainClass, keys)))[0]
   }
 
   async update(item, options={}) {
-    return this.mapper.update({ item }, { ...this.options, ...options})
+    try {
+      return this.mapper.update({ item }, { ...this.options, ...options})
+    } catch (error) {
+      throw new DynamoDBORMError({
+        error,
+        method: 'update',
+        className: 'Connection',
+        args: [ DomainClass, options ]
+      },
+      'ConnectionError',
+      )
+  }
   }
 
   async scan(DomainClass, options) {
-    return getMappedItems(this.mapper.scan(
-      DomainClass,
-      options,
-    ))
+    try {
+      return getMappedItems(this.mapper.scan(
+        DomainClass,
+        options,
+      ))
+    } catch (error) {
+      throw new DynamoDBORMError({
+        error,
+        method: 'scan',
+        className: 'Connection',
+        args: [ DomainClass,  options ]
+      },
+      'ConnectionError',
+      )
+    }
   }
 }
 

@@ -1,7 +1,8 @@
 import Connection from './Connection'
 import Repository from './Repository'
 import parseAggregationRootModel, { parseFields, Model } from './Model'
-import Migration from './Migration'
+export { DomainError } from './DomainError'
+export { DynamoDBORMError } from './DynamoDBORMError'
 export { appendCustomMethods } from './helpers/appendCustomMethods'
 
 class AggregationRoot {

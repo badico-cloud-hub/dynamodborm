@@ -243,7 +243,7 @@ describe('AggregationRoot class', () => {
     console.log(result[0])
     const d = result[0].get()
     return done()
-  })
+  }, 15000)
   it.skip('Return of repository should have the common applied methods', async (done) => {
     expect.assertions(5)
     class AccountModel {
