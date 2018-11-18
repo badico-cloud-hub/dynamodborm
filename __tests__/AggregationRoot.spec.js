@@ -214,7 +214,36 @@ describe('AggregationRoot class', () => {
     const d = result[0].get()
     expect(result[0].get()).not.toHaveProperty('merchantId')
     return done()
-  }, 100000)
+  }, 10000)
+  
+  it('should have the common schema for createdAt and updatedAt', async (done) => {
+    expect.assertions(4)
+    class AccountModel {
+      constructor(values) {
+        Object.assign(this, values)
+      }
+    }
+
+    class Domain extends AggregationRoot {
+    }
+
+    const { Repository } = new Domain({
+      ModelClass: AccountModel,
+      tableName,
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+    const result = await Repository.find()
+    expect(result).toBeInstanceOf(Array)
+    expect(result[0]).toBeInstanceOf(AccountModel)
+    expect(result[0].get()).toHaveProperty('updatedAt')
+    expect(result[0].get()).toHaveProperty('createdAt')
+    console.log(result[0])
+    const d = result[0].get()
+    return done()
+  })
   it.skip('Return of repository should have the common applied methods', async (done) => {
     expect.assertions(5)
     class AccountModel {

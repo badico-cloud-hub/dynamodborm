@@ -7,6 +7,6 @@ export const commonSchema = hasToBe => ({
   updatedAt: {
     type: 'String',
     validator: hasToBe.string(),
-    defaultProvider: (() => new Date()).toISOString()
+    defaultProvider: () => (new Date()).toISOString()
   }
 })

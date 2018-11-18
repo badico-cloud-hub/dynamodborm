@@ -131,7 +131,8 @@ function buildAggregationRootModelsFactory({
   applyRootSchema,
   applyValueObjectSchema,
   applyCommonMethods,
-  Joi
+  Joi,
+  commonSchema
 }) {
   return buildAggregationRootModels.bind(
     null,
@@ -139,7 +140,8 @@ function buildAggregationRootModelsFactory({
     applyRootSchema,
     applyValueObjectSchema,
     applyCommonMethods,
-    Joi
+    Joi,
+    commonSchema
   )
 }
 
