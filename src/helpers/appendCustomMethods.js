@@ -1,7 +1,19 @@
-export function appendCustomMethods(funcInst, methods) {
+export function appendCustomMethods(funcInst, custommethods) {
+    const target = funcInst.prototype || funcInst
+    const extractCustomMethods = (methods, key) => {
+        if (target[key] === undefined) {
+          return ({ ...methods, [key]: custommethods[key] })
+        }
+        return ({
+            ...methods,
+            [`_${key}`]: target[key],
+            [key]: custommethods[key],
+        })
+    }
+
     Object.assign(
-        funcInst.prototype || funcInst,
-        methods
+        target,
+        Object.keys(custommethods).reduce(extractCustomMethods, {})
     )
     return undefined
 }
