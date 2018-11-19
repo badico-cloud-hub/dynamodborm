@@ -21,10 +21,12 @@ tests all:
   stage: test
   script:
     - docker pull node:alpine
-    - docker pull dwmkerr/dynamodb
+    - docker pull semeietecnologies/node-dynamodblocal
+    - docker run --name nodedb -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  -d -v "$PWD":/app -v /data:/data -p 8000:8000 semeietecnologies/node-dynamodblocal -dbPath /data -sharedDbD
+    - docker exec nodedb npm test --prefix /app
     # - docker network create testnet
-    - docker run --name db -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
-    - docker run --link db:db -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/usr/src/app -w /usr/src/app node:alpine sh -c 'npm install && npm run test'
+    # - docker run --name db -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
+    # - docker run --link db:db -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/usr/src/app -w /usr/src/app node:alpine sh -c 'npm install && npm run test'
   environment: test
 
 codequality:
