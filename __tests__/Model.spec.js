@@ -7,10 +7,10 @@ import { Migration } from '../src/Migration'
 import ChangeLogAggregator from '../migrate/changelog-domain'
 import config from '../migrate/changelog-domain/config'
 
-// process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 const region = 'us-east-1'
-const client = new Client({ region })
+const client = new Client({ region: 'localhost', endpoint:  process.env['DBLOCAL'] })
 const mapper = new DataMapper({ client })
 const connection = new Connection({ region })
 const schema = Joi => ({
@@ -80,27 +80,27 @@ describe('Model', () => {
     await migration.dropTable(ChangeLogAggregator.Model)
   })
 
-  beforeEach(async () => {
-    const root = {}
-    class Account {
-      constructor(values = {}) {
-        Object.assign(this, values)
-      }
-    }
-    buildAggregatorModel(connection, root, {
-      ModelClass: Account,
-      className: 'Account',
-      schema,
-      ...config,
-      tableName,
-      indexes: undefined
-    })
+  // beforeEach(async () => {
+  //   const root = {}
+  //   class Account {
+  //     constructor(values = {}) {
+  //       Object.assign(this, values)
+  //     }
+  //   }
+  //   buildAggregatorModel(connection, root, {
+  //     ModelClass: Account,
+  //     className: 'Account',
+  //     schema,
+  //     ...config,
+  //     tableName,
+  //     indexes: undefined
+  //   })
 
-    await migration.createTable(Account)
-    await migration.createTable(ChangeLogAggregator.Model)
+  //   await migration.createTable(Account)
+  //   await migration.createTable(ChangeLogAggregator.Model)
     
-    jest.setTimeout(100000)
-  })
+  //   jest.setTimeout(100000)
+  // })
   it('Model without proper assignment should not be able to use a mapper method - buildAggregatorModel', async (done) => {
     expect.assertions(1)
     class Account {

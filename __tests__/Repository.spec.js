@@ -14,7 +14,7 @@ import config from '../migrate/changelog-domain/config'
 import aggregationRootModel, { Model } from '../src/Model'
 import v4 from 'uuid/v4'
 
-// process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 const region = 'us-east-1'

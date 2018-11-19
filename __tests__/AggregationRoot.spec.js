@@ -8,11 +8,11 @@ import ChangeLogAggregator from '../migrate/changelog-domain'
 import config from '../migrate/changelog-domain/config'
 import AggregationRoot from '../src'
 
-// process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 const region = 'us-east-1'
-const client = new Client({ region })
+const client = new Client({ region: 'localhost', endpoint: process.env['DBLOCAL'] })
 const mapper = new DataMapper({ client })
 
 const schema = Joi => ({

@@ -14,6 +14,10 @@ before_script:
 
 tests all:
   stage: test
+  services:
+    - name: dwmkerr/dynamodb:latest
+      alias: dynamodb-local
+      command: ["docker", "run", "-d", "-v", "/data:/data", "-p", "8000:8000", "dwmkerr/dynamodb", "-dbPath", "/data", "-sharedDb"]
   script:
     - npm install
     - npm test

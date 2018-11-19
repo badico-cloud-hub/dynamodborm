@@ -6,7 +6,7 @@ import AggregationRoot from '../src'
 import { Migration } from '../src/Migration'
 import Connection from '../src/Connection';
 
-// process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 
@@ -75,8 +75,6 @@ const schema = hasToBe => ({
     validator: hasToBe.string().required()
   },
 })
-
-
 
 describe('Migration instantiation class', () => {
   it('Shoud me give a migration instance, that is instance of Connection and Migration', () => {

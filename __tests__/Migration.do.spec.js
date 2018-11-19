@@ -5,7 +5,7 @@ import {
 } from '../src/Migration'
 
 
-// process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 const config = {
