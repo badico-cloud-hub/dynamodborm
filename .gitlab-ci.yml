@@ -5,26 +5,21 @@ variables:
 
 stages:
   - test
+  - deploy
+  - e2e
   - approvals
-  - build
+  - production
 
 before_script:
 
-tests:
+tests all:
   stage: test
-  image: node:latest
-  variables:
-    DOCKER_DRIVER: overlay2
-  # services:
-  #   - docker:dind
-  #   - node:latest
   script:
     - npm install
     - npm test
   environment: test
 
 codequality:
-  stage: test
   image: docker:latest
   variables:
     DOCKER_DRIVER: overlay2
@@ -48,20 +43,3 @@ approval:
   allow_failure: false
   environment: prod
   when: manual
-  only: 
-    - master
-
-build:
-  stage: build
-  script:
-  # send to some git branch
-    -
-    - npm install -g serverless
-    - npm install
-    # - make stage=prod deploy
-  environment: prod
-  when: on_success
-  only: 
-    - master
-    - develop
-    - release
