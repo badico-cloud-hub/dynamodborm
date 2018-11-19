@@ -80,7 +80,7 @@ describe('Model', () => {
     await migration.dropTable(ChangeLogAggregator.Model)
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const root = {}
     class Account {
       constructor(values = {}) {
