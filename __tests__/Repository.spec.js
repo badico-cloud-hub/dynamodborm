@@ -217,9 +217,14 @@ describe('Repository', () => {
     const { id } = await connection.update(account)
 
     const repository = new Repository(root.Model, connection)
-    const result = await repository.get({ id })
-    expect(result).toBeInstanceOf(AccountModel)
-    expect(result.get('id')).toBe(id)
+    try {
+      const result = await repository.get({ id })
+      expect(result).toBeInstanceOf(AccountModel)
+      expect(result.get('id')).toBe(id)
+    } catch (err) {
+      console.log(err)
+    }
+    
     return done()
   }, 100000)
 
