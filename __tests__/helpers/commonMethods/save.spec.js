@@ -35,6 +35,7 @@ describe('save commom method', () => {
     it('should handle updatedAt field in a object with id', async(done) => {
         expect.assertions(3)
         Object.assign(mock, {
+            id: 'mockId',
             createdAt: '2018-11-18T16:13:52.863Z',
             updatedAt: '2018-11-18T16:13:52.863Z',
         })
