@@ -227,7 +227,7 @@ describe('AggregationRoot class', () => {
     class Domain extends AggregationRoot {
     }
 
-    const { Repository } = new Domain({
+    const { Repository, Model } = new Domain({
       ModelClass: AccountModel,
       tableName,
       schema,
@@ -235,7 +235,18 @@ describe('AggregationRoot class', () => {
       tableName,
       indexes: undefined
     })
+
+    await migration.dropTable(Model)
+    await migration.createTable(Model)
+
+    const acc1 = new Model({
+      name: 'm1',
+      cpf: '0112'
+    })
+
+    await acc1.save()
     const result = await Repository.find()
+
     expect(result).toBeInstanceOf(Array)
     expect(result[0]).toBeInstanceOf(AccountModel)
     expect(result[0].get()).toHaveProperty('updatedAt')
