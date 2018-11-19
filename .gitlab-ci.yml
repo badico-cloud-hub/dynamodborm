@@ -13,14 +13,18 @@ stages:
 before_script:
 
 tests all:
-  stage: test
+  image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+  allow_failure: true
   services:
-    - name: dwmkerr/dynamodb:latest
-      alias: dynamodb-local
-      command: ["docker", "run", "-d", "-v", "/data:/data", "-p", "8000:8000", "dwmkerr/dynamodb", "-dbPath", "/data", "-sharedDb"]
+    - docker:dind
+  stage: test
   script:
-    - npm install
-    - npm test
+    - docker pull node:alpine
+    - docker pull dwmkerr/dynamodb
+    - docker run -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
+    - docker run -v "$PWD":/usr/src/app -w /usr/src/app node:alpine sh -c 'npm install && npm run test'
   environment: test
 
 codequality:
