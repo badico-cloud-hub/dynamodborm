@@ -79,7 +79,7 @@ describe('Model', () => {
 
     await migration.dropTable(Account)
     await migration.dropTable(ChangeLogAggregator.Model)
-  })
+  }, 1000000)
 
   it('Model without proper assignment should not be able to use a mapper method - buildAggregatorModel', async (done) => {
     expect.assertions(1)
@@ -96,7 +96,7 @@ describe('Model', () => {
       expect(e).toBeInstanceOf(Error)
     }
     return done()
-  })
+  }, 1000000)
 
   it('Model with proprer assignment should be able to use a mapper method - buildAggregatorModel', async (done) => {
     expect.assertions(1)
@@ -116,7 +116,7 @@ describe('Model', () => {
     const result = await mapper.update({ item: account }, { onMissing: 'skip' })
     expect(result).toHaveProperty('id')
     return done()
-  })
+  }, 1000000)
 
   it('root Model should be a construct alias for Model Root Class method', async (done) => {
     expect.assertions(1)
@@ -137,7 +137,7 @@ describe('Model', () => {
     const result = await mapper.update({ item: account }, { onMissing: 'skip' })
     expect(result).toHaveProperty('id')
     return done()
-  })
+  }, 1000000)
 
   it('root Alias should be a construct alias for Model Root Class method', async (done) => {
     expect.assertions(1)
@@ -157,7 +157,7 @@ describe('Model', () => {
     const result = await mapper.update({ item: account }, { onMissing: 'skip' })
     expect(result).toHaveProperty('id')
     return done()
-  })
+  }, 1000000)
 
   it('Model should be able to validate it-self - in error', (done) => {
     expect.assertions(1)
@@ -177,7 +177,7 @@ describe('Model', () => {
     return account.validate()
       .then(valid => console.log(valid))
       .catch(err => (expect(err).toBeDefined()), done())
-  })
+  }, 1000000)
 
   it('Model should be able to validate it-self - in success', (done) => {
     expect.assertions(1)
@@ -197,7 +197,7 @@ describe('Model', () => {
     return account.validate()
       .then(valid => (expect(valid).toBeDefined(), done()))
       .catch(err => console.log(err))
-  })
+  }, 1000000)
 
   it('Model should be able to validade a uuid', (done) => {
     expect.assertions(1)

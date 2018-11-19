@@ -118,7 +118,7 @@ describe('Migration.do operator', () => {
           return done()
       }
       
-  },100000)
+  },1000000)
 
   it('should promissify fnList item if the function is not async', async (done) => {
     expect.assertions(3)
@@ -162,7 +162,7 @@ describe('Migration.do operator', () => {
       } catch (err) {
           return done()
       }
-  },100000)
+  },1000000)
 
   it('should exec if a fn as passed in place of fnList', async (done) => {
       expect.assertions(3)
@@ -207,7 +207,7 @@ describe('Migration.do operator', () => {
       } catch (err) {
           return done()
       }
-  },100000)
+  },1000000)
   it('should log the operation after success', async(done) => {
       expect.assertions(1)
     class ChangeLogModel {
@@ -244,14 +244,14 @@ describe('Migration.do operator', () => {
        await Migration.do('deploy', mockFn(_sync), migration)
        const { Repository } = ChangeLogMockAggregator
        const logs = await Repository.find()
-       expect(logs).toHaveLength(3)
+       expect(logs.length).toBeGreaterThanOrEqual(3)
        await migration.dropTable(ChangeLogMockAggregator.Model)
        return done()
       } catch (err) {
           console.log(util.inspect(err))
           return done()
       }
-  },100000)
+  },1000000)
 
   it('should log the operation after error', async(done) => {
       expect.assertions(1)
@@ -296,7 +296,7 @@ describe('Migration.do operator', () => {
             await migration.dropTable(ChangeLogMockAggregator.Model)
           return done()
       }
-  },100000)
+  },1000000)
 
   it('should stop the operation after error', async(done) => {
       expect.assertions(2)
@@ -340,7 +340,7 @@ describe('Migration.do operator', () => {
             await migration.dropTable(ChangeLogMockAggregator.Model)
           return done()
       }
-  },100000)
+  },1000000)
 
   it('should create a unique label for the operation if it was not provided', async(done) => {
     expect.assertions(5)
@@ -391,7 +391,7 @@ describe('Migration.do operator', () => {
       } catch (err) {
           return done()
       }
-  },100000)
+  },1000000)
 })
 
 describe('Migration.do validations', () => {
