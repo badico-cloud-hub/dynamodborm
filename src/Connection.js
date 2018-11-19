@@ -30,27 +30,18 @@ class Connection {
   }
   async query(DomainClass, keys, {index, filter, ...options }) {
     try {
+      const params = { ...options }
       if (filter) {
-        return getMappedItems(
-          this.mapper.query(
-            DomainClass, keys, {
-              ...( index ? {indexName: index } : {}),
-              filter,
-              ...options }
-          ),
-        )
+        Object.assign(params, { filter })
       }
   
       if (index) {
-        return getMappedItems(
-          this.mapper.query(
-            DomainClass, keys, { indexName: index, ...options }
-          ),
-        )
+        Object.assign(params, { indexName: index })
       }
+      
       return getMappedItems(
         this.mapper.query(
-          DomainClass, keys,
+          DomainClass, keys, params
         ),
       )
     } catch (error) {
