@@ -12,13 +12,20 @@ before_script:
 
 tests:
   stage: test
-  # image: docker:latest
-  # variables:
-  #   DOCKER_DRIVER: overlay2
+  image: node:latest
+  variables:
+    DOCKER_DRIVER: overlay2
   # services:
   #   - docker:dind
   #   - node:latest
   script:
+    - apt-get update -qy
+    - apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    - apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+    - apt-get update
+    - apt-cache policy docker-engine
+    - apt-get install -y docker-engine
+    - systemctl status docker
     - docker pull dwmkerr/dynamodb
     - docker run -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
     - npm install
@@ -57,6 +64,7 @@ build:
   stage: build
   script:
   # send to some git branch
+    -
     - npm install -g serverless
     - npm install
     # - make stage=prod deploy
