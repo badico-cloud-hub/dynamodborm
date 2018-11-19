@@ -81,6 +81,24 @@ describe('Model', () => {
   })
 
   beforeEach(() => {
+    const root = {}
+    class Account {
+      constructor(values = {}) {
+        Object.assign(this, values)
+      }
+    }
+    buildAggregatorModel(connection, root, {
+      ModelClass: Account,
+      className: 'Account',
+      schema,
+      ...config,
+      tableName,
+      indexes: undefined
+    })
+
+    await migration.createTable(Account)
+    await migration.createTable(ChangeLogAggregator.Model)
+    
     jest.setTimeout(100000)
   })
   it('Model without proper assignment should not be able to use a mapper method - buildAggregatorModel', async (done) => {
