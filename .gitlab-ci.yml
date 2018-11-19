@@ -17,6 +17,7 @@ tests:
     DOCKER_DRIVER: overlay2
   services:
     - docker:dind
+    - node:latest
   script:
     - docker pull dwmkerr/dynamodb
     - docker run -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
