@@ -16,7 +16,6 @@ tests all:
   image: docker:latest
   variables:
     DOCKER_DRIVER: overlay2
-  allow_failure: true
   services:
     - docker:dind
   stage: test
