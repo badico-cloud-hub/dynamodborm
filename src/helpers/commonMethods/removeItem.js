@@ -1,7 +1,8 @@
-import { DomainError } from "../../DomainError";
+import { DomainError } from "../../DomainError"
+import { isInvalidList } from './isInvalidList'
 
 export function removeItem(itemKey, itemId) {
-  if (this[itemKey] !== undefined && !(this[itemKey] instanceof Array)) {
+  if (isInvalidList(this[itemKey])) {
     throw new DomainError({
       error: new Error('The item is not a list'),
       args: [itemKey, Item],

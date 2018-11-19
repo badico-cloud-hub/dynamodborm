@@ -1,7 +1,7 @@
 import { DomainError } from "../../DomainError";
 
 export function updateItem(itemKey, Item) {
-  if (this[itemKey] !== undefined && !(this[itemKey] instanceof Array)) {
+  if (isInvalidList(this[itemKey])) {
     throw new DomainError({
       error: new Error('The item is not a list'),
       args: [itemKey, Item],
