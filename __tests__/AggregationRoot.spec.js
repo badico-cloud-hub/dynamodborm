@@ -12,7 +12,7 @@ import AggregationRoot from '../src'
 process.env['STAGE'] = 'test'
 
 const region = 'us-east-1'
-const client = new Client({ region: 'localhost', endpoint: 'http://localhost:8000' })
+const client = new Client({ region })
 const mapper = new DataMapper({ client })
 
 const schema = Joi => ({
@@ -129,7 +129,7 @@ describe('AggregationRoot class', () => {
     expect(Repository).toBeDefined()
     expect(Model).toBeDefined()
     expect(connection).toBeDefined()
-  })
+  }, 100000)
 
   it('should be able to give me a working Model connection', async (done) => {
     expect.assertions(2)
@@ -158,7 +158,7 @@ describe('AggregationRoot class', () => {
     const result = await mapper.update({ item: account }, { onMissing: 'skip' })
     expect(result).toHaveProperty('id')
     return done()
-  })
+  }, 100000)
 
   it('should be able to give a connection instance inside my domain', async (done) => {
     expect.assertions(2)
@@ -185,7 +185,7 @@ describe('AggregationRoot class', () => {
     const result = await connection.update(account)
     expect(result).toHaveProperty('id')
     return done()
-  })
+  }, 100000)
   
   it('get should no have the merchantId', async (done) => {
     expect.assertions(4)
@@ -214,7 +214,7 @@ describe('AggregationRoot class', () => {
     const d = result[0].get()
     expect(result[0].get()).not.toHaveProperty('merchantId')
     return done()
-  })
+  }, 100000)
   it.skip('Return of repository should have the common applied methods', async (done) => {
     expect.assertions(5)
     class AccountModel {
@@ -322,7 +322,7 @@ describe('AggregationRoot class', () => {
     const address = new Address({ city: 'teste' })
     expect(address).toHaveProperty('city', 'teste')
     return done()
-  })
+  }, 100000)
 
   it('should the recursively generated model have the common methods', async (done) => {
     expect.assertions(2)
@@ -368,5 +368,5 @@ describe('AggregationRoot class', () => {
     expect(address.get()).toHaveProperty('city', 'teste')
     expect(address.get('cep')).toBe('cepTeste')
     return done()
-  })
+  }, 100000)
 })

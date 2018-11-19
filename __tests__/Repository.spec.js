@@ -153,7 +153,7 @@ describe('Repository', () => {
     const repository = new Repository(root.Model, connection)
     expect(repository).toBeInstanceOf(Repository)
     return done()
-  }, 1000000)
+  }, 100000)
 
   it('should return a list of aggregation root class', async (done) => {
     expect.assertions(2)
@@ -186,7 +186,7 @@ describe('Repository', () => {
     expect(result).toBeInstanceOf(Array)
     expect(result[0]).toBeInstanceOf(AccountModel)
     return done()
-  }, 1000000)
+  }, 100000)
   it('should have a method get for use Id as key', async (done) => {
     expect.assertions(2)
     class AccountModel {
@@ -221,7 +221,7 @@ describe('Repository', () => {
     expect(result).toBeInstanceOf(AccountModel)
     expect(result.get('id')).toBe(id)
     return done()
-  }, 1000000)
+  }, 100000)
 
   it.skip('iterator from mapper should work properly in paginator', async (done) => {
     const root = {}
@@ -269,7 +269,7 @@ describe('Repository', () => {
     const lastKey2 = paginator.lastEvaluatedKey
     expect(lastKey1.id).not.toBe(lastKey2.id)
     return done()
-  }, 1000000)
+  }, 100000)
 
   it('should find build a expression - limit', async (done) => {
     expect.assertions(2)
@@ -303,7 +303,7 @@ describe('Repository', () => {
     expect(result).toBeInstanceOf(Array)
     expect(result).toHaveLength(3)
     return done()
-  }, 1000000)
+  }, 100000)
 
   it('should find build a expression - limit, pageSize & lastId', async (done) => {
     expect.assertions(2)
@@ -345,7 +345,7 @@ describe('Repository', () => {
     const lastId2 = result[9].id
     expect(lastId1).not.toBe(lastId2)
     return done()
-  }, 15000)
+  }, 100000)
 
   it.skip('should find build a expression - index', async (done) => {
     expect.assertions(2)
@@ -388,7 +388,7 @@ describe('Repository', () => {
     const lastId2 = result[9].id
     expect(lastId1).not.toBe(lastId2)
     return done()
-  }, 1000000)
+  }, 100000)
 
   // for now not working with this cases
   it.skip('query shold work properly', async (done) => {
@@ -425,7 +425,7 @@ describe('Repository', () => {
 
 
     return done()
-  }, 1000000)
+  }, 100000)
 
   it.skip('should find by a search key, as name, from query params', async (done) => {
     expect.assertions(1)
@@ -450,7 +450,7 @@ describe('Repository', () => {
     const result = await repository.find(params)
     expect(1).toBe(2)
     return done()
-  }, 15000)
+  }, 100000)
 
   // filters
 })
