@@ -7,7 +7,7 @@ class Repository {
     this.bucket = []
   }
   async get(filter) {
-    const bucket = this.connection.get(this.Model, filter)
+    const bucket = await this.connection.get(this.Model, filter)
     if (!bucket.length) throw new DynamoDBORMError({
         error: new Error('The item searched was not found'),
         args: [filter],
