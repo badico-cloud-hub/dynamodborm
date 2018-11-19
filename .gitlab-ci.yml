@@ -22,9 +22,9 @@ tests all:
   script:
     - docker pull node:alpine
     - docker pull dwmkerr/dynamodb
-    - docker network create testnet
-    - docker run --net testnet -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
-    - docker run --net testnet -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/usr/src/app -w /usr/src/app node:alpine sh -c 'npm install && npm run test'
+    # - docker network create testnet
+    - docker run --name db -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
+    - docker run --link db:db -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" -v "$PWD":/usr/src/app -w /usr/src/app node:alpine sh -c 'npm install && npm run test'
   environment: test
 
 codequality:

@@ -6,7 +6,7 @@ import AggregationRoot from '../src'
 import { Migration } from '../src/Migration'
 import Connection from '../src/Connection';
 
-process.env['DBLOCAL'] = 'http://localhost:8000'
+process.env['DBLOCAL'] = process.env['DB_PORT_8000'] ? process.env['DB_ENDPOINT'] :'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 
