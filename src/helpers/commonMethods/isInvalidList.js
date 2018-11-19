@@ -1,1 +1,0 @@
-export const isInvalidLsit = item => item !== undefined && !(item instanceof Array)

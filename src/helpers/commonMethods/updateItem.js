@@ -1,6 +1,9 @@
 import { DomainError } from "../../DomainError";
+import { throwIfIsInvalidList } from './throwIfIsInvalidList'
 
 export function updateItem(itemKey, Item) {
+  throwIfIsInvalidList(this[itemKey])
+
   if (isInvalidList(this[itemKey])) {
     throw new DomainError({
       error: new Error('The item is not a list'),

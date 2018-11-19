@@ -1,14 +1,8 @@
 import { DomainError } from "../../DomainError"
-import { isInvalidList } from './isInvalidList'
+import { throwIfIsInvalidList } from './throwIfIsInvalidList'
 
 export function removeItem(itemKey, itemId) {
-  if (isInvalidList(this[itemKey])) {
-    throw new DomainError({
-      error: new Error('The item is not a list'),
-      args: [itemKey, Item],
-      method: 'updateItem'
-    }, 'NotValidOperation')
-  }
+  throwIfIsInvalidList(this[itemKey])
   let founded = false
   this[itemKey] = this[itemKey].filter(
     (item) => {
