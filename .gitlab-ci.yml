@@ -1,0 +1,67 @@
+image: node:8.10
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - test
+  - approvals
+  - build
+
+before_script:
+
+tests:
+  stage: test
+  image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  script:
+    - docker pull dwmkerr/dynamodb
+    - docker run -d -v /data:/data -p 8000:8000 dwmkerr/dynamodb -dbPath /data -sharedDb
+    - npm install
+    - DBLOCAL=http://localhost:8000 npm test
+  environment: test
+
+codequality:
+  stage: test
+  image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+  allow_failure: true
+  services:
+    - docker:dind
+  script:
+    - docker pull codeclimate/codeclimate 
+    - docker run -v /tmp/cc:/tmp/cc -v "$PWD":/code -v /var/run/docker.sock:/var/run/docker.sock codeclimate/codeclimate validate-config
+    - ls -lash $PWD
+    - echo $PWD
+    - docker run --env CODECLIMATE_CODE="$PWD" -v "$PWD":/code -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -f json > gl-code-quality-report.json
+  environment: dev
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+approval:
+  stage: approvals
+  script:
+    - echo "aprovado deploy para producao"
+  allow_failure: false
+  environment: prod
+  when: manual
+  only: 
+    - master
+
+build:
+  stage: build
+  script:
+  # send to some git branch
+    - npm install -g serverless
+    - npm install
+    # - make stage=prod deploy
+  environment: prod
+  when: on_success
+  only: 
+    - master
+    - develop
+    - release
