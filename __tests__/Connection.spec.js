@@ -5,7 +5,7 @@ import v4 from 'uuid/v4'
 import AggregationRoot from '../src'
 import Connection from '../src/Connection';
 
-process.env['DBLOCAL'] = 'http://localhost:8000'
+// process.env['DBLOCAL'] = 'http://localhost:8000'
 process.env['STAGE'] = 'test'
 
 
