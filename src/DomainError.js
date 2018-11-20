@@ -1,11 +1,11 @@
 import { DynamoDBORMError} from './DynamoDBORMError'
 
 export class DomainError extends DynamoDBORMError {
-    constructor(argz, kind) {
+    constructor(argz, kind, message) {
         super({
             ...argz,
             className: 'Model',
-        }, kind)
+        }, kind, message)
         this.name = 'DomainError'
     }
 }
