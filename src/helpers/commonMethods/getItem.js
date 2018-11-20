@@ -1,5 +1,5 @@
 import { DomainError } from '../../DomainError'
-import { throwIfIsInvalidList } from './throwIfIsInvalidList'
+import { throwIfIsInvalidList } from './listHelpers'
 
 export function getItem(itemKey, itemId) {
     throwIfIsInvalidList(this[itemKey])
