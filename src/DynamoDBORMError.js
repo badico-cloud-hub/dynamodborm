@@ -4,9 +4,10 @@ export class DynamoDBORMError extends Error {
         args,
         className,
         details,
+        message,
         method
     }, kind) {
-        super(`${kind} has being catch in ${className} on method ${method}`)
+        super(message || `${kind} has being catch in ${className} on method ${method}`)
         this.name = 'DynamoDBORMError'
         this.kind = kind
         this.error = error
@@ -23,17 +24,6 @@ export class DynamoDBORMError extends Error {
             message: this.message,
             code: this.kind,
             ...(this.details !== undefined ? { errors: this.details } : {}),
-        }
-    }
-
-    details() {
-        return {
-            message: this.message,
-            code: this.kind,
-            error: this.error,
-            stack: this.error.stack,
-            className: this.className,
-            fn: this.fnData,
         }
     }
 
