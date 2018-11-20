@@ -1,4 +1,4 @@
-import { DomainError } from "../../DomainError";
+import { DomainError } from '../../DomainError'
 import { throwIfIsInvalidList } from './throwIfIsInvalidList'
 
 export function getItem(itemKey, itemId) {
