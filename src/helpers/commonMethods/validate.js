@@ -14,11 +14,16 @@ function validator(joi, values, schema, self) {
         'ValidationError',
       )
       
-      error.details.forEach(error => {
+     const errors =  error.details.map(error => {
         const identifier = error.path.filter((p) => isNaN(p)).join('.') 
-        return validationError.pushError(error, identifier)
+        const { message } = error
+        return new DynamoDBORMError({
+          method: 'validate',
+          args: [ joi, values, schema, self ],
+          className: 'Model'
+        }, identifier, message)
       })
-      return reject(validationError)
+      return reject(DynamoDBORMError.fromArray(errors, 'ValidationError'))
     }
     return resolve(self)
   })

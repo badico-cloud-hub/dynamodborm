@@ -1,48 +1,41 @@
 export class DynamoDBORMError extends Error {
     constructor({
         error,
+        errors,
         args,
         className,
         method
-    }, kind, message) {
-        super(message || `${kind} has being catch in ${className} on method ${method}`)
+    }, code, message) {
+        super(message || `${code} has being catch in ${className} on method ${method}`)
         this.name = 'DynamoDBORMError'
-        this.kind = kind
-        this.error = error
-        this.errors = []
+        this.code = code
+        if (error) {
+            this.error = error
+        }
+        if (errors) {
+            this.errors = errors
+        }
         this.fnData = {
             args,
             method,
             className,
         }
-    }
-    pushError(error, identifier) {
-        this.errors.push({
-            message: error.message,
-            identifier,
-            error
-        })
-    }
-    mapErrors() {
-        if (!this.errors.length) return {}
-        return {
-            errors: this.errors.map(({
-                identifier,
-                message,
-            }) => ({
-                identifier,
-                message,
-            })),
-        }
-    }
 
-    get() {
-        const { mapErrors } = this
-        return {
-            message: this.message,
-            code: this.kind,
-            ...mapErrors,
-        }
+        Error.captureStackTrace(this, this.constructor);
     }
 
 }
+function mapErrors(errors) {
+     return errors.map((error) => ({
+        identifier: error.code,
+        message: error.message,
+        ...error,
+    }))
+}
+
+DynamoDBORMError.fromArray = (errors, kind, message) =>
+    new DynamoDBORMError({
+      ...errors[0],
+      error: undefined,  
+      errors: mapErrors(errors),
+    }, kind, message)
