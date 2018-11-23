@@ -14,6 +14,7 @@ class Repository {
   }
 
   async find({
+    scanIndexForward,
     pageSize,
     lastIndex,
     filter,
@@ -26,6 +27,7 @@ class Repository {
       startKey: lastIndex && new this.Model({ [indexKey || 'id']: lastIndex }),
       limit: limit || pageSize || 25,
       filter,
+      scanIndexForward,
     }
     if (!query) {
       this.bucket = await this.connection.scan(this.Model, options)

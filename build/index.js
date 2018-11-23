@@ -1234,6 +1234,7 @@ module.exports =
 	    value: function () {
 	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
 	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	            scanIndexForward = _ref4.scanIndexForward,
 	            pageSize = _ref4.pageSize,
 	            lastIndex = _ref4.lastIndex,
 	            filter = _ref4.filter,
@@ -1250,7 +1251,8 @@ module.exports =
 	                  pageSize: pageSize || limit || 25,
 	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
 	                  limit: limit || pageSize || 25,
-	                  filter: filter
+	                  filter: filter,
+	                  scanIndexForward: scanIndexForward
 	                };
 
 	                if (query) {
