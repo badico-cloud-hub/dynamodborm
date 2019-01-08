@@ -783,18 +783,20 @@ module.exports =
 
 	function getItem(itemKey, itemId) {
 	    (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
-	    var founded = this[itemKey].find(function (_ref) {
-	        var id = _ref.id;
-	        return id === itemId;
-	    });
-
-	    if (!founded) throw new _DomainError.DomainError({
-	        error: new Error('The item searched was not found'),
-	        args: [itemKey, Item],
-	        method: 'getItem'
-	    }, 'NotFoundItem');
-
-	    return founded;
+	    try {
+	        var founded = this[itemKey].find(function (_ref) {
+	            var id = _ref.id;
+	            return id === itemId;
+	        });
+	        if (!founded) throw new Error('The item searched was not found');
+	        return founded;
+	    } catch (error) {
+	        throw new _DomainError.DomainError({
+	            error: error,
+	            args: [itemKey, Item],
+	            method: 'getItem'
+	        }, 'NotFoundItem');
+	    }
 	}
 
 /***/ }),
