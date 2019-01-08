@@ -1143,7 +1143,7 @@ module.exports =
 	    } catch (error) {
 	        throw new _DomainError.DomainError({
 	            error: error,
-	            args: [itemKey, Item],
+	            args: [itemKey, itemId],
 	            method: 'getItem'
 	        }, 'NotFoundItem');
 	    }

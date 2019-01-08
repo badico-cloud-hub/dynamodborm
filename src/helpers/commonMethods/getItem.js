@@ -10,7 +10,7 @@ export function getItem(itemKey, itemId) {
     } catch(error) {
         throw new DomainError({
             error: error,
-            args: [itemKey, Item],
+            args: [itemKey, itemId],
             method: 'getItem'
         }, 'NotFoundItem')
     }
