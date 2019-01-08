@@ -15,7 +15,7 @@ RUN wget https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest
 # The entrypoint is the dynamodb jar. Default port is 8000.
 EXPOSE 8000
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update -qq && apt-get install -qq --no-install-recommends \

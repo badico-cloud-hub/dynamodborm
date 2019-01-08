@@ -68,6 +68,31 @@ export class Migration extends Connection {
     }
 
     // TODO: CHANGE
+    // https://github.com/awslabs/dynamodb-data-mapper-js/issues/58
+    async updateItems(fn) {
+        // get bunch of items,
+
+        // delete bunch of items
+
+        // update bunch of items
+
+        // save bunch of items
+
+        // keep track repeat until the end
+
+    }
+    // https://github.com/awslabs/dynamodb-data-mapper-js/issues/113
+    async changeIndexes(index) {
+        // test for index exist in table
+
+        // get all items
+
+        // save into a s3
+
+        // delete table
+
+        // 
+    }
 }
 
 Migration.do = function(operation, fnList, migration, label) {
