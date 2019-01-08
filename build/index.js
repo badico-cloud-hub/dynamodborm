@@ -45,7 +45,7 @@ module.exports =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(38);
+	module.exports = __webpack_require__(42);
 
 
 /***/ }),
@@ -133,6 +133,8 @@ module.exports =
 
 	var _dynamodb2 = _interopRequireDefault(_dynamodb);
 
+	var _DynamoDBORMError = __webpack_require__(11);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Connection = function () {
@@ -164,36 +166,40 @@ module.exports =
 	        var index = _ref5.index,
 	            filter = _ref5.filter,
 	            options = (0, _objectWithoutProperties3.default)(_ref5, ['index', 'filter']);
+	        var params;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
-	                if (!filter) {
-	                  _context2.next = 2;
-	                  break;
+	                _context2.prev = 0;
+	                params = (0, _extends3.default)({}, options);
+
+	                if (filter) {
+	                  Object.assign(params, { filter: filter });
 	                }
 
-	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, (0, _extends3.default)({}, index ? { indexName: index } : {}, {
-	                  filter: filter
-	                }, options))));
-
-	              case 2:
-	                if (!index) {
-	                  _context2.next = 4;
-	                  break;
+	                if (index) {
+	                  Object.assign(params, { indexName: index });
 	                }
 
-	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, (0, _extends3.default)({ indexName: index }, options))));
+	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys, params)));
 
-	              case 4:
-	                return _context2.abrupt('return', getMappedItems(this.mapper.query(DomainClass, keys)));
+	              case 7:
+	                _context2.prev = 7;
+	                _context2.t0 = _context2['catch'](0);
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: _context2.t0,
+	                  method: 'query',
+	                  className: 'Connection',
+	                  args: [DomainClass, keys, (0, _extends3.default)({ index: index, filter: filter }, options)]
+	                }, 'ConnectionError');
 
-	              case 5:
+	              case 10:
 	              case 'end':
 	                return _context2.stop();
 	            }
 	          }
-	        }, _callee2, this);
+	        }, _callee2, this, [[0, 7]]);
 	      }));
 
 	      function query(_x3, _x4, _x5) {
@@ -210,14 +216,25 @@ module.exports =
 	          while (1) {
 	            switch (_context3.prev = _context3.next) {
 	              case 0:
+	                _context3.prev = 0;
 	                return _context3.abrupt('return', this.mapper.delete({ item: item }));
 
-	              case 1:
+	              case 4:
+	                _context3.prev = 4;
+	                _context3.t0 = _context3['catch'](0);
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: _context3.t0,
+	                  method: 'delete',
+	                  className: 'Connection',
+	                  args: [item]
+	                }, 'ConnectionError');
+
+	              case 7:
 	              case 'end':
 	                return _context3.stop();
 	            }
 	          }
-	        }, _callee3, this);
+	        }, _callee3, this, [[0, 4]]);
 	      }));
 
 	      function _delete(_x6) {
@@ -237,40 +254,52 @@ module.exports =
 	          while (1) {
 	            switch (_context4.prev = _context4.next) {
 	              case 0:
+	                _context4.prev = 0;
+
 	                if (!index) {
-	                  _context4.next = 7;
+	                  _context4.next = 8;
 	                  break;
 	                }
 
-	                _context4.next = 3;
+	                _context4.next = 4;
 	                return getMappedItems(this.mapper.query(DomainClass, keys, { indexName: index }));
 
-	              case 3:
+	              case 4:
 	                list = _context4.sent;
 
 	                if (!(list.length > 1)) {
-	                  _context4.next = 6;
+	                  _context4.next = 7;
 	                  break;
 	                }
 
 	                throw new Error('Not unique item');
 
-	              case 6:
+	              case 7:
 	                return _context4.abrupt('return', list[0]);
 
-	              case 7:
-	                _context4.next = 9;
+	              case 8:
+	                _context4.next = 10;
 	                return getMappedItems(this.mapper.query(DomainClass, keys));
 
-	              case 9:
+	              case 10:
 	                return _context4.abrupt('return', _context4.sent[0]);
 
-	              case 10:
+	              case 13:
+	                _context4.prev = 13;
+	                _context4.t0 = _context4['catch'](0);
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: _context4.t0,
+	                  method: 'get',
+	                  className: 'Connection',
+	                  args: [DomainClass, (0, _extends3.default)({ index: index }, keys)]
+	                }, 'ConnectionError');
+
+	              case 16:
 	              case 'end':
 	                return _context4.stop();
 	            }
 	          }
-	        }, _callee4, this);
+	        }, _callee4, this, [[0, 13]]);
 	      }));
 
 	      function get(_x7, _x8) {
@@ -288,14 +317,25 @@ module.exports =
 	          while (1) {
 	            switch (_context5.prev = _context5.next) {
 	              case 0:
+	                _context5.prev = 0;
 	                return _context5.abrupt('return', this.mapper.update({ item: item }, (0, _extends3.default)({}, this.options, options)));
 
-	              case 1:
+	              case 4:
+	                _context5.prev = 4;
+	                _context5.t0 = _context5['catch'](0);
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: _context5.t0,
+	                  method: 'update',
+	                  className: 'Connection',
+	                  args: [DomainClass, options]
+	                }, 'ConnectionError');
+
+	              case 7:
 	              case 'end':
 	                return _context5.stop();
 	            }
 	          }
-	        }, _callee5, this);
+	        }, _callee5, this, [[0, 4]]);
 	      }));
 
 	      function update(_x9) {
@@ -312,14 +352,25 @@ module.exports =
 	          while (1) {
 	            switch (_context6.prev = _context6.next) {
 	              case 0:
+	                _context6.prev = 0;
 	                return _context6.abrupt('return', getMappedItems(this.mapper.scan(DomainClass, options)));
 
-	              case 1:
+	              case 4:
+	                _context6.prev = 4;
+	                _context6.t0 = _context6['catch'](0);
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: _context6.t0,
+	                  method: 'scan',
+	                  className: 'Connection',
+	                  args: [DomainClass, options]
+	                }, 'ConnectionError');
+
+	              case 7:
 	              case 'end':
 	                return _context6.stop();
 	            }
 	          }
-	        }, _callee6, this);
+	        }, _callee6, this, [[0, 4]]);
 	      }));
 
 	      function scan(_x11, _x12) {
@@ -397,404 +448,154 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.Migration = undefined;
+	exports.DynamoDBORMError = undefined;
 
-	var _toConsumableArray2 = __webpack_require__(7);
+	var _extends2 = __webpack_require__(2);
 
-	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-	var _objectWithoutProperties2 = __webpack_require__(3);
-
-	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
-
-	var _defineProperty2 = __webpack_require__(12);
-
-	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
-
-	var _extends4 = __webpack_require__(2);
-
-	var _extends5 = _interopRequireDefault(_extends4);
-
-	var _regenerator = __webpack_require__(6);
-
-	var _regenerator2 = _interopRequireDefault(_regenerator);
-
-	var _asyncToGenerator2 = __webpack_require__(8);
-
-	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+	var _extends3 = _interopRequireDefault(_extends2);
 
 	var _classCallCheck2 = __webpack_require__(4);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _createClass2 = __webpack_require__(5);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	var _possibleConstructorReturn2 = __webpack_require__(13);
+	var _possibleConstructorReturn2 = __webpack_require__(12);
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-	var _inherits2 = __webpack_require__(14);
+	var _inherits2 = __webpack_require__(13);
 
 	var _inherits3 = _interopRequireDefault(_inherits2);
 
-	exports.getMigrationsFiles = getMigrationsFiles;
-
-	var _fs = __webpack_require__(15);
-
-	var _fs2 = _interopRequireDefault(_fs);
-
-	var _path = __webpack_require__(16);
-
-	var _path2 = _interopRequireDefault(_path);
-
-	var _util = __webpack_require__(17);
-
-	var _util2 = _interopRequireDefault(_util);
-
-	var _Connection2 = __webpack_require__(1);
-
-	var _Connection3 = _interopRequireDefault(_Connection2);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Migration = exports.Migration = function (_Connection) {
-	    (0, _inherits3.default)(Migration, _Connection);
+	var DynamoDBORMError = exports.DynamoDBORMError = function (_Error) {
+	    (0, _inherits3.default)(DynamoDBORMError, _Error);
 
-	    function Migration(ChangeLogAggregator) {
-	        var _ref;
+	    function DynamoDBORMError(_ref, code, message) {
+	        var error = _ref.error,
+	            errors = _ref.errors,
+	            args = _ref.args,
+	            className = _ref.className,
+	            method = _ref.method;
+	        (0, _classCallCheck3.default)(this, DynamoDBORMError);
 
-	        (0, _classCallCheck3.default)(this, Migration);
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (DynamoDBORMError.__proto__ || Object.getPrototypeOf(DynamoDBORMError)).call(this, message || code + ' has being catch in ' + className + ' on method ' + method));
 
-	        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	            args[_key - 1] = arguments[_key];
+	        _this.name = 'DynamoDBORMError';
+	        _this.code = code;
+	        if (error) {
+	            _this.error = error;
 	        }
+	        if (errors) {
+	            _this.errors = errors;
+	        }
+	        _this.fnData = {
+	            args: args,
+	            method: method,
+	            className: className
+	        };
 
-	        var _this = (0, _possibleConstructorReturn3.default)(this, (_ref = Migration.__proto__ || Object.getPrototypeOf(Migration)).call.apply(_ref, [this].concat(args)));
-
-	        _this.ChangeLogAggregator = ChangeLogAggregator;
+	        Error.captureStackTrace(_this, _this.constructor);
 	        return _this;
 	    }
 
-	    (0, _createClass3.default)(Migration, [{
-	        key: 'log',
-	        value: function () {
-	            var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {
-	                var operation = _ref3.operation,
-	                    completedAt = _ref3.completedAt,
-	                    domain = _ref3.domain,
-	                    migrationName = _ref3.migrationName,
-	                    kind = _ref3.kind,
-	                    status = _ref3.status,
-	                    errorMessage = _ref3.errorMessage,
-	                    label = _ref3.label,
-	                    duration = _ref3.duration;
-	                var ChangeLog, log;
-	                return _regenerator2.default.wrap(function _callee$(_context) {
-	                    while (1) {
-	                        switch (_context.prev = _context.next) {
-	                            case 0:
-	                                ChangeLog = this.ChangeLogAggregator.ChangeLog;
-	                                log = new ChangeLog({
-	                                    status: status,
-	                                    errorMessage: errorMessage,
-	                                    label: label,
-	                                    operation: operation,
-	                                    completedAt: completedAt,
-	                                    duration: duration,
-	                                    domain: domain,
-	                                    migrationName: migrationName,
-	                                    kind: kind
-	                                });
-	                                _context.next = 4;
-	                                return log.save();
+	    return DynamoDBORMError;
+	}(Error);
 
-	                            case 4:
-	                                return _context.abrupt('return', this);
-
-	                            case 5:
-	                            case 'end':
-	                                return _context.stop();
-	                        }
-	                    }
-	                }, _callee, this);
-	            }));
-
-	            function log(_x) {
-	                return _ref2.apply(this, arguments);
-	            }
-
-	            return log;
-	        }()
-	    }, {
-	        key: 'createTable',
-	        value: function () {
-	            var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(Model) {
-	                var _this2 = this;
-
-	                return _regenerator2.default.wrap(function _callee2$(_context2) {
-	                    while (1) {
-	                        switch (_context2.prev = _context2.next) {
-	                            case 0:
-	                                return _context2.abrupt('return', this.mapper.ensureTableExists(Model, (0, _extends5.default)({
-	                                    readCapacityUnits: Model.readCapacity,
-	                                    writeCapacityUnits: Model.writeCapacity
-	                                }, Model.indexes && Model.indexes.length ? { indexOptions: Model.indexes.reduce(function (options, index) {
-	                                        return (0, _extends5.default)({}, options, (0, _defineProperty3.default)({}, index.name, {
-	                                            readCapacityUnits: index.readCapacity,
-	                                            writeCapacityUnits: index.writeCapacity,
-	                                            projection: index.projection,
-	                                            type: index.type
-
-	                                        }));
-	                                    }, {})
-	                                } : {})).then(function () {
-	                                    return _this2;
-	                                }));
-
-	                            case 1:
-	                            case 'end':
-	                                return _context2.stop();
-	                        }
-	                    }
-	                }, _callee2, this);
-	            }));
-
-	            function createTable(_x2) {
-	                return _ref4.apply(this, arguments);
-	            }
-
-	            return createTable;
-	        }()
-	    }, {
-	        key: 'dropTable',
-	        value: function () {
-	            var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(Model) {
-	                var _this3 = this;
-
-	                return _regenerator2.default.wrap(function _callee3$(_context3) {
-	                    while (1) {
-	                        switch (_context3.prev = _context3.next) {
-	                            case 0:
-	                                return _context3.abrupt('return', this.mapper.ensureTableNotExists(Model).then(function () {
-	                                    return _this3;
-	                                }));
-
-	                            case 1:
-	                            case 'end':
-	                                return _context3.stop();
-	                        }
-	                    }
-	                }, _callee3, this);
-	            }));
-
-	            function dropTable(_x3) {
-	                return _ref5.apply(this, arguments);
-	            }
-
-	            return dropTable;
-	        }()
-
-	        // TODO: CHANGE
-
-	    }]);
-	    return Migration;
-	}(_Connection3.default);
-
-	Migration.do = function (operation, fnList, migration, label) {
-
-	    var lineupMigrations = function lineupMigrations(funcs) {
-	        return funcs.reduce(function (promise, _ref6) {
-	            var fn = _ref6.fn,
-	                migrationName = _ref6.migrationName,
-	                DomainAggregator = _ref6.DomainAggregator,
-	                kind = _ref6.kind,
-	                domain = _ref6.domain;
-
-	            // log begin here
-	            var start = Date.now();
-	            return promise.then(function (lastFnCompleted) {
-	                console.log(migrationName + ', ' + domain + ' is about to start');
-	                return fn(DomainAggregator).then(function (migrationHasCompleted) {
-	                    var duration = Date.now() - start;
-	                    console.log(migrationName + ', ' + domain + ' has completed: ' + duration + ' seconds');
-
-	                    return migration.afterEach({
-	                        operation: operation,
-	                        kind: kind,
-	                        completedAt: new Date().toISOString(),
-	                        duration: duration,
-	                        domain: domain,
-	                        label: label,
-	                        migrationName: migrationName,
-	                        status: 1 // 'success'
-	                    });
-	                }).catch(function (err) {
-	                    var duration = Date.now() - start;
-	                    console.log(migrationName + ', ' + domain + ' has throw: ' + duration + ' seconds');
-	                    console.log('ERROR::::', err);
-	                    return migration.afterEach({
-	                        operation: operation,
-	                        completedAt: new Date().toISOString(),
-	                        duration: duration,
-	                        kind: kind,
-	                        domain: domain,
-	                        label: label,
-	                        migrationName: migrationName,
-	                        status: 0, // error 
-	                        errorMessage: err
-	                    }).then(function () {
-	                        throw new Error('A error has being occured, check migration logs for more information');
-	                    });
-	                });
-	            });
-	        }, Promise.resolve([]));
-	    };
-	    var bindedFns = fnList.map(function (_ref7) {
-	        var fn = _ref7.fn,
-	            args = (0, _objectWithoutProperties3.default)(_ref7, ['fn']);
-	        return (0, _extends5.default)({ fn: fn.bind(migration) }, args);
+	function mapErrors(errors) {
+	    return errors.map(function (error) {
+	        return (0, _extends3.default)({
+	            identifier: error.code,
+	            message: error.message
+	        }, error);
 	    });
-	    try {
-	        console.log(operation + ' about to start');
-	        var _start = Date.now();
-	        return lineupMigrations(bindedFns).then(function (lastFnCompleted) {
-	            return console.log(operation + ' has being completed, duration: ' + (Date.now() - _start) + ' seconds');
-	        });
-	    } catch (err) {
-	        console.log('Error has being catch and has interrupted ' + operation + ', duration: ' + (Date.now() - start) + ' seconds');
-	    }
-	};
-
-	function getMigrationsFiles(domain) {
-	    var comandDirPath = this.comandDirPath;
-
-	    console.log('COMMAAND DIR :::', comandDirPath);
-	    function validateDomainName(name) {
-	        var isDomain = !!name.match(/domain-/g);
-	        return isDomain;
-	    }
-	    function checkValidDynamodbORMDomain(_package) {
-	        var isDomain = validateDomainName(_package.name);
-	        var hasDynamodbORM = !!_package.dependencies['@spark/dynamodborm'] || !!_package.dependencies['dynamodborm'];
-	        return isDomain && hasDynamodbORM;
-	    }
-	    function findDomainDeps(_package) {
-	        var deps = _package.dependencies;
-	        var depsNames = Object.keys(deps);
-	        var depsVersions = Object.values(deps);
-	        var getDomains = function getDomains() {
-	            var domains = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	            var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-	            var this_iteration_domain = void 0;
-	            if (depsNames[index].match(/domain-/g)) {
-	                var atualized_domains = [].concat((0, _toConsumableArray3.default)(domains), [{
-	                    domain: depsNames[index],
-	                    reference: depsVersions[index]
-	                }]);
-	                this_iteration_domain = atualized_domains;
-	            }
-	            var atualized_index = index + 1;
-	            if (atualized_index < depsNames.length) {
-	                return getDomains(this_iteration_domain || domains, atualized_index);
-	            }
-
-	            return this_iteration_domain || domains;
-	        };
-	        return getDomains();
-	    }
-	    function getCustomOrDefaultList(domainName) {
-	        if (domainName) {
-	            if (!validateDomainName(domainName)) {
-	                throw new Error('Not a valid domain name');
-	            }
-	        }
-	        var fullpath = _path2.default.join.apply(_path2.default, [comandDirPath, 'src'].concat((0, _toConsumableArray3.default)(domainName ? domainName.split('/') : []), ['migrations']));
-
-	        if (_fs2.default.existsSync(fullpath)) {
-	            var migrationsfile = _fs2.default.readdirSync(fullpath);
-	            if (migrationsfile.length) {
-	                return migrationsfile.map(function (filepath) {
-	                    return '' + _path2.default.join(fullpath, filepath);
-	                });
-	            }
-	        }
-
-	        var defaultPath = _path2.default.join(
-	        // __dirname,
-	        comandDirPath,
-	        // ...(domainName ? domainName.split('/') : []),
-	        'node_modules', '@spark', 'dynamodborm', 'migrate', 'default-migrations');
-	        // default create-table
-	        console.log('DEFAULT PATH ::::', defaultPath);
-	        return _fs2.default.readdirSync(defaultPath).map(function (filepath) {
-	            return '' + _path2.default.join(defaultPath, filepath);
-	        });
-	    }
-
-	    if (!domain) {
-	        var _package = JSON.parse(_fs2.default.readFileSync('package.json'));
-	        if (checkValidDynamodbORMDomain(_package)) {
-	            // procceed with reading on the actual package
-	            return (0, _defineProperty3.default)({}, _package.name, getCustomOrDefaultList());
-	        }
-
-	        // look for domain packages in dependencies
-	        var domains = findDomainDeps(_package);
-	        if (domains.length) {
-	            // go to domain packages
-	            return domains.map(function (_ref9) {
-	                var domain = _ref9.domain;
-	                return getCustomOrDefaultList(domain);
-	            }).reduce(function (finalList, list, i) {
-	                return (0, _extends5.default)({}, finalList, (0, _defineProperty3.default)({}, domains[i].domain, list));
-	            }, {});
-	        }
-	        throw new Error('Not found a valid dynamodborm domain');
-	    }
-	    return (0, _defineProperty3.default)({}, domain, getCustomOrDefaultList(domain));
 	}
+
+	DynamoDBORMError.fromArray = function (errors, kind, message) {
+	    return new DynamoDBORMError((0, _extends3.default)({}, errors[0], {
+	        error: undefined,
+	        errors: mapErrors(errors)
+	    }), kind, message);
+	};
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/defineProperty");
+	module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
 	module.exports = require("babel-runtime/helpers/inherits");
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports) {
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = require("fs");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.DomainError = undefined;
+
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _classCallCheck2 = __webpack_require__(4);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(12);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(13);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _DynamoDBORMError2 = __webpack_require__(11);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DomainError = exports.DomainError = function (_DynamoDBORMError) {
+	    (0, _inherits3.default)(DomainError, _DynamoDBORMError);
+
+	    function DomainError(argz, kind, message) {
+	        (0, _classCallCheck3.default)(this, DomainError);
+
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (DomainError.__proto__ || Object.getPrototypeOf(DomainError)).call(this, (0, _extends3.default)({}, argz, {
+	            className: 'Model'
+	        }), kind, message));
+
+	        _this.name = 'DomainError';
+	        return _this;
+	    }
+
+	    return DomainError;
+	}(_DynamoDBORMError2.DynamoDBORMError);
 
 /***/ }),
+/* 15 */,
 /* 16 */
 /***/ (function(module, exports) {
 
-	module.exports = require("path");
+	module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = require("util");
+	module.exports = require("babel-runtime/helpers/defineProperty");
 
 /***/ }),
-/* 18 */
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -810,27 +611,29 @@ module.exports =
 
 	var _dynamodbDataMapper = __webpack_require__(9);
 
-	var _joi = __webpack_require__(19);
+	var _joi = __webpack_require__(22);
 
 	var _joi2 = _interopRequireDefault(_joi);
 
-	var _applyValueObjectSchema = __webpack_require__(20);
+	var _applyValueObjectSchema = __webpack_require__(23);
 
 	var _applyValueObjectSchema2 = _interopRequireDefault(_applyValueObjectSchema);
 
-	var _applyAggregationRootSchema = __webpack_require__(21);
+	var _applyAggregationRootSchema = __webpack_require__(24);
 
 	var _applyAggregationRootSchema2 = _interopRequireDefault(_applyAggregationRootSchema);
 
-	var _applyCommonMethods = __webpack_require__(22);
+	var _applyCommonMethods = __webpack_require__(25);
 
 	var _applyCommonMethods2 = _interopRequireDefault(_applyCommonMethods);
 
-	var _buildAggregationRootModels = __webpack_require__(34);
+	var _buildAggregationRootModels = __webpack_require__(38);
 
 	var _buildAggregationRootModels2 = _interopRequireDefault(_buildAggregationRootModels);
 
-	var _parseFields = __webpack_require__(35);
+	var _parseFields = __webpack_require__(39);
+
+	var _commonSchema = __webpack_require__(40);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -842,7 +645,8 @@ module.exports =
 	  applyRootSchema: applyRootSchema,
 	  applyValueObjectSchema: applyValueObjectSchema,
 	  applyCommonMethods: _applyCommonMethods2.default,
-	  Joi: _joi2.default
+	  Joi: _joi2.default,
+	  commonSchema: _commonSchema.commonSchema
 	});
 	var parseFields = (0, _parseFields.parseFieldsFactory)(_joi2.default);
 
@@ -861,13 +665,13 @@ module.exports =
 	exports.default = AgregationRootModel;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports) {
 
 	module.exports = require("joi");
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -877,7 +681,7 @@ module.exports =
 	});
 	exports.applyObjectValueSchema = undefined;
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -905,7 +709,7 @@ module.exports =
 	exports.default = applyObjectValueSchemaFactory;
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -915,7 +719,7 @@ module.exports =
 	});
 	exports.applyAgregationRootSchema = undefined;
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -950,7 +754,7 @@ module.exports =
 	exports.default = applyAgregationRootSchemaFactory;
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -959,15 +763,15 @@ module.exports =
 	  value: true
 	});
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-	var _extends3 = __webpack_require__(2);
+	var _extends4 = __webpack_require__(2);
 
-	var _extends4 = _interopRequireDefault(_extends3);
+	var _extends5 = _interopRequireDefault(_extends4);
 
-	var _commonMethods = __webpack_require__(23);
+	var _commonMethods = __webpack_require__(26);
 
 	var commons = _interopRequireWildcard(_commonMethods);
 
@@ -975,17 +779,20 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var extractMethods = function extractMethods(methods, key) {
-	  return (0, _extends4.default)({}, methods, (0, _defineProperty3.default)({}, key, commons[key]));
-	};
 	function applyCommonMethods(classDefinition) {
+	  var extractMethods = function extractMethods(methods, key) {
+	    if (classDefinition.prototype[key] === undefined) {
+	      return (0, _extends5.default)({}, methods, (0, _defineProperty3.default)({}, key, commons[key]));
+	    }
+	    return (0, _extends5.default)({}, methods, (0, _defineProperty3.default)({}, '_' + key, commons[key]));
+	  };
 	  return Object.assign(classDefinition.prototype, Object.keys(commons).reduce(extractMethods, {}));
 	}
 
 	exports.default = applyCommonMethods;
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -994,7 +801,7 @@ module.exports =
 	  value: true
 	});
 
-	var _get = __webpack_require__(24);
+	var _get = __webpack_require__(27);
 
 	Object.defineProperty(exports, 'get', {
 	  enumerable: true,
@@ -1003,7 +810,7 @@ module.exports =
 	  }
 	});
 
-	var _set = __webpack_require__(25);
+	var _set = __webpack_require__(28);
 
 	Object.defineProperty(exports, 'set', {
 	  enumerable: true,
@@ -1012,7 +819,7 @@ module.exports =
 	  }
 	});
 
-	var _save = __webpack_require__(26);
+	var _save = __webpack_require__(29);
 
 	Object.defineProperty(exports, 'save', {
 	  enumerable: true,
@@ -1021,7 +828,7 @@ module.exports =
 	  }
 	});
 
-	var _update = __webpack_require__(27);
+	var _update = __webpack_require__(30);
 
 	Object.defineProperty(exports, 'update', {
 	  enumerable: true,
@@ -1030,7 +837,7 @@ module.exports =
 	  }
 	});
 
-	var _delete = __webpack_require__(28);
+	var _delete = __webpack_require__(31);
 
 	Object.defineProperty(exports, 'delete', {
 	  enumerable: true,
@@ -1039,7 +846,7 @@ module.exports =
 	  }
 	});
 
-	var _validate = __webpack_require__(29);
+	var _validate = __webpack_require__(32);
 
 	Object.defineProperty(exports, 'validate', {
 	  enumerable: true,
@@ -1048,7 +855,7 @@ module.exports =
 	  }
 	});
 
-	var _getItem = __webpack_require__(30);
+	var _getItem = __webpack_require__(33);
 
 	Object.defineProperty(exports, 'getItem', {
 	  enumerable: true,
@@ -1057,7 +864,7 @@ module.exports =
 	  }
 	});
 
-	var _addItem = __webpack_require__(31);
+	var _addItem = __webpack_require__(35);
 
 	Object.defineProperty(exports, 'addItem', {
 	  enumerable: true,
@@ -1066,7 +873,7 @@ module.exports =
 	  }
 	});
 
-	var _removeItem = __webpack_require__(32);
+	var _removeItem = __webpack_require__(36);
 
 	Object.defineProperty(exports, 'removeItem', {
 	  enumerable: true,
@@ -1075,7 +882,7 @@ module.exports =
 	  }
 	});
 
-	var _updateItem = __webpack_require__(33);
+	var _updateItem = __webpack_require__(37);
 
 	Object.defineProperty(exports, 'updateItem', {
 	  enumerable: true,
@@ -1085,7 +892,7 @@ module.exports =
 	});
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1094,7 +901,7 @@ module.exports =
 	  value: true
 	});
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1127,7 +934,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1141,7 +948,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1162,19 +969,27 @@ module.exports =
 	var save = exports.save = function () {
 	  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	    var updated;
+	    var now, updated;
 	    return _regenerator2.default.wrap(function _callee$(_context) {
 	      while (1) {
 	        switch (_context.prev = _context.next) {
 	          case 0:
-	            _context.next = 2;
+	            now = new Date().toISOString();
+
+	            if (this.id === undefined) {
+	              this.createdAt = now;
+	            }
+	            this.updatedAt = now;
+	            _context.next = 5;
 	            return this.connection.update(this, options);
 
-	          case 2:
+	          case 5:
 	            updated = _context.sent;
-	            return _context.abrupt("return", Object.assign(this, updated.get()));
 
-	          case 4:
+	            Object.assign(this, updated.get());
+	            return _context.abrupt("return", this);
+
+	          case 8:
 	          case "end":
 	            return _context.stop();
 	        }
@@ -1190,7 +1005,7 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -1205,7 +1020,7 @@ module.exports =
 	}
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1248,10 +1063,10 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -1263,6 +1078,8 @@ module.exports =
 
 	exports.validate = validate;
 
+	var _DynamoDBORMError = __webpack_require__(11);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function validator(joi, values, schema, self) {
@@ -1271,7 +1088,26 @@ module.exports =
 	        error = _joi.error;
 
 	    if (error) {
-	      return reject(error);
+	      var validationError = new _DynamoDBORMError.DynamoDBORMError({
+	        error: error,
+	        method: 'validate',
+	        args: [joi, values, schema, self],
+	        className: 'Model'
+	      }, 'ValidationError');
+
+	      var errors = error.details.map(function (error) {
+	        var identifier = error.path.filter(function (p) {
+	          return isNaN(p);
+	        }).join('.');
+	        var message = error.message;
+
+	        return new _DynamoDBORMError.DynamoDBORMError({
+	          method: 'validate',
+	          args: [joi, values, schema, self],
+	          className: 'Model'
+	        }, identifier, message);
+	      });
+	      return reject(_DynamoDBORMError.DynamoDBORMError.fromArray(errors, 'ValidationError'));
 	    }
 	    return resolve(self);
 	  });
@@ -1282,28 +1118,65 @@ module.exports =
 	}
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports) {
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	exports.getItem = getItem;
+
+	var _DomainError = __webpack_require__(14);
+
+	var _listHelpers = __webpack_require__(34);
+
 	function getItem(itemKey, itemId) {
-	    var searchById = function searchById(items) {
-	        var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-	        return items[index].id === itemId && items[index] || searchById(items, index + 1);
-	    };
-	    return searchById(this[itemKey]);
+	    (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
+	    var founded = this[itemKey].find(function (_ref) {
+	        var id = _ref.id;
+	        return id === itemId;
+	    });
+
+	    if (!founded) throw new _DomainError.DomainError({
+	        error: new Error('The item searched was not found'),
+	        args: [itemKey, Item],
+	        method: 'getItem'
+	    }, 'NotFoundItem');
+
+	    return founded;
 	}
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.throwIfIsInvalidList = undefined;
+
+	var _DomainError = __webpack_require__(14);
+
+	// TODO: test for this function
+	var throwIfIsInvalidList = exports.throwIfIsInvalidList = function throwIfIsInvalidList(item) {
+	    if (item !== undefined && !(item instanceof Array)) {
+	        throw new _DomainError.DomainError({
+	            error: new Error('The item is not a list'),
+	            args: [itemKey, Item],
+	            method: 'updateItem'
+	        }, 'NotValidOperation');
+	    }
+	};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -1315,9 +1188,13 @@ module.exports =
 
 	exports.addItem = addItem;
 
+	var _listHelpers = __webpack_require__(34);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function addItem(itemKey, Item) {
+	    // TODO: test for this case
+	    (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
 	    // TODO: add check for uniqueness
 	    var items = this[itemKey] || [];
 	    this[itemKey] = [].concat((0, _toConsumableArray3.default)(items), [Item]); // dont't like this
@@ -1325,43 +1202,76 @@ module.exports =
 	}
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports) {
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.removeItem = removeItem;
+
+	var _DomainError = __webpack_require__(14);
+
+	var _listHelpers = __webpack_require__(34);
+
 	function removeItem(itemKey, itemId) {
+	  // TODO: test for this case
+	  (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
+	  var founded = false;
+	  // // TODO: test for this case
 	  this[itemKey] = this[itemKey].filter(function (item) {
+	    if (item.id === itemId) founded = true;
 	    return item.id !== itemId;
 	  });
+
+	  // TODO: test for this case
+	  if (!founded) throw new _DomainError.DomainError({
+	    error: new Error('The item searched was not found'),
+	    args: [itemKey, itemId],
+	    method: 'removeItem'
+	  }, 'NotFoundItem');
 
 	  return this;
 	}
 
 /***/ }),
-/* 33 */
-/***/ (function(module, exports) {
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.updateItem = updateItem;
+
+	var _DomainError = __webpack_require__(14);
+
+	var _listHelpers = __webpack_require__(34);
+
 	function updateItem(itemKey, Item) {
+	  // TODO: test for this case
+	  (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
+	  var found = false;
+	  // TODO: test for this case
 	  this[itemKey] = this[itemKey].map(function (item) {
-	    return item.id === Item.id ? Item : item;
+	    return item.id === Item.id ? (found = true, Item) : item;
 	  });
+
+	  // TODO: test for this case
+	  if (!found) throw new _DomainError.DomainError({
+	    error: new Error('The item searched was not found'),
+	    args: [itemKey, Item],
+	    method: 'updateItem'
+	  }, 'NotFoundItem');
 
 	  return this;
 	}
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1371,7 +1281,7 @@ module.exports =
 	});
 	exports.buildAggregationRootModels = undefined;
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1381,7 +1291,7 @@ module.exports =
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function buildAggregationRootModels(embed, applyRootSchema, applyValueObjectSchema, applyCommonMethods, Joi, connection, _ref) {
+	function buildAggregationRootModels(embed, applyRootSchema, applyValueObjectSchema, applyCommonMethods, Joi, commonSchema, connection, _ref) {
 	  var ModelClass = _ref.ModelClass,
 	      schema = _ref.schema,
 	      tableName = _ref.tableName,
@@ -1389,7 +1299,7 @@ module.exports =
 	      indexes = _ref.indexes,
 	      writeCapacity = _ref.writeCapacity,
 	      readCapacity = _ref.readCapacity;
-	  var objectValuesMaps = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : [];
+	  var objectValuesMaps = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : [];
 
 	  var getJoischema = function getJoischema(mixedSchema, objValMaps) {
 	    return Object.keys(mixedSchema).reduce(function (jschema, key) {
@@ -1409,7 +1319,7 @@ module.exports =
 	  var valueObjectsClasses = objectValuesMaps.reduce(function (batch, map) {
 	    var _extends5;
 
-	    var mixedSchema = map.schema(Joi);
+	    var mixedSchema = (0, _extends8.default)({}, commonSchema(Joi), map.schema(Joi));
 	    var mapSchema = getMapperSchema(mixedSchema);
 	    var joiSchema = getJoischema(mixedSchema, batch);
 
@@ -1427,7 +1337,7 @@ module.exports =
 	    }
 	    return name;
 	  };
-	  var mixedRootSchema = schema(Joi);
+	  var mixedRootSchema = (0, _extends8.default)({}, commonSchema(Joi), schema(Joi));
 	  var mapRootSchema = getMapperSchema(mixedRootSchema);
 	  var rootJoischema = getJoischema(mixedRootSchema, valueObjectsClasses);
 	  var parsedSchema = objectValuesMaps.length ? objectValuesMaps.reduce(function (intermediateSchema, objectValueMap) {
@@ -1480,16 +1390,17 @@ module.exports =
 	      applyRootSchema = _ref3.applyRootSchema,
 	      applyValueObjectSchema = _ref3.applyValueObjectSchema,
 	      applyCommonMethods = _ref3.applyCommonMethods,
-	      Joi = _ref3.Joi;
+	      Joi = _ref3.Joi,
+	      commonSchema = _ref3.commonSchema;
 
-	  return buildAggregationRootModels.bind(null, embed, applyRootSchema, applyValueObjectSchema, applyCommonMethods, Joi);
+	  return buildAggregationRootModels.bind(null, embed, applyRootSchema, applyValueObjectSchema, applyCommonMethods, Joi, commonSchema);
 	}
 
 	exports.buildAggregationRootModels = buildAggregationRootModels;
 	exports.default = buildAggregationRootModelsFactory;
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1502,11 +1413,11 @@ module.exports =
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-	var _typeof2 = __webpack_require__(36);
+	var _typeof2 = __webpack_require__(16);
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1581,13 +1492,35 @@ module.exports =
 	}
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports) {
 
-	module.exports = require("babel-runtime/helpers/typeof");
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var commonSchema = exports.commonSchema = function commonSchema(hasToBe) {
+	  return {
+	    createdAt: {
+	      type: 'String',
+	      validator: hasToBe.string(),
+	      defaultProvider: function defaultProvider() {
+	        return new Date().toISOString();
+	      }
+	    },
+	    updatedAt: {
+	      type: 'String',
+	      validator: hasToBe.string(),
+	      defaultProvider: function defaultProvider() {
+	        return new Date().toISOString();
+	      }
+	    }
+	  };
+	};
 
 /***/ }),
-/* 37 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1604,11 +1537,7 @@ module.exports =
 
 	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
-<<<<<<< HEAD
-	var _defineProperty2 = __webpack_require__(14);
-=======
-	var _defineProperty2 = __webpack_require__(12);
->>>>>>> migration assets splited [build]
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -1628,6 +1557,8 @@ module.exports =
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
+	var _DynamoDBORMError = __webpack_require__(11);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Repository = function () {
@@ -1643,13 +1574,35 @@ module.exports =
 	    key: 'get',
 	    value: function () {
 	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filter) {
+	        var bucket;
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
-	                return _context.abrupt('return', this.connection.get(this.Model, filter));
+	                _context.next = 2;
+	                return this.connection.get(this.Model, filter);
 
-	              case 1:
+	              case 2:
+	                bucket = _context.sent;
+
+	                console.log(bucket);
+
+	                if (bucket) {
+	                  _context.next = 6;
+	                  break;
+	                }
+
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: new Error('The item searched was not found'),
+	                  args: [filter],
+	                  className: 'Repository',
+	                  method: 'get'
+	                }, 'NotFoundItem');
+
+	              case 6:
+	                return _context.abrupt('return', bucket);
+
+	              case 7:
 	              case 'end':
 	                return _context.stop();
 	            }
@@ -1697,10 +1650,7 @@ module.exports =
 	    value: function () {
 	      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
 	        var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-<<<<<<< HEAD
 	            scanIndexForward = _ref4.scanIndexForward,
-=======
->>>>>>> migration assets splited [build]
 	            pageSize = _ref4.pageSize,
 	            lastIndex = _ref4.lastIndex,
 	            filter = _ref4.filter,
@@ -1717,12 +1667,8 @@ module.exports =
 	                  pageSize: pageSize || limit || 25,
 	                  startKey: lastIndex && new this.Model((0, _defineProperty3.default)({}, indexKey || 'id', lastIndex)),
 	                  limit: limit || pageSize || 25,
-<<<<<<< HEAD
 	                  filter: filter,
 	                  scanIndexForward: scanIndexForward
-=======
-	                  filter: filter
->>>>>>> migration assets splited [build]
 	                };
 
 	                if (query) {
@@ -1762,7 +1708,7 @@ module.exports =
 	exports.default = Repository;
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1770,13 +1716,31 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Model = exports.appendCustomMethods = undefined;
+	exports.Model = exports.appendCustomMethods = exports.DynamoDBORMError = exports.DomainError = undefined;
 
 	var _classCallCheck2 = __webpack_require__(4);
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _appendCustomMethods = __webpack_require__(39);
+	var _DomainError = __webpack_require__(14);
+
+	Object.defineProperty(exports, 'DomainError', {
+	  enumerable: true,
+	  get: function get() {
+	    return _DomainError.DomainError;
+	  }
+	});
+
+	var _DynamoDBORMError = __webpack_require__(11);
+
+	Object.defineProperty(exports, 'DynamoDBORMError', {
+	  enumerable: true,
+	  get: function get() {
+	    return _DynamoDBORMError.DynamoDBORMError;
+	  }
+	});
+
+	var _appendCustomMethods = __webpack_require__(43);
 
 	Object.defineProperty(exports, 'appendCustomMethods', {
 	  enumerable: true,
@@ -1789,17 +1753,13 @@ module.exports =
 
 	var _Connection2 = _interopRequireDefault(_Connection);
 
-	var _Repository = __webpack_require__(37);
+	var _Repository = __webpack_require__(41);
 
 	var _Repository2 = _interopRequireDefault(_Repository);
 
-	var _Model = __webpack_require__(18);
+	var _Model = __webpack_require__(21);
 
 	var _Model2 = _interopRequireDefault(_Model);
-
-	var _Migration = __webpack_require__(11);
-
-	var _Migration2 = _interopRequireDefault(_Migration);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1821,17 +1781,39 @@ module.exports =
 	exports.default = AggregationRoot;
 
 /***/ }),
-/* 39 */
-/***/ (function(module, exports) {
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _defineProperty2 = __webpack_require__(17);
+
+	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+	var _extends4 = __webpack_require__(2);
+
+	var _extends5 = _interopRequireDefault(_extends4);
+
 	exports.appendCustomMethods = appendCustomMethods;
-	function appendCustomMethods(funcInst, methods) {
-	    Object.assign(funcInst.prototype || funcInst, methods);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function appendCustomMethods(funcInst, custommethods) {
+	    var target = funcInst.prototype || funcInst;
+	    var extractCustomMethods = function extractCustomMethods(methods, key) {
+	        var _extends3;
+
+	        if (target[key] === undefined) {
+	            return (0, _extends5.default)({}, methods, (0, _defineProperty3.default)({}, key, custommethods[key]));
+	        }
+	        return (0, _extends5.default)({}, methods, (_extends3 = {}, (0, _defineProperty3.default)(_extends3, "_" + key, target[key]), (0, _defineProperty3.default)(_extends3, key, custommethods[key]), _extends3));
+	    };
+
+	    Object.assign(target, Object.keys(custommethods).reduce(extractCustomMethods, {}));
 	    return undefined;
 	}
 

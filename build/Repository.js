@@ -46,7 +46,7 @@ module.exports =
 /***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(37);
+	module.exports = __webpack_require__(41);
 
 
 /***/ }),
@@ -93,14 +93,108 @@ module.exports =
 
 /***/ }),
 
+/***/ 11:
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.DynamoDBORMError = undefined;
+
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _classCallCheck2 = __webpack_require__(4);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(12);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(13);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DynamoDBORMError = exports.DynamoDBORMError = function (_Error) {
+	    (0, _inherits3.default)(DynamoDBORMError, _Error);
+
+	    function DynamoDBORMError(_ref, code, message) {
+	        var error = _ref.error,
+	            errors = _ref.errors,
+	            args = _ref.args,
+	            className = _ref.className,
+	            method = _ref.method;
+	        (0, _classCallCheck3.default)(this, DynamoDBORMError);
+
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (DynamoDBORMError.__proto__ || Object.getPrototypeOf(DynamoDBORMError)).call(this, message || code + ' has being catch in ' + className + ' on method ' + method));
+
+	        _this.name = 'DynamoDBORMError';
+	        _this.code = code;
+	        if (error) {
+	            _this.error = error;
+	        }
+	        if (errors) {
+	            _this.errors = errors;
+	        }
+	        _this.fnData = {
+	            args: args,
+	            method: method,
+	            className: className
+	        };
+
+	        Error.captureStackTrace(_this, _this.constructor);
+	        return _this;
+	    }
+
+	    return DynamoDBORMError;
+	}(Error);
+
+	function mapErrors(errors) {
+	    return errors.map(function (error) {
+	        return (0, _extends3.default)({
+	            identifier: error.code,
+	            message: error.message
+	        }, error);
+	    });
+	}
+
+	DynamoDBORMError.fromArray = function (errors, kind, message) {
+	    return new DynamoDBORMError((0, _extends3.default)({}, errors[0], {
+	        error: undefined,
+	        errors: mapErrors(errors)
+	    }), kind, message);
+	};
+
+/***/ }),
+
 /***/ 12:
+/***/ (function(module, exports) {
+
+	module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
+
+/***/ }),
+
+/***/ 13:
+/***/ (function(module, exports) {
+
+	module.exports = require("babel-runtime/helpers/inherits");
+
+/***/ }),
+
+/***/ 17:
 /***/ (function(module, exports) {
 
 	module.exports = require("babel-runtime/helpers/defineProperty");
 
 /***/ }),
 
-/***/ 37:
+/***/ 41:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -117,7 +211,7 @@ module.exports =
 
 	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
-	var _defineProperty2 = __webpack_require__(12);
+	var _defineProperty2 = __webpack_require__(17);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -137,6 +231,8 @@ module.exports =
 
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
+	var _DynamoDBORMError = __webpack_require__(11);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Repository = function () {
@@ -152,13 +248,35 @@ module.exports =
 	    key: 'get',
 	    value: function () {
 	      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(filter) {
+	        var bucket;
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
-	                return _context.abrupt('return', this.connection.get(this.Model, filter));
+	                _context.next = 2;
+	                return this.connection.get(this.Model, filter);
 
-	              case 1:
+	              case 2:
+	                bucket = _context.sent;
+
+	                console.log(bucket);
+
+	                if (bucket) {
+	                  _context.next = 6;
+	                  break;
+	                }
+
+	                throw new _DynamoDBORMError.DynamoDBORMError({
+	                  error: new Error('The item searched was not found'),
+	                  args: [filter],
+	                  className: 'Repository',
+	                  method: 'get'
+	                }, 'NotFoundItem');
+
+	              case 6:
+	                return _context.abrupt('return', bucket);
+
+	              case 7:
 	              case 'end':
 	                return _context.stop();
 	            }
