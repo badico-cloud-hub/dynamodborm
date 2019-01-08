@@ -1135,9 +1135,8 @@ module.exports =
 	function getItem(itemKey, itemId) {
 	    (0, _listHelpers.throwIfIsInvalidList)(this[itemKey]);
 	    try {
-	        var founded = this[itemKey].find(function (_ref) {
-	            var id = _ref.id;
-	            return id === itemId;
+	        var founded = this[itemKey].find(function (item) {
+	            return item.id === itemId;
 	        });
 	        if (!founded) throw new Error('The item searched was not found');
 	        return founded;
