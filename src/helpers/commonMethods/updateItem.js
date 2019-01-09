@@ -7,7 +7,11 @@ export function updateItem(itemKey, Item) {
   let found = false
   // TODO: test for this case
   this[itemKey] = this[itemKey].map(
-    (item) => item.id === Item.id ? (found = true, Item) : item
+    (item) => item.id === Item.id ? (found = true, {
+      ...item,
+      ...Item,
+      updatedAt: (new Date()).toISOString(),
+    }) : item
   )
 
   // TODO: test for this case

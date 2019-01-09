@@ -1246,11 +1246,18 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
 	exports.updateItem = updateItem;
 
 	var _DomainError = __webpack_require__(14);
 
 	var _listHelpers = __webpack_require__(34);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function updateItem(itemKey, Item) {
 	  // TODO: test for this case
@@ -1258,7 +1265,9 @@ module.exports =
 	  var found = false;
 	  // TODO: test for this case
 	  this[itemKey] = this[itemKey].map(function (item) {
-	    return item.id === Item.id ? (found = true, Item) : item;
+	    return item.id === Item.id ? (found = true, (0, _extends3.default)({}, item, Item, {
+	      updatedAt: new Date().toISOString()
+	    })) : item;
 	  });
 
 	  // TODO: test for this case
