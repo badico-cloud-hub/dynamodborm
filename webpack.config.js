@@ -40,7 +40,7 @@ function build() {
     name: 'dynamodborm',
     entry: readDir('/src'),
     output: {
-      path: path.join(__dirname, 'build'),
+      path: path.join(__dirname, 'lib'),
       library: '[name]',
       libraryTarget: 'commonjs2',
       filename: '[name].js'

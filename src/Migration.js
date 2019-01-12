@@ -231,51 +231,52 @@ Migration.do = function(operation, fnList, migration, label) {
     }
 }
 
+function validateDomainName(name) {
+    const isDomain = !!name.match(/domain-/g)
+    return isDomain
+}
+function checkValidDynamodbORMDomain(_package) {
+    const isDomain = validateDomainName(_package.name)
+    const hasDynamodbORM = !!_package.dependencies['@spark/dynamodborm'] || !!_package.dependencies['dynamodborm']
+    return isDomain && hasDynamodbORM
+}
 
+export function findDomainDeps(_package) {
+    const deps = _package.dependencies
+    const depsNames = Object.keys(deps)
+    const depsVersions = Object.values(deps)
+    const getDomains = (domains = [], index = 0) => {
+        let this_iteration_domain
+        if (depsNames[index].match(/domain-/g)) {
+            const atualized_domains = [
+                ...domains,
+                {
+                    domain: depsNames[index],
+                    reference: depsVersions[index]
+                }
+            ]
+            this_iteration_domain = atualized_domains
+        }
+        const atualized_index = index + 1
+        if (atualized_index < depsNames.length) {
+            return getDomains(
+                this_iteration_domain || domains,
+                atualized_index,
+            )
+        }
+
+        return this_iteration_domain || domains
+
+
+    }
+   return getDomains()
+}
 export function getMigrationsFiles(domain) {
     const {
         comandDirPath,
         _package,
     } = this
-    function validateDomainName(name) {
-        const isDomain = !!name.match(/domain-/g)
-        return isDomain
-    }
-    function checkValidDynamodbORMDomain(_package) {
-        const isDomain = validateDomainName(_package.name)
-        const hasDynamodbORM = !!_package.dependencies['@spark/dynamodborm'] || !!_package.dependencies['dynamodborm']
-        return isDomain && hasDynamodbORM
-    }
-    function findDomainDeps(_package) {
-        const deps = _package.dependencies
-        const depsNames = Object.keys(deps)
-        const depsVersions = Object.values(deps)
-        const getDomains = (domains = [], index = 0) => {
-            let this_iteration_domain
-            if (depsNames[index].match(/domain-/g)) {
-                const atualized_domains = [
-                    ...domains,
-                    {
-                        domain: depsNames[index],
-                        reference: depsVersions[index]
-                    }
-                ]
-                this_iteration_domain = atualized_domains
-            }
-            const atualized_index = index + 1
-            if (atualized_index < depsNames.length) {
-                return getDomains(
-                    this_iteration_domain || domains,
-                    atualized_index,
-                )
-            }
-
-            return this_iteration_domain || domains
-
-
-        }
-       return getDomains()
-    }
+    
     function getCustomOrDefaultList(domainName) {
         if (domainName) {
             if (!validateDomainName(domainName)) {

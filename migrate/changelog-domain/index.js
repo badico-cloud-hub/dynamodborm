@@ -1,7 +1,7 @@
 const {
   appendCustomMethods,
   default: AggregationRoot,
-} = require('../../build')
+} = require('../../lib')
 const {
   region,
   tableName,

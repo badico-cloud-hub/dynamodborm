@@ -4,8 +4,9 @@ const fs = require('fs')
 const path = require('path')
 const mkdirp = require('mkdirp')
 const cli = require('commander')
+var exec = require('child_process').exec
 
-const { Migration, getMigrationsFiles } = require('../build/Migration')
+const { Migration, getMigrationsFiles, findDomainDeps } = require('../lib/Migration')
 
 const ChangeLogAggregator = require('./changelog-domain')
 const { deploy } = require('./deploy')
@@ -57,6 +58,31 @@ cli
     .option('-k, --kind [value]', 'The Kind of the migration') // table, seed, schema
     .action(actionAdd)
 
+cli
+    .command('build')
+    .action()
+
+cli
+    .command('install')
+    .action(() => {
+        const domains = findDomainDeps(_package)
+        console.log('Starting the instalation of domain')
+        return Promise.all(
+            domains
+                .map(({domain}) => {
+                    const path = path.join('node_modules', '@spark', domain)
+                    return new Promise((resolve, reject) => {
+                        exec(`npm install --prefix ${path}`, function(error, stdout, stderr){
+                            if (error) {
+                                return reject(error, stderr)
+                            }
+                            return resolve(stdout)
+                        });
+                    })
+                })
+        ).catch(console.error)
+        .then(() => console.log('instalation finished'))
+    })
 cli.parse(process.argv)
 
 module.exports.cli

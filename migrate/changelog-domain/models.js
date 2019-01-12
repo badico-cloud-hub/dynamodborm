@@ -1,4 +1,4 @@
-const { Model } = require('../../build')
+const { Model } = require('../../lib')
 
 class ChangeLogModel extends Model {
 

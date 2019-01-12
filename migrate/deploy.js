@@ -1,6 +1,5 @@
 const utils = require('util')
 
-
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
     const functor = 'up'
