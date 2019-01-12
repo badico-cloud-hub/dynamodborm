@@ -70,9 +70,9 @@ cli
         return Promise.all(
             domains
                 .map(({domain}) => {
-                    const path = path.join('node_modules', '@spark', domain)
+                    const pathtodomain = path.join('node_modules', '@spark', domain)
                     return new Promise((resolve, reject) => {
-                        exec(`npm install --prefix ${path}`, function(error, stdout, stderr){
+                        exec(`npm install --prefix ${pathtodomain}`, function(error, stdout, stderr){
                             if (error) {
                                 return reject(error, stderr)
                             }
