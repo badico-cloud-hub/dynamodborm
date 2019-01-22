@@ -25,7 +25,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
     container.service('DynamoDBORMError', () => DynamoDBORMError)
     container.service('DomainError', () => DomainError)
     container.service('Migration', () => Migration)
-
+    console.log('container with services?', container)
     // self-migration
     return migration.createTable(ChangeLog).then(() => {
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
