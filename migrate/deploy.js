@@ -1,12 +1,13 @@
 const utils = require('util')
 const container = require('@spark/utils/lib/IoC').default
 const {
-    AggregationRoot,
+    dafault: AggregationRoot,
     Model,
     DynamoDBORMError,
     DomainError,
     Migration,
 } = require('../lib')
+
 console.log('AggregationRoot', AggregationRoot)
 function DynamoDBORMProvider(c) {
     c.service('AggregationRoot', () => AggregationRoot)
