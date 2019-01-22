@@ -7,7 +7,7 @@ const {
     DomainError,
     Migration,
 } = require('../lib')
-
+console.log('container???', container)
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
     const functor = 'up'
@@ -33,6 +33,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
             const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename
             // require provider
             const provider = require(`${fileToRequire}/build/provider`).default
+            console.log('provider?', provider)
             provider(container)
             const DomainAggregator = container[provider.DomainName]
             return ChangeLogRepository.find({
