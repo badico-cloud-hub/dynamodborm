@@ -21,5 +21,5 @@ class AggregationRoot {
 
 export {
  Model,
+ AggregationRoot,
 }
-export default AggregationRoot
