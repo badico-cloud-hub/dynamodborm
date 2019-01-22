@@ -7,6 +7,14 @@ const {
     DomainError,
     Migration,
 } = require('../lib')
+console.log('AggregationRoot', AggregationRoot)
+function DynamoDBORMProvider(c) {
+    c.service('AggregationRoot', () => AggregationRoot)
+    c.service('Model', () => Model)
+    c.service('DynamoDBORMError', () => DynamoDBORMError)
+    c.service('DomainError', () => DomainError)
+    c.service('Migration', () => Migration)
+}
 console.log('container???', container)
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
@@ -20,11 +28,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
      })(domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
-    container.service('AggregationRoot', () => AggregationRoot)
-    container.service('Model', () => Model)
-    container.service('DynamoDBORMError', () => DynamoDBORMError)
-    container.service('DomainError', () => DomainError)
-    container.service('Migration', () => Migration)
+    DynamoDBORMProvider(container)
     console.log('container with services?', container)
     // self-migration
     return migration.createTable(ChangeLog).then(() => {
