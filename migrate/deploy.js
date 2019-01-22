@@ -35,6 +35,8 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
             const provider = require(`${fileToRequire}/build/provider`).default
             console.log('provider?', provider)
             provider(container)
+            console.log('domainname?', provider.DomainName)
+            console.log('aggregator?', container[provider.DomainName])
             const DomainAggregator = container[provider.DomainName]
             return ChangeLogRepository.find({
                 query: {
