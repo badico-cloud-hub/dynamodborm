@@ -77,7 +77,9 @@ cli
                                 return reject(error, stderr)
                             }
                             return resolve(stdout)
-                        });
+                        }).stdout.on('data', function(data){
+                            console.log(`${domain} - ${data}`)
+                        });;
                     })
                 })
         ).catch(console.error)

@@ -1,4 +1,12 @@
 const utils = require('util')
+const container = require('@spark/utils/lib/IoC').default
+const {
+    AggregationRoot,
+    Model,
+    DynamoDBORMError,
+    DomainError,
+    Migration,
+} = require('../lib')
 
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
@@ -12,13 +20,21 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
      })(domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
+    container.service('AggregationRoot', () => AggregationRoot)
+    container.service('Model', () => Model)
+    container.service('DynamoDBORMError', () => DynamoDBORMError)
+    container.service('DomainError', () => DomainError)
+    container.service('Migration', () => Migration)
+
     // self-migration
     return migration.createTable(ChangeLog).then(() => {
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
             console.log('REQUIRE :::', utils.inspect(filename))
             const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename
-
-            const DomainAggregator = require(fileToRequire)
+            // require provider
+            const provider = require(`${fileToRequire}/build/provider`).default
+            provider(container)
+            const DomainAggregator = container[provider.DomainName]
             return ChangeLogRepository.find({
                 query: {
                     domain: filename
