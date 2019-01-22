@@ -1,7 +1,7 @@
 const utils = require('util')
 const container = require('@spark/utils/lib/IoC').default
 const {
-    AggregationRoot,
+    default: AggregationRoot,
     Model,
     DynamoDBORMError,
     DomainError,
