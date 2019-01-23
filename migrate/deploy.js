@@ -5,6 +5,7 @@ const {
     Model,
     DynamoDBORMError,
     DomainError,
+    appendCustomMethods,
     Migration,
 } = require('../lib')
 
@@ -15,6 +16,8 @@ function DynamoDBORMProvider(c) {
     c.service('DynamoDBORMError', () => DynamoDBORMError)
     c.service('DomainError', () => DomainError)
     c.service('Migration', () => Migration)
+    c.service('appendCustomMethods', () => appendCustomMethods)
+
 }
 console.log('container???', container)
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
