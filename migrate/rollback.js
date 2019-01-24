@@ -1,4 +1,7 @@
 const utils = require('util')
+const container = require('@spark/utils/lib/IoC').default
+const { DynamoDBORMProvider } = require('../lib/provider')
+
 function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
     const functor = 'down'
@@ -8,11 +11,14 @@ function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, get
         comandDirPath,
         _package,
     })(domain)
+    DynamoDBORMProvider(container)
     
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-        const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename  
-        
-        const DomainAggregator = require(fileToRequire)
+        const fileToRequire = filename === packageName ? '../../../..' : filename
+        // require provider
+        const provider = require(`${fileToRequire}/build/provider`).default
+        provider(container)
+        const DomainAggregator = container[provider.DomainName]
         return ChangeLogRepository.find({
             query: {
                 domain: filename

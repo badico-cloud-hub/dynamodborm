@@ -1,25 +1,8 @@
 const utils = require('util')
 const container = require('@spark/utils/lib/IoC').default
-const {
-    default: AggregationRoot,
-    Model,
-    DynamoDBORMError,
-    DomainError,
-    appendCustomMethods,
-    Migration,
-} = require('../lib')
+const { DynamoDBORMProvider } = require('../lib/provider')
 
-console.log('AggregationRoot', AggregationRoot)
-function DynamoDBORMProvider(c) {
-    c.service('AggregationRoot', () => AggregationRoot)
-    c.service('Model', () => Model)
-    c.service('DynamoDBORMError', () => DynamoDBORMError)
-    c.service('DomainError', () => DomainError)
-    c.service('Migration', () => Migration)
-    c.service('appendCustomMethods', () => appendCustomMethods)
 
-}
-console.log('container???', container)
 function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
     const packageName = _package.name
     const functor = 'up'
@@ -33,19 +16,13 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
     DynamoDBORMProvider(container)
-    console.log('container with services?', container)
     // self-migration
     return migration.createTable(ChangeLog).then(() => {
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-            console.log('REQUIRE :::', utils.inspect(filename))
             const fileToRequire = filename === packageName ? '../../../..' : filename
             // require provider
-            console.log('FILE TO REQUIRE', fileToRequire)
             const provider = require(`${fileToRequire}/build/provider`).default
-            console.log('provider?', provider)
             provider(container)
-            console.log('domainname?', provider.DomainName)
-            console.log('aggregator?', container[provider.DomainName])
             const DomainAggregator = container[provider.DomainName]
             return ChangeLogRepository.find({
                 query: {
