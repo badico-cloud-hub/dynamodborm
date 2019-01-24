@@ -38,7 +38,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
     return migration.createTable(ChangeLog).then(() => {
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
             console.log('REQUIRE :::', utils.inspect(filename))
-            const fileToRequire = filename === packageName ? '../../../../build/index.js' : filename
+            const fileToRequire = filename === packageName ? '../../../../' : filename
             // require provider
             const provider = require(`${fileToRequire}/build/provider`).default
             console.log('provider?', provider)
