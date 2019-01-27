@@ -16,3 +16,4 @@ export function DynamoDBORMProvider(c) {
     c.service('appendCustomMethods', () => appendCustomMethods)
 }
 
+export default DynamoDBORMProvider
