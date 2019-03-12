@@ -18,7 +18,7 @@ const readDir = function (name) {
 
 const config = {
   target: 'node',
-  externals: [nodeExternals()],
+  // externals: [nodeExternals()],
   module: {
     loaders: [
       {
