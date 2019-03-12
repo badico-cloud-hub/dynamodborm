@@ -259,5 +259,5 @@ describe('Model', () => {
         expect(valid).toBeDefined(),
         done()
       )).catch(err => console.log(err)))
-  })
+  }, 10000)
 })
