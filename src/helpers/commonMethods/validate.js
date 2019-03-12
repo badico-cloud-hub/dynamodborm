@@ -2,7 +2,7 @@ import { DynamoDBORMError } from '../../DynamoDBORMError'
 
 function validator(joi, values, schema, self) {
   console.log('###args joi, values, schema, self', joi, values, schema, self)
-  return new Promise((resolve, reject) => joi(values, schema, { abortEarly: false }, (error) => {
+  return new Promise((resolve, reject) => joi.apply(joi, [values, schema, { abortEarly: false }, (error) => {
       if (error) {
         const validationError = new DynamoDBORMError(
           {
@@ -26,7 +26,7 @@ function validator(joi, values, schema, self) {
         return reject(DynamoDBORMError.fromArray(errors, 'ValidationError'))
       }
       return resolve(self)
-    })
+    }])
   )
 }
 
