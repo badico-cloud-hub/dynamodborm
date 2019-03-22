@@ -1,7 +1,6 @@
 import { DynamoDBORMError } from '../../DynamoDBORMError'
 
 function validator(joi, values, schema, self) {
-  console.log('###args joi, values, schema, self', joi, values, schema, self)
   return new Promise((resolve, reject) => {
     const {error} = joi(values, schema, { abortEarly: false }, )
     if (error) {
@@ -15,9 +14,10 @@ function validator(joi, values, schema, self) {
         'ValidationError',
       )
       
-     const errors =  error.details.map(error => {
-        const identifier = error.path.filter((p) => isNaN(p)).join('.') 
-        const { message } = error
+     const errors =  error.details.map(e => {
+        console.log('ERROR & PATH', e)
+        const identifier = e.path.filter((p) => isNaN(p)).join('.') 
+        const { message } = e
         return new DynamoDBORMError({
           method: 'validate',
           args: [ joi, values, schema, self ],
