@@ -16,7 +16,7 @@ function validator(joi, values, schema, self) {
       
      const errors =  error.details.map(e => {
         console.log('ERROR & PATH', e)
-        const identifier = e.path.length ? e.path.filter((p) => isNaN(p)).join('.') : e.path
+        const identifier = e.path instanceof Array ? e.path.filter((p) => isNaN(p)).join('.') : e.path
         const { message } = e
         return new DynamoDBORMError({
           method: 'validate',
