@@ -2,7 +2,21 @@
 
 A DDD ORM make with dynamodb mapper js
 
-## Features on 1.0.0
+## Fatures on 0.2.0
+- cli with commands:
+  - `deploy`, execute `up` script from migration files
+  - `rollback`, execute `down` script from migration files
+  - `add`, create a new migration file
+- Migration class, extending Connection class with:
+  - `createTable`
+  - `dropTable`
+- a `updatedAt` field that updated itself after every change, and a way for disabiliting it
+- commom fields, `updatedAt` and `updatedAt`
+- Model with a new method:
+  - sync update => this
+- Base methods of `Model` being able to being overhide on definiton of model, in this case the original method is writen as `_methodName`
+
+## Features on 0.1.0
 
 - There is a base `Model` for the root `class/entity`, and a constructor for each item of a List on the Model.
 - The base `Model` brings the following commom methods:
@@ -25,15 +39,18 @@ A DDD ORM make with dynamodb mapper js
 - Simple aggregation root with a list inside.
 
 ## ROADMAP
-
+- Schema validation to `JSONSchema`
+- Schema on migration
+- Migration of schemas:
+    - data.v1 to data.v2
+    - data.v2 to data.v2
 - publish this version on npm
 - a full documentation of operations
 - a example of extensability, adding custom methods
 - coments in the code
-- migration methods for the domains, `up` and `down`
-- a commom fields, with a way for configuring it
-- a `updatedAt` field that updated itself after every change, and a way for disabiliting it
 - application of the `versionAttribute` of `mapper`
+- a commom fields, with a way for configuring it
+
 
 ## Dependencies OR Builded with:
 
