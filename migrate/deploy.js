@@ -21,7 +21,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
         return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
             const fileToRequire = filename === packageName ? '../../../..' : filename
             // require provider
-            const provider = require(`${fileToRequire}/build/provider`).default
+            const provider = require(`${fileToRequire}/orm/provider`).default
             provider(container)
             const DomainAggregator = container[provider.DomainName]
             return ChangeLogRepository.find({
