@@ -14,9 +14,9 @@ function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, get
     DynamoDBORMProvider(container)
     
     return Promise.all(Object.keys(domainsMigrationListFiles).map((filename) => {
-        const fileToRequire = filename === packageName ? '../../../..' : filename
+        const fileToRequire = filename === packageName ? '../../../../src/orm' : `${filename}/build`
         // require provider
-        const provider = require(`${fileToRequire}/orm/provider`).default
+        const provider = require(`${fileToRequire}/provider`).default
         provider(container)
         const DomainAggregator = container[provider.DomainName]
         return ChangeLogRepository.find({
