@@ -317,10 +317,9 @@ export function getMigrationsFiles(domain) {
     }
 
     if (!domain) {
-        if (checkValidDynamodbORMDomain(_package)) {
-            // procceed with reading on the actual package
-            return { [_package.name]: getCustomOrDefaultList() }
-        }
+        const selfMigration = checkValidDynamodbORMDomain(_package) ?
+             { [_package.name]: getCustomOrDefaultList() } :
+             {}
 
         // look for domain packages in dependencies
         const domains = findDomainDeps(_package)
@@ -332,7 +331,7 @@ export function getMigrationsFiles(domain) {
                 {
                 ...finalList,
                 [domains[i].domain]: list,
-            }), {})
+            }), selfMigration)
 
         }
         throw new Error('Not found a valid dynamodborm domain')

@@ -125,6 +125,4 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
     })
 }
 
-module.exports = {
-    deploy
-}
+module.exports = {  deploy }
