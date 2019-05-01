@@ -1,5 +1,5 @@
 const utils = require('util')
-const container = require('@spark/services-container').default
+const container = require('@spark/services-container')
 const { DynamoDBORMProvider } = require('../lib/provider')
 
 
@@ -15,6 +15,7 @@ function deploy(comandDirPath, _package, Migration, ChangeLogAggregator, getMigr
      })(domain)
     console.log('DOMAIN MIGRATION FILES :::', utils.inspect(domainsMigrationListFiles))
     const { ChangeLog } = ChangeLogAggregator
+    console.log('container', container)
     DynamoDBORMProvider(container)
     // self-migration
     return migration.createTable(ChangeLog).then(() => {
