@@ -336,7 +336,7 @@ export function getMigrationsFiles(domain) {
             }), selfMigration)
 
         }
-        throw new Error('Not found a valid dynamodborm domain')
+        return selfMigration
     }
     return { [domain]: getCustomOrDefaultList(domain) }
 }
