@@ -238,6 +238,8 @@ function validateDomainName(name) {
 function checkValidDynamodbORMDomain(_package) {
     const isDomain = validateDomainName(_package.name)
     const hasDynamodbORM = !!_package.dependencies['@spark/dynamodborm'] || !!_package.dependencies['dynamodborm']
+    console.log('###isDomain', isDomain)
+    console.log('###hasDynamodbORM', hasDynamodbORM)
     return isDomain && hasDynamodbORM
 }
 
