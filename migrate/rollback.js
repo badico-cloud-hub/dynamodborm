@@ -1,5 +1,5 @@
 const utils = require('util')
-const container = require('@spark/utils/lib/IoC').default
+const container = require('@spark/services-container').default
 const { DynamoDBORMProvider } = require('../lib/provider')
 
 function rollback (comandDirPath,  _package, Migration, ChangeLogAggregator, getMigrationsFiles, label, { domain, region, force }) {
